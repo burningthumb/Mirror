@@ -39,7 +39,7 @@ namespace kcp2k
         // internal time.
         // StopWatch offers ElapsedMilliSeconds and should be more precise than
         // Unity's time.deltaTime over long periods.
-        readonly Stopwatch refTime = new Stopwatch();
+        readonly Stopwatch watch = new Stopwatch();
 
         // we need to subtract the channel byte from every MaxMessageSize
         // calculation.
@@ -116,9 +116,9 @@ namespace kcp2k
         internal const int QueueDisconnectThreshold = 10000;
 
         // getters for queue and buffer counts, used for debug info
-        public int SendQueueCount => kcp.snd_queue.Count;
-        public int ReceiveQueueCount => kcp.rcv_queue.Count;
-        public int SendBufferCount => kcp.snd_buf.Count;
+        public int SendQueueCount     => kcp.snd_queue.Count;
+        public int ReceiveQueueCount  => kcp.rcv_queue.Count;
+        public int SendBufferCount    => kcp.snd_buf.Count;
         public int ReceiveBufferCount => kcp.rcv_buf.Count;
 
         // maximum send rate per second can be calculated from kcp parameters
@@ -139,16 +139,7 @@ namespace kcp2k
         // => useful to start from a fresh state every time the client connects
         // => NoDelay, interval, wnd size are the most important configurations.
         //    let's force require the parameters so we don't forget it anywhere.
-        public KcpPeer(
-            Action<ArraySegment<byte>> output,
-            bool noDelay,
-            uint interval = Kcp.INTERVAL,
-            int fastResend = 0,
-            bool congestionWindow = true,
-            uint sendWindowSize = Kcp.WND_SND,
-            uint receiveWindowSize = Kcp.WND_RCV,
-            int timeout = DEFAULT_TIMEOUT,
-            uint maxRetransmits = Kcp.DEADLINK)
+        public KcpPeer(Action<ArraySegment<byte>> output, KcpConfig config)
         {
             this.RawSend = output;
 
@@ -157,8 +148,8 @@ namespace kcp2k
 
             // set nodelay.
             // note that kcp uses 'nocwnd' internally so we negate the parameter
-            kcp.SetNoDelay(noDelay ? 1u : 0u, interval, fastResend, !congestionWindow);
-            kcp.SetWindowSize(sendWindowSize, receiveWindowSize);
+            kcp.SetNoDelay(config.NoDelay ? 1u : 0u, config.Interval, config.FastResend, !config.CongestionWindow);
+            kcp.SetWindowSize(config.SendWindowSize, config.ReceiveWindowSize);
 
             // IMPORTANT: high level needs to add 1 channel byte to each raw
             // message. so while Kcp.MTU_DEF is perfect, we actually need to
@@ -167,16 +158,16 @@ namespace kcp2k
             kcp.SetMtu(Kcp.MTU_DEF - CHANNEL_HEADER_SIZE);
 
             // set maximum retransmits (aka dead_link)
-            kcp.dead_link = maxRetransmits;
+            kcp.dead_link = config.MaxRetransmits;
 
             // create message buffers AFTER window size is set
             // see comments on buffer definition for the "+1" part
-            kcpMessageBuffer = new byte[1 + ReliableMaxMessageSize(receiveWindowSize)];
-            kcpSendBuffer    = new byte[1 + ReliableMaxMessageSize(receiveWindowSize)];
+            kcpMessageBuffer = new byte[1 + ReliableMaxMessageSize(config.ReceiveWindowSize)];
+            kcpSendBuffer    = new byte[1 + ReliableMaxMessageSize(config.ReceiveWindowSize)];
 
-            this.timeout = timeout;
+            timeout = config.Timeout;
 
-            refTime.Start();
+            watch.Start();
         }
 
         void HandleTimeout(uint time)
@@ -223,7 +214,7 @@ namespace kcp2k
             // see QueueSizeDisconnect comments.
             // => include all of kcp's buffers and the unreliable queue!
             int total = kcp.rcv_queue.Count + kcp.snd_queue.Count +
-                        kcp.rcv_buf.Count + kcp.snd_buf.Count;
+                        kcp.rcv_buf.Count   + kcp.snd_buf.Count;
             if (total >= QueueDisconnectThreshold)
             {
                 // pass error to user callback. no need to log it manually.
@@ -248,45 +239,41 @@ namespace kcp2k
         // -> to avoid buffering, unreliable messages call OnData directly.
         bool ReceiveNextReliable(out KcpHeader header, out ArraySegment<byte> message)
         {
-            int msgSize = kcp.PeekSize();
-            if (msgSize > 0)
-            {
-                // only allow receiving up to buffer sized messages.
-                // otherwise we would get BlockCopy ArgumentException anyway.
-                if (msgSize <= kcpMessageBuffer.Length)
-                {
-                    // receive from kcp
-                    int received = kcp.Receive(kcpMessageBuffer, msgSize);
-                    if (received >= 0)
-                    {
-                        // extract header & content without header
-                        header = (KcpHeader)kcpMessageBuffer[0];
-                        message = new ArraySegment<byte>(kcpMessageBuffer, 1, msgSize - 1);
-                        lastReceiveTime = (uint)refTime.ElapsedMilliseconds;
-                        return true;
-                    }
-                    else
-                    {
-                        // if receive failed, close everything
-                        // pass error to user callback. no need to log it manually.
-                        // GetType() shows Server/ClientConn instead of just Connection.
-                        OnError(ErrorCode.InvalidReceive, $"{GetType()}: Receive failed with error={received}. closing connection.");
-                        Disconnect();
-                    }
-                }
-                // we don't allow sending messages > Max, so this must be an
-                // attacker. let's disconnect to avoid allocation attacks etc.
-                else
-                {
-                    // pass error to user callback. no need to log it manually.
-                    OnError(ErrorCode.InvalidReceive, $"{GetType()}: possible allocation attack for msgSize {msgSize} > buffer {kcpMessageBuffer.Length}. Disconnecting the connection.");
-                    Disconnect();
-                }
-            }
-
             message = default;
             header = KcpHeader.Disconnect;
-            return false;
+
+            int msgSize = kcp.PeekSize();
+            if (msgSize <= 0) return false;
+
+            // only allow receiving up to buffer sized messages.
+            // otherwise we would get BlockCopy ArgumentException anyway.
+            if (msgSize > kcpMessageBuffer.Length)
+            {
+                // we don't allow sending messages > Max, so this must be an
+                // attacker. let's disconnect to avoid allocation attacks etc.
+                // pass error to user callback. no need to log it manually.
+                OnError(ErrorCode.InvalidReceive, $"{GetType()}: possible allocation attack for msgSize {msgSize} > buffer {kcpMessageBuffer.Length}. Disconnecting the connection.");
+                Disconnect();
+                return false;
+            }
+
+            // receive from kcp
+            int received = kcp.Receive(kcpMessageBuffer, msgSize);
+            if (received < 0)
+            {
+                // if receive failed, close everything
+                // pass error to user callback. no need to log it manually.
+                // GetType() shows Server/ClientConn instead of just Connection.
+                OnError(ErrorCode.InvalidReceive, $"{GetType()}: Receive failed with error={received}. closing connection.");
+                Disconnect();
+                return false;
+            }
+
+            // extract header & content without header
+            header = (KcpHeader)kcpMessageBuffer[0];
+            message = new ArraySegment<byte>(kcpMessageBuffer, 1, msgSize - 1);
+            lastReceiveTime = (uint)watch.ElapsedMilliseconds;
+            return true;
         }
 
         void TickIncoming_Connected(uint time)
@@ -308,7 +295,7 @@ namespace kcp2k
                         // we were waiting for a handshake.
                         // it proves that the other end speaks our protocol.
                         // GetType() shows Server/ClientConn instead of just Connection.
-                        Log.Info($"[KCP] {GetType()}: received handshake");
+                        Log.Info($"{GetType()}: received handshake");
                         state = KcpState.Authenticated;
                         OnAuthenticated?.Invoke();
                         break;
@@ -350,7 +337,7 @@ namespace kcp2k
                     {
                         // should never receive another handshake after auth
                         // GetType() shows Server/ClientConn instead of just Connection.
-                        Log.Warning($"[KCP] {GetType()}: received invalid header {header} while Authenticated. Disconnecting the connection.");
+                        Log.Warning($"{GetType()}: received invalid header {header} while Authenticated. Disconnecting the connection.");
                         Disconnect();
                         break;
                     }
@@ -381,7 +368,7 @@ namespace kcp2k
                     {
                         // disconnect might happen
                         // GetType() shows Server/ClientConn instead of just Connection.
-                        Log.Info($"[KCP] {GetType()}: received disconnect message");
+                        Log.Info($"{GetType()}: received disconnect message");
                         Disconnect();
                         break;
                     }
@@ -391,7 +378,7 @@ namespace kcp2k
 
         public void TickIncoming()
         {
-            uint time = (uint)refTime.ElapsedMilliseconds;
+            uint time = (uint)watch.ElapsedMilliseconds;
 
             try
             {
@@ -443,7 +430,7 @@ namespace kcp2k
 
         public void TickOutgoing()
         {
-            uint time = (uint)refTime.ElapsedMilliseconds;
+            uint time = (uint)watch.ElapsedMilliseconds;
 
             try
             {
@@ -493,80 +480,83 @@ namespace kcp2k
         // insert raw IO. usually from socket.Receive.
         // offset is useful for relays, where we may parse a header and then
         // feed the rest to kcp.
-        public void RawInput(byte[] buffer, int offset, int size)
+        public void RawInput(ArraySegment<byte> segment)
         {
-            // parse channel
-            if (size > 0)
-            {
-                byte channel = buffer[offset + 0];
-                switch (channel)
-                {
-                    case (byte)KcpChannel.Reliable:
-                    {
-                        // input into kcp, but skip channel byte
-                        int input = kcp.Input(buffer, offset + 1, size - 1);
-                        if (input != 0)
-                        {
-                            // GetType() shows Server/ClientConn instead of just Connection.
-                            Log.Warning($"[KCP] {GetType()}: Input failed with error={input} for buffer with length={size - 1}");
-                        }
-                        break;
-                    }
-                    case (byte)KcpChannel.Unreliable:
-                    {
-                        // ideally we would queue all unreliable messages and
-                        // then process them in ReceiveNext() together with the
-                        // reliable messages, but:
-                        // -> queues/allocations/pools are slow and complex.
-                        // -> DOTSNET 10k is actually slower if we use pooled
-                        //    unreliable messages for transform messages.
-                        //
-                        //      DOTSNET 10k benchmark:
-                        //        reliable-only:         170 FPS
-                        //        unreliable queued: 130-150 FPS
-                        //        unreliable direct:     183 FPS(!)
-                        //
-                        //      DOTSNET 50k benchmark:
-                        //        reliable-only:         FAILS (queues keep growing)
-                        //        unreliable direct:     18-22 FPS(!)
-                        //
-                        // -> all unreliable messages are DATA messages anyway.
-                        // -> let's skip the magic and call OnData directly if
-                        //    the current state allows it.
-                        if (state == KcpState.Authenticated)
-                        {
-                            ArraySegment<byte> message = new ArraySegment<byte>(buffer, offset + 1, size - 1);
-                            OnData?.Invoke(message, KcpChannel.Unreliable);
+            // ensure valid size: at least 1 byte for channel
+            if (segment.Count <= 0) return;
 
-                            // set last receive time to avoid timeout.
-                            // -> we do this in ANY case even if not enabled.
-                            //    a message is a message.
-                            // -> we set last receive time for both reliable and
-                            //    unreliable messages. both count.
-                            //    otherwise a connection might time out even
-                            //    though unreliable were received, but no
-                            //    reliable was received.
-                            lastReceiveTime = (uint)refTime.ElapsedMilliseconds;
-                        }
-                        else
-                        {
-                            // should never happen
-                            // pass error to user callback. no need to log it manually.
-                            // GetType() shows Server/ClientConn instead of just Connection.
-                            OnError(ErrorCode.InvalidReceive, $"{GetType()}: received unreliable message in state {state}. Disconnecting the connection.");
-                            Disconnect();
-                        }
-                        break;
-                    }
-                    default:
+            // parse channel
+            byte channel = segment[0];
+
+            // parse message
+            ArraySegment<byte> message = new ArraySegment<byte>(segment.Array, segment.Offset + 1, segment.Count - 1);
+
+            switch (channel)
+            {
+                case (byte)KcpChannel.Reliable:
+                {
+                    // input into kcp, but skip channel byte
+                    int input = kcp.Input(message.Array, message.Offset, message.Count);
+                    if (input != 0)
                     {
-                        // not a valid channel. random data or attacks.
-                        // pass error to user callback. no need to log it manually.
-                            // GetType() shows Server/ClientConn instead of just Connection.
-                        OnError(ErrorCode.InvalidReceive, $"{GetType()}: Disconnecting connection because of invalid channel header: {channel}");
-                        Disconnect();
-                        break;
+                        // GetType() shows Server/ClientConn instead of just Connection.
+                        Log.Warning($"{GetType()}: Input failed with error={input} for buffer with length={message.Count - 1}");
                     }
+                    break;
+                }
+                case (byte)KcpChannel.Unreliable:
+                {
+                    // ideally we would queue all unreliable messages and
+                    // then process them in ReceiveNext() together with the
+                    // reliable messages, but:
+                    // -> queues/allocations/pools are slow and complex.
+                    // -> DOTSNET 10k is actually slower if we use pooled
+                    //    unreliable messages for transform messages.
+                    //
+                    //      DOTSNET 10k benchmark:
+                    //        reliable-only:         170 FPS
+                    //        unreliable queued: 130-150 FPS
+                    //        unreliable direct:     183 FPS(!)
+                    //
+                    //      DOTSNET 50k benchmark:
+                    //        reliable-only:         FAILS (queues keep growing)
+                    //        unreliable direct:     18-22 FPS(!)
+                    //
+                    // -> all unreliable messages are DATA messages anyway.
+                    // -> let's skip the magic and call OnData directly if
+                    //    the current state allows it.
+                    if (state == KcpState.Authenticated)
+                    {
+                        OnData?.Invoke(message, KcpChannel.Unreliable);
+
+                        // set last receive time to avoid timeout.
+                        // -> we do this in ANY case even if not enabled.
+                        //    a message is a message.
+                        // -> we set last receive time for both reliable and
+                        //    unreliable messages. both count.
+                        //    otherwise a connection might time out even
+                        //    though unreliable were received, but no
+                        //    reliable was received.
+                        lastReceiveTime = (uint)watch.ElapsedMilliseconds;
+                    }
+                    else
+                    {
+                        // should never happen
+                        // pass error to user callback. no need to log it manually.
+                        // GetType() shows Server/ClientConn instead of just Connection.
+                        OnError(ErrorCode.InvalidReceive, $"{GetType()}: received unreliable message in state {state}. Disconnecting the connection.");
+                        Disconnect();
+                    }
+                    break;
+                }
+                default:
+                {
+                    // not a valid channel. random data or attacks.
+                    // pass error to user callback. no need to log it manually.
+                        // GetType() shows Server/ClientConn instead of just Connection.
+                    OnError(ErrorCode.InvalidReceive, $"{GetType()}: Disconnecting connection because of invalid channel header: {channel}");
+                    Disconnect();
+                    break;
                 }
             }
         }
@@ -586,42 +576,46 @@ namespace kcp2k
         void SendReliable(KcpHeader header, ArraySegment<byte> content)
         {
             // 1 byte header + content needs to fit into send buffer
-            if (1 + content.Count <= kcpSendBuffer.Length) // TODO
+            if (1 + content.Count > kcpSendBuffer.Length) // TODO
             {
-                // copy header, content (if any) into send buffer
-                kcpSendBuffer[0] = (byte)header;
-                if (content.Count > 0)
-                    Buffer.BlockCopy(content.Array, content.Offset, kcpSendBuffer, 1, content.Count);
-
-                // send to kcp for processing
-                int sent = kcp.Send(kcpSendBuffer, 0, 1 + content.Count);
-                if (sent < 0)
-                {
-                    // GetType() shows Server/ClientConn instead of just Connection.
-                    OnError(ErrorCode.InvalidSend, $"{GetType()}: Send failed with error={sent} for content with length={content.Count}");
-                }
+                // otherwise content is larger than MaxMessageSize. let user know!
+                // GetType() shows Server/ClientConn instead of just Connection.
+                OnError(ErrorCode.InvalidSend, $"{GetType()}: Failed to send reliable message of size {content.Count} because it's larger than ReliableMaxMessageSize={ReliableMaxMessageSize(kcp.rcv_wnd)}");
+                return;
             }
-            // otherwise content is larger than MaxMessageSize. let user know!
-            // GetType() shows Server/ClientConn instead of just Connection.
-            else OnError(ErrorCode.InvalidSend, $"{GetType()}: Failed to send reliable message of size {content.Count} because it's larger than ReliableMaxMessageSize={ReliableMaxMessageSize(kcp.rcv_wnd)}");
+
+            // copy header, content (if any) into send buffer
+            kcpSendBuffer[0] = (byte)header;
+            if (content.Count > 0)
+                Buffer.BlockCopy(content.Array, content.Offset, kcpSendBuffer, 1, content.Count);
+
+            // send to kcp for processing
+            int sent = kcp.Send(kcpSendBuffer, 0, 1 + content.Count);
+            if (sent < 0)
+            {
+                // GetType() shows Server/ClientConn instead of just Connection.
+                OnError(ErrorCode.InvalidSend, $"{GetType()}: Send failed with error={sent} for content with length={content.Count}");
+            }
         }
 
         void SendUnreliable(ArraySegment<byte> message)
         {
             // message size needs to be <= unreliable max size
-            if (message.Count <= UnreliableMaxMessageSize)
+            if (message.Count > UnreliableMaxMessageSize)
             {
-                // copy channel header, data into raw send buffer, then send
-                rawSendBuffer[0] = (byte)KcpChannel.Unreliable;
-                Buffer.BlockCopy(message.Array, message.Offset, rawSendBuffer, 1, message.Count);
-
-                // IO send
-                ArraySegment<byte> segment = new ArraySegment<byte>(rawSendBuffer, 0, message.Count + 1);
-                RawSend(segment);
+                // otherwise content is larger than MaxMessageSize. let user know!
+                // GetType() shows Server/ClientConn instead of just Connection.
+                Log.Error($"{GetType()}: Failed to send unreliable message of size {message.Count} because it's larger than UnreliableMaxMessageSize={UnreliableMaxMessageSize}");
+                return;
             }
-            // otherwise content is larger than MaxMessageSize. let user know!
-            // GetType() shows Server/ClientConn instead of just Connection.
-            else Log.Error($"[KCP] {GetType()}: Failed to send unreliable message of size {message.Count} because it's larger than UnreliableMaxMessageSize={UnreliableMaxMessageSize}");
+
+            // copy channel header, data into raw send buffer, then send
+            rawSendBuffer[0] = (byte)KcpChannel.Unreliable;
+            Buffer.BlockCopy(message.Array, message.Offset, rawSendBuffer, 1, message.Count);
+
+            // IO send
+            ArraySegment<byte> segment = new ArraySegment<byte>(rawSendBuffer, 0, message.Count + 1);
+            RawSend(segment);
         }
 
         // server & client need to send handshake at different times, so we need
@@ -632,8 +626,8 @@ namespace kcp2k
         // => handshake info needs to be delivered, so it goes over reliable.
         public void SendHandshake()
         {
-                // GetType() shows Server/ClientConn instead of just Connection.
-            Log.Info($"[KCP] {GetType()}: sending Handshake to other end!");
+            // GetType() shows Server/ClientConn instead of just Connection.
+            Log.Info($"{GetType()}: sending Handshake to other end!");
             SendReliable(KcpHeader.Handshake, default);
         }
 
@@ -647,7 +641,7 @@ namespace kcp2k
             {
                 // pass error to user callback. no need to log it manually.
                 // GetType() shows Server/ClientConn instead of just Connection.
-                OnError(ErrorCode.InvalidSend, $"[KCP] {GetType()}: tried sending empty message. This should never happen. Disconnecting.");
+                OnError(ErrorCode.InvalidSend, $"{GetType()}: tried sending empty message. This should never happen. Disconnecting.");
                 Disconnect();
                 return;
             }
@@ -700,7 +694,7 @@ namespace kcp2k
 
             // set as Disconnected, call event
             // GetType() shows Server/ClientConn instead of just Connection.
-            Log.Info($"[KCP] {GetType()}: Disconnected.");
+            Log.Info($"{GetType()}: Disconnected.");
             state = KcpState.Disconnected;
             OnDisconnected?.Invoke();
         }
