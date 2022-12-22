@@ -11,7 +11,7 @@ namespace Mirror.Examples.PongGame
         [SerializeField] PongGameScoreDigit m_tens;
         [SerializeField] PongGameScoreDigit m_ones;
 
-        [SerializeField] AudioSource m_scoreAudio;
+        [SerializeField] string m_scoreSFX = "scoreSFX";
 
         public int Value
         {
@@ -24,11 +24,6 @@ namespace Mirror.Examples.PongGame
         // Start is called before the first frame update
         void Start()
         {
-            if (null == m_scoreAudio)
-            {
-                m_scoreAudio = GetComponent<AudioSource>();
-            }
-
             SetDigitsToValue();
         }
 
@@ -42,10 +37,7 @@ namespace Mirror.Examples.PongGame
         {
             if (m_value > 0)
             {
-                if (null != m_scoreAudio)
-                {
-                    m_scoreAudio.Play();
-                }
+                AudioManager.Play(m_scoreSFX, AudioManager.MixerTarget.SFX);
             }
         }
 
