@@ -1573,6 +1573,7 @@ GameObject:
   - component: {fileID: 250986666}
   - component: {fileID: 250986665}
   - component: {fileID: 250986669}
+  - component: {fileID: 250986670}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -1679,6 +1680,18 @@ MonoBehaviour:
   mainMenu: {fileID: 1148073871}
   pauseMenu: {fileID: 0}
   lobbyMenu: {fileID: 0}
+--- !u!114 &250986670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250986664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fa9ff429e8e4f25b3ef42712c3a067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &254527247
 GameObject:
   m_ObjectHideFlags: 0
@@ -4657,7 +4670,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 725959388}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250986670}
+        m_TargetAssemblyTypeName: SimpleLevelManager, Assembly-CSharp
+        m_MethodName: LoadGameScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Scene
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &725959388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6927,6 +6952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093c49e02af2c4131bc0caaf953ff7ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_qualityKey: GrahpicsQuality
   graphicsDropdown: {fileID: 1166063346}
 --- !u!1 &1158481775
 GameObject:

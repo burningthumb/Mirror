@@ -12,6 +12,7 @@ public class UIAudio : MonoBehaviour, ISelectHandler, IPointerEnterHandler/*, IP
 			btn.onClick.AddListener(() => AudioManager.Play("clickUI", AudioManager.MixerTarget.UI));
 		}
 	}
+
 	//public void OnPointerClick(PointerEventData eventData)
 	//{
 	//	AudioManager.Play("clickUI", AudioManager.MixerTarget.UI);
