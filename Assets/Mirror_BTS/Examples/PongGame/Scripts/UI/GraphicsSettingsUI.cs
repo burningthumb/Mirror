@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class GraphicsSettingsUI : MonoBehaviour
 {
+    public string m_qualityKey = "GrahpicsQuality";
+
     public TMP_Dropdown graphicsDropdown;
     //public Toggle postprocessingToggle;
 
@@ -24,14 +26,23 @@ public class GraphicsSettingsUI : MonoBehaviour
         {
             options.Add(names[i]);
         }
+        graphicsDropdown.ClearOptions();
         graphicsDropdown.AddOptions(options);
-        QualitySettings.SetQualityLevel(graphicsDropdown.options.Count - 1);
-        graphicsDropdown.value = graphicsDropdown.options.Count - 1;
+
+        int l_quality = Mathf.Max(0, (int)(graphicsDropdown.options.Count / 2 - 0.5f));
+
+        l_quality = PlayerPrefs.GetInt(m_qualityKey, l_quality);
+
+        QualitySettings.SetQualityLevel(l_quality);
+        graphicsDropdown.value = l_quality;
     }
 
     public void SetGraphicsQuality()
     {
         QualitySettings.SetQualityLevel(graphicsDropdown.value);
+
+        PlayerPrefs.SetInt(m_qualityKey, graphicsDropdown.value);
+        PlayerPrefs.Save();
     }
 
     public void TogglePostProcessing()
