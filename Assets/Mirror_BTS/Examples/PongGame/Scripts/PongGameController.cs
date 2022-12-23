@@ -34,7 +34,7 @@ namespace Mirror.Examples.PongGame
 
 			if (null != l_ball)
 			{
-				l_ball.ResetBall();
+				l_ball.rpcResetBall();
 			}
 
 			GameOver = false;

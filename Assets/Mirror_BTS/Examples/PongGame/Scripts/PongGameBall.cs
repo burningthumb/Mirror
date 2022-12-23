@@ -39,9 +39,15 @@ namespace Mirror.Examples.PongGame
         }
 
         [ClientRpc]
-        public void ResetBall()
+        public void rpcResetBall()
         {
             rigidbody2d.position = Vector2.zero;
+        }
+
+        [ClientRpc]
+        public void rpcPlayBounceSound()
+        {
+            AudioManager.Play(m_ballBounceSFX, AudioManager.MixerTarget.SFX);
         }
 
         // only call this on server
@@ -78,7 +84,7 @@ namespace Mirror.Examples.PongGame
                 // Play the bounce audio
                 if (!m_pongGameController.GameOver)
                 {
-                    AudioManager.Play(m_ballBounceSFX, AudioManager.MixerTarget.SFX);
+                    rpcPlayBounceSound();
                 }
 
             }
@@ -107,7 +113,7 @@ namespace Mirror.Examples.PongGame
                 // Play the bounce audio
                 if (!m_pongGameController.GameOver)
                 {
-                    AudioManager.Play(m_ballBounceSFX, AudioManager.MixerTarget.SFX);
+                    rpcPlayBounceSound();
                 }
             }
         }
