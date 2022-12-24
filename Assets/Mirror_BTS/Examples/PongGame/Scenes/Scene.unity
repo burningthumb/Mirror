@@ -2416,6 +2416,7 @@ MonoBehaviour:
   syncInterval: 0.1
   m_gameOver: 1
   m_gameOverGO: {fileID: 1335765669}
+  m_startButtonGO: {fileID: 42471304}
 --- !u!114 &1066399046
 MonoBehaviour:
   m_ObjectHideFlags: 0
