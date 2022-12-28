@@ -157,6 +157,8 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.burningthumb.game.netpong
     Standalone: com.burningthumb.game.netpong
+    iPhone: com.burningthumb.game.netpong
+    tvOS: com.burningthumb.game.netpong
   buildNumber:
     Standalone: 0
     iPhone: 0
@@ -896,7 +898,13 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    Collab: 0
+    Game Performance: 0
+    Purchasing: 0
+    UDP: 0
+    Unity Ads: 1
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -911,11 +919,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: 47104b3f-4045-4d94-9aff-e41302fc2ef4
   framebufferDepthMemorylessMode: 2
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: NetPong
+  organizationId: burningthumb-studios-as-publisher
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1
   playerDataPath: 
