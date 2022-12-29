@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -8,6 +9,14 @@ public class AdManager : MonoBehaviour
 {
     [SerializeField] SOString m_appKey;
     [SerializeField] Button m_playButton;
+    [SerializeField] TMP_Text m_playText;
+    [SerializeField] Image m_playImage;
+
+    [SerializeField] string m_enabledText = "Play";
+    [SerializeField] string m_disabledText = "Waiting...";
+
+    [SerializeField] Sprite m_enabledSprite;
+    [SerializeField] Sprite m_disabledSprite;
 
     [SerializeField] UnityEvent m_addPlayed;
 
@@ -20,9 +29,10 @@ public class AdManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        m_playButton.interactable = false;
+
+#if (UNITY_ANDROID || UNITY_IOS) && (!UNITY_EDITOR)
 
         IronSource.Agent.init(AppKey);
 
@@ -35,19 +45,51 @@ public class AdManager : MonoBehaviour
         IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent;
         IronSourceEvents.onRewardedVideoAdShowFailedEvent += RewardedVideoAdShowFailedEvent;
 
+        if (!IronSource.Agent.isRewardedVideoAvailable())
+        {
+            m_playButton.interactable = false;
+            m_playText.text = m_disabledText;
+            m_playImage.sprite = m_disabledSprite;
+ 
+            LoadRV();
+        }
+#endif
 
-        LoadRV();
+    }
+
+    void OnDisable()
+    {
+
+#if (UNITY_ANDROID || UNITY_IOS) && (!UNITY_EDITOR)
+
+        IronSourceEvents.onRewardedVideoAdOpenedEvent -= RewardedVideoAdOpenedEvent;
+        IronSourceEvents.onRewardedVideoAdClickedEvent -= RewardedVideoAdClickedEvent;
+        IronSourceEvents.onRewardedVideoAdClosedEvent -= RewardedVideoAdClosedEvent;
+        IronSourceEvents.onRewardedVideoAvailabilityChangedEvent -= RewardedVideoAvailabilityChangedEvent;
+        IronSourceEvents.onRewardedVideoAdStartedEvent -= RewardedVideoAdStartedEvent;
+        IronSourceEvents.onRewardedVideoAdEndedEvent -= RewardedVideoAdEndedEvent;
+        IronSourceEvents.onRewardedVideoAdRewardedEvent -= RewardedVideoAdRewardedEvent;
+        IronSourceEvents.onRewardedVideoAdShowFailedEvent -= RewardedVideoAdShowFailedEvent;
+
+#endif
     }
 
     public void Update()
     {
+
+#if (UNITY_ANDROID || UNITY_IOS) && (!UNITY_EDITOR)
+
         if (IronSource.Agent.isRewardedVideoAvailable())
         {
             if (!m_playButton.interactable)
             {
                 m_playButton.interactable = true;
+                m_playText.text = m_enabledText;
+                m_playImage.sprite = m_enabledSprite;
             }
         }
+#endif
+
     }
 
     //Invoked when the RewardedVideo ad view has opened.
@@ -73,10 +115,14 @@ public class AdManager : MonoBehaviour
         if (a_available)
         {
             m_playButton.interactable = true;
+            m_playText.text = m_enabledText;
+            m_playImage.sprite = m_enabledSprite;
         }
         else
         {
             m_playButton.interactable = false;
+            m_playText.text = m_disabledText;
+            m_playImage.sprite = m_disabledSprite;
             LoadRV();
         }
     }
