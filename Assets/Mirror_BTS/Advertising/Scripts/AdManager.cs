@@ -172,6 +172,16 @@ public class AdManager : MonoBehaviour
 
     public void ShowRV()
     {
+
+#if (UNITY_ANDROID || UNITY_IOS) && (!UNITY_EDITOR)
+
         IronSource.Agent.showRewardedVideo();
+
+#else
+
+        m_addPlayed.Invoke();
+
+#endif
+
     }
 }
