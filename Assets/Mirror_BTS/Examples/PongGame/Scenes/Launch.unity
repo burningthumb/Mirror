@@ -4225,7 +4225,7 @@ MonoBehaviour:
   m_playText: {fileID: 16123459}
   m_playImage: {fileID: 1997923761}
   m_enabledText: Play
-  m_disabledText: Waiting...
+  m_disabledText: Loading...
   m_enabledSprite: {fileID: 1328694606, guid: 20c43b43e14ae42449c36ee3459a382d, type: 3}
   m_disabledSprite: {fileID: -986653582, guid: 20c43b43e14ae42449c36ee3459a382d, type: 3}
   m_addPlayed:
