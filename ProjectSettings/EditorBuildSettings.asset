@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Mirror_BTS/Examples/PongGame/Scenes/Launch.unity
     guid: 82d809a9813b74e219c0fe4d808f09d3
   - enabled: 1
-    path: Assets/Mirror_BTS/Examples/PongGame/Scenes/Scene.unity
+    path: Assets/Mirror_BTS/Examples/PongGame/Scenes/PongGame.unity
     guid: c6c3810a67c704893a1ea993e9fa9f38
+  - enabled: 1
+    path: Assets/Mirror_BTS/Examples/PongGame/Scenes/BreakoutGame.unity
+    guid: fa2334ed7f6a3436396c5992545bb8b6
   m_configObjects: {}

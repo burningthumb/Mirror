@@ -61,7 +61,6 @@ namespace Mirror.Examples.PongGame
             //   col.collider is the racket's collider
 
             PongGamePlayer l_player = col.transform.GetComponent<PongGamePlayer>();
-
             PongGameScoreCollider l_scoreCollider = col.transform.GetComponent<PongGameScoreCollider>();
 
             // did we hit a racket? then we need to calculate the hit factor
@@ -93,19 +92,33 @@ namespace Mirror.Examples.PongGame
 
                 if (!m_pongGameController.GameOver)
                 {
-                    PongGameScore l_score = l_scoreCollider.GetScore();
+                    PongGameScore l_score = l_scoreCollider.GetPongGameScore;
 
                     if (null != l_score)
                     {
-                        l_score.rpcSetValue(l_score.Value + 1);
-
-                        if (l_score.Value >= 20)
+                        if (l_scoreCollider.ScoreValue != 0)
                         {
-                            m_pongGameController.GameOver = true;
+                            int l_newScore = l_score.Value + l_scoreCollider.ScoreValue;
+
+                            if (l_newScore > 20)
+                            {
+                                m_pongGameController.GameOver = true;
+                            }
+
+                            l_score.rpcSetValue(l_newScore);
+
                         }
                     }
 
-                    rigidbody2d.position = Vector2.zero;
+                    if (l_scoreCollider.RepositionOnScore)
+                    { 
+                        rigidbody2d.position = Vector2.zero;
+                    }
+
+                    if (l_scoreCollider.DestroyOnScore)
+                    {
+                        l_scoreCollider.rpcHide();
+                    }
                 }
             }
             else

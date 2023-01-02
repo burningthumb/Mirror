@@ -69,6 +69,8 @@ MonoBehaviour:
       Value: {fileID: 8300000, guid: f53c8183f43315b428f389ed75d52e68, type: 3}
     - Key: ballBounceSFX
       Value: {fileID: 8300000, guid: 56e18f723ce814873b93dd737aa16aba, type: 3}
+    - Key: blockDestroySFX
+      Value: {fileID: 8300000, guid: 07bb7d063a6b94ee695446ccede28c42, type: 3}
     - Key: scoreSFX
       Value: {fileID: 8300000, guid: 0b5de865586844050b285d4a3fd6b033, type: 3}
   musicBank:

@@ -27,6 +27,8 @@ namespace Mirror.Examples.PongGame
 
 		public PongGameController m_gameController;
 
+		public PongGameScoreCollider[] m_activateThese;
+
 		GameObject m_ballGO;
 		PongGameBall m_ball;
 
@@ -118,14 +120,25 @@ namespace Mirror.Examples.PongGame
 
 		public void ClearScore()
 		{
-			PongGameScore l_score = m_leftScore.GetScore();
+
+			m_activateThese = GameObject.FindObjectsOfType<PongGameScoreCollider>();
+
+			foreach (PongGameScoreCollider l_pgsc in m_activateThese)
+            {
+				if (l_pgsc.DestroyOnScore)
+				{ 
+					l_pgsc.rpcShow();
+				}
+            }
+
+			PongGameScore l_score = m_leftScore.GetPongGameScore;
 
 			if (null != l_score)
 			{
 				l_score.rpcSetValue(0);
 			}
 
-			l_score = m_rightScore.GetScore();
+			l_score = m_rightScore.GetPongGameScore;
 
 			if (null != l_score)
 			{
