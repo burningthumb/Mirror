@@ -19,6 +19,11 @@ namespace Mirror.Examples.PongGame
             {
                 return m_value;
             }
+
+            set
+            {
+                m_value = value;
+            }
         }
 
         // Start is called before the first frame update

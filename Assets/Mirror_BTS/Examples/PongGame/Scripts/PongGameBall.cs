@@ -98,14 +98,14 @@ namespace Mirror.Examples.PongGame
                     {
                         if (l_scoreCollider.ScoreValue != 0)
                         {
-                            int l_newScore = l_score.Value + l_scoreCollider.ScoreValue;
+                            l_score.Value = l_score.Value + l_scoreCollider.ScoreValue;
 
-                            if (l_newScore > 20)
+                            if (l_score.Value > 20)
                             {
                                 m_pongGameController.GameOver = true;
                             }
 
-                            l_score.rpcSetValue(l_newScore);
+                            l_score.rpcSetValue(l_score.Value);
 
                         }
                     }
