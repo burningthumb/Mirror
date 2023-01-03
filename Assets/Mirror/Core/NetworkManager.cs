@@ -40,6 +40,8 @@ namespace Mirror
         [Tooltip("Server & Client send rate per second. Use around 60Hz for fast paced games like Counter-Strike to minimize latency. Use around 30Hz for games like WoW to minimize computations. Use around 1-10Hz for slow paced games like EVE.")]
         [FormerlySerializedAs("serverTickRate")]
         public int sendRate = 30;
+
+        // Deprecated 2022-10-31
         [Obsolete("NetworkManager.serverTickRate was renamed to sendRate because that's what it configures for both server & client now.")]
         public int serverTickRate => sendRate;
 
@@ -49,6 +51,7 @@ namespace Mirror
         // send interval is 1 / sendRate.
         // but for tests we need a way to set it to exactly 0.
         // 1 / int.max would not be exactly 0, so handel that manually.
+        // Deprecated 2022-10-06
         [Obsolete("NetworkManager.serverTickInterval was moved to NetworkServer.tickInterval for consistency.")]
         public float serverTickInterval => NetworkServer.tickInterval;
 
@@ -150,7 +153,7 @@ namespace Mirror
             // always >= 0
             maxConnections = Mathf.Max(maxConnections, 0);
 
-            if (playerPrefab != null && playerPrefab.GetComponent<NetworkIdentity>() == null)
+            if (playerPrefab != null && !playerPrefab.TryGetComponent<NetworkIdentity>(out _))
             {
                 Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
                 playerPrefab = null;
@@ -242,7 +245,8 @@ namespace Mirror
             !Utils.IsSceneActive(onlineScene) &&
             onlineScene != offlineScene;
 
-        [Obsolete("NetworkManager.IsSceneActive moved to Utils.IsSceneActive")] // DEPRECATED 2022-12-12
+        // Deprecated 2022-12-12
+        [Obsolete("NetworkManager.IsSceneActive moved to Utils.IsSceneActive")]
         public static bool IsSceneActive(string scene) => Utils.IsSceneActive(scene);
 
         // NetworkManager exposes some NetworkServer/Client configuration.
@@ -1130,7 +1134,7 @@ namespace Mirror
                 return;
             }
 
-            if (autoCreatePlayer && playerPrefab.GetComponent<NetworkIdentity>() == null)
+            if (autoCreatePlayer && !playerPrefab.TryGetComponent<NetworkIdentity>(out _))
             {
                 Debug.LogError("The PlayerPrefab does not have a NetworkIdentity. Please add a NetworkIdentity to the player prefab.");
                 return;
@@ -1211,15 +1215,16 @@ namespace Mirror
                 && SceneManager.GetActiveScene().path != offlineScene)
                 SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
 
-            OnStopClient();
-
-            //Debug.Log("NetworkManager StopClient");
-
             // set offline mode BEFORE changing scene so that FinishStartScene
             // doesn't think we need initialize anything.
             // set offline mode BEFORE NetworkClient.Disconnect so StopClient
             // only runs once.
+            // set offline mode BEFORE OnStopClient so StopClient
+            // only runs once.
             mode = NetworkManagerMode.Offline;
+
+            //Debug.Log("NetworkManager StopClient");
+            OnStopClient();
 
             // shutdown client
             NetworkClient.Shutdown();
@@ -1295,7 +1300,7 @@ namespace Mirror
             NetworkServer.AddPlayerForConnection(conn, player);
         }
 
-        // DEPRECATED 2022-05-12
+        // Deprecated 2022-05-12
         [Obsolete("OnServerError(conn, Exception) was changed to OnServerError(conn, TransportError, string)")]
         public virtual void OnServerError(NetworkConnectionToClient conn, Exception exception) {}
         /// <summary>Called on server when transport raises an exception. NetworkConnection may be null.</summary>
@@ -1333,7 +1338,7 @@ namespace Mirror
         /// <summary>Called on clients when disconnected from a server.</summary>
         public virtual void OnClientDisconnect() {}
 
-        // DEPRECATED 2022-05-12
+        // Deprecated 2022-05-12
         [Obsolete("OnClientError(Exception) was changed to OnClientError(TransportError, string)")]
         public virtual void OnClientError(Exception exception) {}
         /// <summary>Called on client when transport raises an exception.</summary>
