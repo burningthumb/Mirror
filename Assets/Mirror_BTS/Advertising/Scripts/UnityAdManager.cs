@@ -1,0 +1,209 @@
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Advertisements;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
+{
+    [SerializeField] string _androidGameId;
+    [SerializeField] string _iOSGameId;
+    [SerializeField] bool _testMode = true;
+
+    [SerializeField] Button m_playButton;
+    [SerializeField] TMP_Text m_playText;
+    [SerializeField] Image m_playImage;
+
+    [SerializeField] string m_enabledText = "Play";
+    [SerializeField] string m_disabledText = "Waiting...";
+
+    [SerializeField] string _androidAdUnitId = "Rewarded_Android";
+    [SerializeField] string _iOSAdUnitId = "Rewarded_iOS";
+
+    [SerializeField] Sprite m_enabledSprite;
+    [SerializeField] Sprite m_disabledSprite;
+
+    [SerializeField] UnityEvent m_adPlayed;
+
+    string _adUnitId = null; // This will remain null for unsupported platforms
+
+    private string _gameId;
+
+    void Awake()
+    {
+
+#if UNITY_IOS
+        _adUnitId = _iOSAdUnitId;
+#elif UNITY_ANDROID
+        _adUnitId = _androidAdUnitId;
+#endif
+
+#if (UNITY_ANDROID || UNITY_IOS) // && (!UNITY_EDITOR)
+        InitializeAds();
+#endif
+    }
+
+    public void InitializeAds()
+    {
+        EnablePlayButton(false);
+
+        _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
+        ? _iOSGameId
+        : _androidGameId;
+
+        if (!Advertisement.isInitialized)
+        { 
+            Advertisement.Initialize(_gameId, _testMode, this);
+        }
+        else
+        {
+            LoadRV();
+        }
+    }
+
+    IEnumerator RetryInitialize()
+    {
+
+        yield return new WaitForSeconds(5.0f);
+
+        InitializeAds();
+
+    }
+
+    public void OnInitializationComplete()
+    {
+        Debug.Log("Unity Ads initialization complete.");
+
+        LoadRV();
+    }
+
+    public void OnInitializationFailed(UnityAdsInitializationError error, string message)
+    {
+        Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
+
+        // Try to initialize again
+        StopCoroutine(RetryInitialize());
+        StartCoroutine(RetryInitialize());
+    }
+
+
+    void LoadRV()
+    {
+        // IMPORTANT: Only load content AFTER initialization
+        Advertisement.Load(_adUnitId, this);
+    }
+
+    IEnumerator RetryLoadRV()
+    {
+
+        yield return new WaitForSeconds(5.0f);
+
+        LoadRV();
+
+    }
+
+    public void ShowRV()
+    {
+
+#if (UNITY_ANDROID || UNITY_IOS) // && (!UNITY_EDITOR)
+
+        Advertisement.Show(_adUnitId, this);
+
+#else
+
+        m_adPlayed.Invoke();
+
+#endif
+    }
+
+    IEnumerator RetryShowRV()
+    {
+
+        yield return new WaitForSeconds(5.0f);
+
+        ShowRV();
+
+    }
+
+    public void OnUnityAdsAdLoaded(string a_placementId)
+    {
+        Debug.Log("Ad Loaded: " + a_placementId);
+
+        if (a_placementId.Equals(_adUnitId))
+        {
+            EnablePlayButton(true);
+        }
+        else
+        {
+            EnablePlayButton(false);
+
+            // Try to load again
+            StopCoroutine(RetryLoadRV());
+            StartCoroutine(RetryLoadRV());
+        }
+    }
+
+    public void OnUnityAdsFailedToLoad(string a_placementId, UnityAdsLoadError error, string message)
+    {
+        Debug.Log($"Error loading Ad Unit {a_placementId}: {error.ToString()} - {message}");
+
+        EnablePlayButton(false);
+
+        // Try to load again
+        StopCoroutine(RetryLoadRV());
+        StartCoroutine(RetryLoadRV());
+    }
+
+    public void OnUnityAdsShowFailure(string a_placementId, UnityAdsShowError error, string message)
+    {
+        Debug.Log($"Error showing Ad Unit {a_placementId}: {error.ToString()} - {message}");
+
+        // Try to show again
+        StopCoroutine(RetryShowRV());
+        StartCoroutine(RetryShowRV());
+    }
+
+    public void OnUnityAdsShowComplete(string a_placementId, UnityAdsShowCompletionState showCompletionState)
+    {
+        if (a_placementId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+        {
+            Debug.Log("Unity Ads Rewarded Ad Completed");
+            m_adPlayed.Invoke();
+        }
+        else
+        {
+            EnablePlayButton(false);
+
+            // Try to load again
+            StopCoroutine(RetryLoadRV());
+            StartCoroutine(RetryLoadRV());
+        }
+    }
+
+    public void OnUnityAdsShowStart(string placementId)
+    {
+
+    }
+
+    public void OnUnityAdsShowClick(string placementId)
+    {
+
+    }
+
+    private void EnablePlayButton(bool a_bool)
+    {
+        if (a_bool)
+        { 
+            m_playButton.interactable = true;
+            m_playText.text = m_enabledText;
+            m_playImage.sprite = m_enabledSprite;
+        }
+        else
+        {
+            m_playButton.interactable = false;
+            m_playText.text = m_disabledText;
+            m_playImage.sprite = m_disabledSprite;
+        }
+    }
+}
