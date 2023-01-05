@@ -8,17 +8,21 @@ namespace com.burningthumb.examples
     {
         [Header("Components")]
         public NavMeshAgent agent;
-        public Animator  animator;
-        public TextMesh  healthBar;
+        public Animator animator;
+        public TextMesh healthBar;
         public Transform turret;
 
         [Header("Movement")]
         public float rotationSpeed = 100;
 
+        [Header("Turret")]
+        public KeyCode rotateLeftKey = KeyCode.Q;
+        public KeyCode rotateRightKey = KeyCode.E;
+
         [Header("Firing")]
         public KeyCode shootKey = KeyCode.Space;
         public GameObject projectilePrefab;
-        public Transform  projectileMount;
+        public Transform projectileMount;
 
         [Header("Stats")]
         [SyncVar] public int health = 4;
@@ -81,13 +85,26 @@ namespace com.burningthumb.examples
 
         void RotateTurret()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //    RaycastHit hit;
+            //    if (Physics.Raycast(ray, out hit, 100))
+            //    {
+            //        Debug.DrawLine(ray.origin, hit.point);
+            //        Vector3 lookRotation = new Vector3(hit.point.x, turret.transform.position.y, hit.point.z);
+            //        turret.transform.LookAt(lookRotation);
+            //    }
+
+            bool l_left = Input.GetKey(rotateLeftKey);
+            bool l_right = Input.GetKey(rotateRightKey);
+
+            if (l_left)
             {
-                Debug.DrawLine(ray.origin, hit.point);
-                Vector3 lookRotation = new Vector3(hit.point.x, turret.transform.position.y, hit.point.z);
-                turret.transform.LookAt(lookRotation);
+                turret.transform.Rotate(0, -1 * rotationSpeed * Time.deltaTime, 0);
+            }
+
+            if (l_right)
+            {
+                turret.transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
             }
         }
     }
