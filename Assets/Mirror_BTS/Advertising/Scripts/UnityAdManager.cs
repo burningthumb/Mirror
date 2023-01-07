@@ -13,10 +13,12 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
 
     [SerializeField] Button m_playButton;
     [SerializeField] TMP_Text m_playText;
+    [SerializeField] TMP_Text m_hintText;
     [SerializeField] Image m_playImage;
 
-    [SerializeField] string m_enabledText = "Play";
-    [SerializeField] string m_disabledText = "Waiting...";
+    [SerializeField] string m_enabledString = "Show Ad";
+    [SerializeField] string m_disabledString = "Waiting...";
+    [SerializeField] string m_unsupportedPlatformString = "Play";
 
     [SerializeField] string _androidAdUnitId = "Rewarded_Android";
     [SerializeField] string _iOSAdUnitId = "Rewarded_iOS";
@@ -41,6 +43,11 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
 
 #if (UNITY_ANDROID || UNITY_IOS) // && (!UNITY_EDITOR)
         InitializeAds();
+#else
+        m_playButton.interactable = true;
+        m_playText.text = m_unsupportedPlatformString;
+        m_hintText.text = "";
+        m_playImage.sprite = m_enabledSprite;
 #endif
     }
 
@@ -53,7 +60,7 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
         : _androidGameId;
 
         if (!Advertisement.isInitialized)
-        { 
+        {
             Advertisement.Initialize(_gameId, _testMode, this);
         }
         else
@@ -194,15 +201,15 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
     private void EnablePlayButton(bool a_bool)
     {
         if (a_bool)
-        { 
+        {
             m_playButton.interactable = true;
-            m_playText.text = m_enabledText;
+            m_playText.text = m_enabledString;
             m_playImage.sprite = m_enabledSprite;
         }
         else
         {
             m_playButton.interactable = false;
-            m_playText.text = m_disabledText;
+            m_playText.text = m_disabledString;
             m_playImage.sprite = m_disabledSprite;
         }
     }
