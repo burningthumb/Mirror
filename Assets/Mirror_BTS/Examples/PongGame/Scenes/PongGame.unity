@@ -296,7 +296,7 @@ RectTransform:
   - {fileID: 1144264895}
   - {fileID: 866988080}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -943,7 +943,7 @@ GameObject:
   m_Component:
   - component: {fileID: 473997961}
   m_Layer: 0
-  m_Name: RacketSpawnLeft
+  m_Name: Player1SpawnLeft
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1225,7 +1225,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &578101926
 PrefabInstance:
@@ -1257,22 +1257,22 @@ PrefabInstance:
     - target: {fileID: 8661794362200553113, guid: 8d29721e8b543422f821d8fdd09bc6d7,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8661794362200553113, guid: 8d29721e8b543422f821d8fdd09bc6d7,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8661794362200553113, guid: 8d29721e8b543422f821d8fdd09bc6d7,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8661794362200553113, guid: 8d29721e8b543422f821d8fdd09bc6d7,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 65.79993
       objectReference: {fileID: 0}
     - target: {fileID: 8661794362811213524, guid: 8d29721e8b543422f821d8fdd09bc6d7,
         type: 3}
@@ -2632,14 +2632,18 @@ MonoBehaviour:
   spawnPrefabs:
   - {fileID: 1080679924113744, guid: 583d69adee73c41399c4d41a05b952c5, type: 3}
   timeInterpolationGui: 0
-  leftRacketSpawn: {fileID: 473997961}
-  rightRacketSpawn: {fileID: 1397990096}
+  m_gamePlayers: 2
+  m_player1SpawnLeft: {fileID: 473997961}
+  m_player2SpawnRight: {fileID: 1397990096}
+  m_player3SpawnLeft: {fileID: 1780552112}
+  m_player4SpawnRight: {fileID: 2138671512}
   m_leftScore: {fileID: 1352350033}
   m_rightScore: {fileID: 1575697333}
   m_leftSlider: {fileID: 1798116671}
   m_rightSlider: {fileID: 1745230490}
   m_ballSpawnPos: {x: 0, y: 0, z: 0}
   m_gameController: {fileID: 1066399045}
+  m_activateThese: []
 --- !u!1 &1048851632
 GameObject:
   m_ObjectHideFlags: 0
@@ -3838,7 +3842,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1397990096}
   m_Layer: 0
-  m_Name: RacketSpawnRight
+  m_Name: Player2SpawnRight
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -3857,7 +3861,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1437261725 stripped
 GameObject:
@@ -4552,6 +4556,37 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 578101926}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1780552111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1780552112}
+  m_Layer: 0
+  m_Name: Player3SpawnLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1780552112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780552111}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -15, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1798116670 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8661794362811213524, guid: 8d29721e8b543422f821d8fdd09bc6d7,
@@ -5108,6 +5143,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Theme: {fileID: 11400000, guid: 120d09b5fe1a4475fb5619a9d1b85faa, type: 2}
+--- !u!1 &2138671511
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2138671512}
+  m_Layer: 0
+  m_Name: Player4SpawnRight
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2138671512
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138671511}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &688167007274376620
 PrefabInstance:
   m_ObjectHideFlags: 0
