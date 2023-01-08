@@ -6,6 +6,8 @@ namespace Mirror.Examples.PongGame
     {
 
         public float speed = 30;
+        public float accelleration = 0.1f;
+        public float savedspeed = 30;
         public Vector2 m_direction = Vector2.right;
         public Rigidbody2D rigidbody2d;
 
@@ -84,9 +86,13 @@ namespace Mirror.Examples.PongGame
                 if (!m_pongGameController.GameOver)
                 {
                     rpcPlayBounceSound();
+
+                    // Increase the speed of the ball
+                    speed += accelleration;
                 }
 
             }
+            // Did we hit a score collider
             else if (null != l_scoreCollider)
             {
 
@@ -107,11 +113,15 @@ namespace Mirror.Examples.PongGame
 
                             l_score.rpcSetValue(l_score.Value);
 
+
+                            // Reset the ball speed
+                            speed = savedspeed;
+
                         }
                     }
 
                     if (l_scoreCollider.RepositionOnScore)
-                    { 
+                    {
                         rigidbody2d.position = Vector2.zero;
                     }
 

@@ -169,6 +169,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   speed: 15
+  accelleration: 0.1
+  savedspeed: 15
   m_direction: {x: 1, y: 0}
   rigidbody2d: {fileID: 50354248948880112}
   m_ballBounceSFX: ballBounceSFX
