@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,6 +8,9 @@ namespace com.burningthumb.examples
 {
     public class BTSTank : NetworkBehaviour
     {
+        [SyncVar]
+        int PlayerId = -1;
+
         [Header("Components")]
         public NavMeshAgent agent;
         public Animator animator;
@@ -26,6 +31,23 @@ namespace com.burningthumb.examples
 
         [Header("Stats")]
         [SyncVar] public int health = 4;
+
+        public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>();
+        public static Hashtable m_playerID = new Hashtable();
+
+        public void Start()
+        {
+            ActivePlayers.Add(this);
+            m_playerID.Add(this, m_playerID.Count);
+
+            gameObject.name = "BTS Tank (" + m_playerID[this] + ")";
+        }
+
+        public void OnDestroy()
+        {
+            ActivePlayers.Remove(this);
+            m_playerID.Remove(this);
+        }
 
         void Update()
         {
