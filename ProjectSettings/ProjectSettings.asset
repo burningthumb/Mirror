@@ -161,7 +161,7 @@ PlayerSettings:
     tvOS: com.burningthumb.game.netpong
   buildNumber:
     Standalone: 230108.0
-    iPhone: 230108.0
+    iPhone: 230112.0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 9
