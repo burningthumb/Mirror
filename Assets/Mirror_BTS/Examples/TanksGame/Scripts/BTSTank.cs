@@ -8,6 +8,9 @@ namespace com.burningthumb.examples
 {
     public class BTSTank : NetworkBehaviour
     {
+        public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>();
+        public static Hashtable m_playerID = new Hashtable();
+
         [SyncVar]
         int PlayerId = -1;
 
@@ -32,11 +35,16 @@ namespace com.burningthumb.examples
         [Header("Stats")]
         [SyncVar] public int health = 4;
 
-        public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>();
-        public static Hashtable m_playerID = new Hashtable();
+        public Camera m_mainCamera;
 
         public void Start()
         {
+            // get a reference to our main camera
+			if ((m_mainCamera == null) && (isLocalPlayer))
+			{
+				m_mainCamera = Camera.main;
+			}
+
             ActivePlayers.Add(this);
             m_playerID.Add(this, m_playerID.Count);
 
