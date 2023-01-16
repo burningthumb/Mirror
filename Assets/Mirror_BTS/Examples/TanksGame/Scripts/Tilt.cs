@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class Tilt : MonoBehaviour
 {
+    public Transform m_raycastTransform;
     public LayerMask mask;
     public float speed = 1.0f;
+
+    public void Start()
+    {
+        if (null == m_raycastTransform)
+        {
+            m_raycastTransform = transform;
+        }
+    }
 
     void LateUpdate()
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, -transform.up, out hit))
+        if (Physics.Raycast(m_raycastTransform.position, -m_raycastTransform.up, out hit))
         {
-
-            if ((hit.normal.x < 0) || (hit.normal.y < 0.5) || (hit.normal.z < 0))
-            {
-                Debug.Log(hit.normal);
-            }
-            else
-            {
-                
-                var slopeRotation = Quaternion.FromToRotation(transform.up, hit.normal);
-                transform.rotation = Quaternion.Slerp(transform.rotation, slopeRotation * transform.rotation, speed * Time.deltaTime);
-            }
-
+            var slopeRotation = Quaternion.FromToRotation(m_raycastTransform.up, hit.normal);
+            transform.rotation = Quaternion.Slerp(transform.rotation, slopeRotation * transform.rotation, speed * Time.deltaTime);
         }
+
     }
 }
