@@ -13,6 +13,9 @@ namespace com.burningthumb.examples
         public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>();
         public static Hashtable m_playerID = new Hashtable();
 
+        [Header("Destruction")]
+        public Transform m_explosion;
+
         [Header("Mobile Input")]
         public GameObject m_mobileInput;
 
@@ -167,6 +170,21 @@ namespace com.burningthumb.examples
             animator.SetTrigger("Shoot");
         }
 
+        // this is called on the tank that fired for all observers
+        [ClientRpc]
+        void RpcOnDestroy()
+        {
+            if (m_explosion)
+            {
+                m_explosion.parent = null;
+                m_explosion.gameObject.SetActive(true);
+                if (isServer)
+                {
+                    NetworkServer.Destroy(gameObject);
+                }
+            }
+        }
+
         [ServerCallback]
         void OnTriggerEnter(Collider other)
         {
@@ -174,7 +192,10 @@ namespace com.burningthumb.examples
             {
                 --health;
                 if (health == 0)
-                    NetworkServer.Destroy(gameObject);
+                {
+                    RpcOnDestroy();
+                    //NetworkServer.Destroy(gameObject);
+                }
             }
         }
 
