@@ -170,8 +170,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  m_mainCamera: {fileID: 0}
+  m_cinemachineVirtualCamera: {fileID: 0}
+  m_cinemachineTransposer: {fileID: 0}
   m_cameraMount: {fileID: 1409986980171571830}
+  m_tankFollowOffset: {x: 0, y: 0.2, z: -0.5}
 --- !u!95 &2240606817507776182
 Animator:
   serializedVersion: 5
@@ -380,7 +382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6269521480740701328}
   m_LocalRotation: {x: 0.21775156, y: 0.00000011634876, z: -0.000000025958002, w: 0.97600424}
-  m_LocalPosition: {x: 0, y: 0.00480064, z: -0.011879994}
+  m_LocalPosition: {x: 0, y: 0.0048006317, z: -0.011879981}
   m_LocalScale: {x: 0.01, y: 0.010000002, z: 0.010000003}
   m_ConstrainProportionsScale: 0
   m_Children: []
