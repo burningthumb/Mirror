@@ -14,11 +14,13 @@ public class Tilt : MonoBehaviour
         if (Physics.Raycast(transform.position, -transform.up, out hit))
         {
 
-            if ((hit.normal.x < 0) || (hit.normal.y < 0) || (hit.normal.z < 0))
+            if ((hit.normal.x < 0) || (hit.normal.y < 0.5) || (hit.normal.z < 0))
             {
+                Debug.Log(hit.normal);
             }
             else
             {
+                
                 var slopeRotation = Quaternion.FromToRotation(transform.up, hit.normal);
                 transform.rotation = Quaternion.Slerp(transform.rotation, slopeRotation * transform.rotation, speed * Time.deltaTime);
             }
