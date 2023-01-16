@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class StoredValue : MonoBehaviour
 {
-	public enum StoredValueKey { kUnknown, kOrthographicSize }
+	public enum StoredValueKey { kUnknown, kOrthographicSize, kSunLightIntensity }
 	public enum StoredValueKind { kUnknown, kFloat }
 	public enum SelectableKind { kUnknown, kSlider }
 
