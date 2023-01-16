@@ -31,15 +31,6 @@ public class BTSMountCamera : NetworkBehaviour
             m_saveLookAt = m_cinemachineVirtualCamera.LookAt;
             m_saveOffset = m_cinemachineTransposer.m_FollowOffset;
 
-            //m_saveParent = m_cinemachineVirtualCamera.transform.parent;
-            //m_savePosition = m_cinemachineVirtualCamera.transform.position;
-            //m_saveRotation = m_cinemachineVirtualCamera.transform.rotation;
-
-            //m_cinemachineVirtualCamera.transform.parent = m_cameraMount;
-            //m_cinemachineVirtualCamera.transform.localPosition = Vector3.zero;
-            //m_cinemachineVirtualCamera.transform.localRotation = Quaternion.identity;
-            //m_cinemachineVirtualCamera.transform.parent = null;
-
             m_cinemachineVirtualCamera.Follow = m_cameraMount;
             m_cinemachineVirtualCamera.LookAt = m_cameraMount;
             m_cinemachineTransposer.m_FollowOffset = m_tankFollowOffset;
@@ -57,11 +48,8 @@ public class BTSMountCamera : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            //m_mainCamera.transform.parent = m_saveParent;
             if (m_cinemachineVirtualCamera)
             {
-                //m_cinemachineVirtualCamera.transform.rotation = m_saveRotation;
-                //m_cinemachineVirtualCamera.transform.position = m_savePosition;
                 m_cinemachineVirtualCamera.Follow = m_saveFollow;
                 m_cinemachineVirtualCamera.LookAt = m_saveLookAt;
                 m_cinemachineTransposer.m_FollowOffset = m_saveOffset;

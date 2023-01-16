@@ -73,6 +73,10 @@ MonoBehaviour:
       Value: {fileID: 8300000, guid: 07bb7d063a6b94ee695446ccede28c42, type: 3}
     - Key: scoreSFX
       Value: {fileID: 8300000, guid: 0b5de865586844050b285d4a3fd6b033, type: 3}
+    - Key: ExplosionBig
+      Value: {fileID: 8300000, guid: a62f2be5f31fc4e5bb72af4cc1c43054, type: 3}
+    - Key: Explosion
+      Value: {fileID: 8300000, guid: 7a36f3dd55fa646d1bf44ca02fc73842, type: 3}
   musicBank:
     kvps:
     - Key: menu
