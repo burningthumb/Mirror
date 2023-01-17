@@ -8,8 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: ebf6cb07210334867816fc7ac89f1972
-  m_OcclusionCullingData: {fileID: 36300000, guid: 1de4ab853b6524ba3837f0330a3c1a4e,
+  m_SceneGUID: a9be0633574444027b5c4374ff93c486
+  m_OcclusionCullingData: {fileID: 36300000, guid: 82a102e4e95974b0e8042631736e5017,
     type: 2}
 --- !u!104 &2
 RenderSettings:
@@ -620,6 +620,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Level Forest Pickup
+      objectReference: {fileID: 0}
+    - target: {fileID: 66520491195899896, guid: 39a922eb46ae249aab501dfaf99742c7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3633710329604756142, guid: 39a922eb46ae249aab501dfaf99742c7,
         type: 3}
