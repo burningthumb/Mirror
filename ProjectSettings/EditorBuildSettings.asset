@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Mirror_BTS/Examples/TanksGame/Scenes/Choose.unity
     guid: e5cef77a3f426471593f774ca4c26af6
   - enabled: 1
-    path: Assets/Mirror_BTS/Examples/TanksGame/Scenes/TanksGame.unity
+    path: Assets/Mirror_BTS/Examples/TanksGame/Scenes/Desert.unity
     guid: ebf6cb07210334867816fc7ac89f1972
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
