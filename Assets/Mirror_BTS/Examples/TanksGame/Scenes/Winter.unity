@@ -287,6 +287,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level Winter Pickup
       objectReference: {fileID: 0}
+    - target: {fileID: 6168322174964123039, guid: 63c50150d743942f9956b3715b74cefb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6168322174964123040, guid: 63c50150d743942f9956b3715b74cefb,
         type: 3}
       propertyPath: m_RootOrder
