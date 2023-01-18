@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
+    public enum keys { AdDiceRoll };
+
+    [SerializeField] int m_minDice = 3;
+
     [SerializeField] string _androidGameId;
     [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
@@ -32,8 +36,28 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
 
     private string _gameId;
 
+    private int m_adDiceRoll = 7;
+    private bool m_needToShowAd = false;
+
     void Awake()
     {
+#if (UNITY_ANDROID || UNITY_IOS)
+        m_adDiceRoll = PlayerPrefs.GetInt(keys.AdDiceRoll.ToString(), 6);
+#endif
+
+        if (m_adDiceRoll > m_minDice)
+        {
+            m_needToShowAd = false;
+            PlayerPrefs.DeleteKey(keys.AdDiceRoll.ToString());
+            PlayerPrefs.Save();
+        }
+        else
+        {
+            m_needToShowAd = true;
+        }
+
+
+        Debug.Log(m_adDiceRoll + " " + m_needToShowAd);
 
 #if UNITY_IOS
         _adUnitId = _iOSAdUnitId;
@@ -41,15 +65,19 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
         _adUnitId = _androidAdUnitId;
 #endif
 
-#if (UNITY_ANDROID || UNITY_IOS) // && (!UNITY_EDITOR)
-        InitializeAds();
-#else
-        m_playButton.interactable = true;
-        m_playText.text = m_unsupportedPlatformString;
-        m_hintText.text = "";
-        m_playImage.sprite = m_enabledSprite;
-#endif
-    }
+        if (m_needToShowAd)
+        {
+            InitializeAds();
+        }
+        else
+        {
+            m_playButton.interactable = true;
+            m_playText.text = m_unsupportedPlatformString;
+            m_hintText.text = "";
+            m_playImage.sprite = m_enabledSprite;
+        }
+
+    }
 
     public void InitializeAds()
     {
@@ -113,16 +141,15 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
     public void ShowRV()
     {
 
-#if (UNITY_ANDROID || UNITY_IOS) // && (!UNITY_EDITOR)
-
-        Advertisement.Show(_adUnitId, this);
-
-#else
-
-        m_adPlayed.Invoke();
-
-#endif
-    }
+        if (m_needToShowAd)
+        {
+            Advertisement.Show(_adUnitId, this);
+        }
+        else
+        {
+            m_adPlayed.Invoke();
+        }
+    }
 
     IEnumerator RetryShowRV()
     {
@@ -176,6 +203,9 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
         if (a_placementId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
             Debug.Log("Unity Ads Rewarded Ad Completed");
+            PlayerPrefs.DeleteKey(UnityAdManager.keys.AdDiceRoll.ToString());
+            PlayerPrefs.Save();
+
             m_adPlayed.Invoke();
         }
         else
