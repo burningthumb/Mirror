@@ -5265,18 +5265,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 786744562}
-  m_LocalRotation: {x: -0.0024445225, y: 0.0024195237, z: 0.021932688, w: 0.99975353}
+  m_LocalRotation: {x: -0, y: -0, z: -0.1263133, w: 0.99199045}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 865778358}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: -0.286, y: 0.271, z: 2.513}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -14.513}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 259, y: 7}
-  m_SizeDelta: {x: -1420, y: -109.5561}
+  m_AnchoredPosition: {x: 366, y: -123.59}
+  m_SizeDelta: {x: -1457.1, y: -90.7997}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &786744564
 MonoBehaviour:
@@ -5328,7 +5328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_EffectDistance: {x: 10, y: -10}
   m_UseGraphicAlpha: 1
 --- !u!1 &803296496
@@ -11609,18 +11609,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1902443594}
-  m_LocalRotation: {x: 0.0042162184, y: -0.004073444, z: -0.025307968, w: 0.9996625}
+  m_LocalRotation: {x: -0, y: -0, z: -0.084800385, w: 0.99639803}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 865778358}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0.471, y: -0.479, z: -2.902}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -9.729}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 86.85702, y: -27}
-  m_SizeDelta: {x: -868.4928, y: -15.439}
+  m_AnchoredPosition: {x: 37, y: 76}
+  m_SizeDelta: {x: -1095.1365, y: 37.1736}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1902443596
 MonoBehaviour:
@@ -11642,7 +11642,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1e138be7841c34fd2b02c34a2824041b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1a4d600e8184c4317b9c824a2d98f0c1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11843,18 +11843,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1978521147}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.07515847, w: 0.99717164}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 865778358}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 8.621}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -203, y: 86}
-  m_SizeDelta: {x: -1523, y: -47.184}
+  m_AnchoredPosition: {x: -336, y: -59}
+  m_SizeDelta: {x: -1412.5226, y: 38.3753}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1978521149
 MonoBehaviour:
@@ -11906,7 +11906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_EffectDistance: {x: 10, y: -10}
   m_UseGraphicAlpha: 1
 --- !u!1 &1983777245
