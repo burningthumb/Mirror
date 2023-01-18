@@ -11,13 +11,9 @@ public class BTSMountCamera : NetworkBehaviour
     [SerializeField] Transform m_cameraMount;
     [SerializeField] Vector3 m_tankFollowOffset = Vector3.zero;
 
-    Vector3 m_savePosition;
-    Quaternion m_saveRotation;
-    Transform m_saveParent;
-
-    Transform m_saveFollow;
-    Transform m_saveLookAt;
-    Vector3 m_saveOffset;
+    [SerializeField] Transform m_saveFollow;
+    [SerializeField] Transform m_saveLookAt;
+    [SerializeField] Vector3 m_saveOffset;
 
     // Start is called before the first frame update
     void Start()
