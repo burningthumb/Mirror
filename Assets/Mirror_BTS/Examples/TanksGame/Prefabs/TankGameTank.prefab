@@ -135,8 +135,8 @@ MonoBehaviour:
   syncInterval: 0.1
   m_explosion: {fileID: 3986754218556082156}
   m_mobileInput: {fileID: 6550123947223323596}
-  MoveSpeed: 4
-  SprintSpeed: 6
+  MoveSpeed: 1
+  SprintSpeed: 2
   RotationSpeed: 10
   SpeedChangeRate: 10
   agent: {fileID: 6900008319038825817}

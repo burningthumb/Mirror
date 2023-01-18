@@ -129,6 +129,7 @@ namespace com.burningthumb.examples
             {
                 // set target speed based on move speed, sprint speed and if sprint is pressed
                 float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
+                agent.speed = targetSpeed / MoveSpeed;
 
                 // rotate
                 //float horizontal = Input.GetAxis("Horizontal");
