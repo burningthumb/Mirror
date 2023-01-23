@@ -23,7 +23,7 @@ public class ShowIPAddress : MonoBehaviour
         }
     }
 
-    string GetIPAddress()
+    public static string GetIPAddress()
     { 
          var host = Dns.GetHostEntry(Dns.GetHostName());
 
@@ -31,7 +31,10 @@ public class ShowIPAddress : MonoBehaviour
          {
              if (ip.AddressFamily == AddressFamily.InterNetwork)
              {
+                if (!(ip.GetAddressBytes()[0] == 169))
+                { 
                  return ip.ToString();
+                }
              }
          }
 

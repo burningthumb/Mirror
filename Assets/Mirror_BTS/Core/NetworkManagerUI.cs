@@ -190,11 +190,11 @@ public class NetworkManagerUI : MonoBehaviour
 			// server / client status message
 			if (NetworkServer.active)
 			{
-				serverText.text = "Server: active. Transport: " + Transport.active;
+				serverText.text = "Server: " + ShowIPAddress.GetIPAddress() + " Transport: " + Transport.active;
 			}
 			if (NetworkClient.isConnected)
 			{
-				clientText.text = "Client: Address: " + NetworkManager.singleton.networkAddress;
+				clientText.text = "Client: Address: " + ShowIPAddress.GetIPAddress(); // NetworkManager.singleton.networkAddress;
 			}
 		}
 

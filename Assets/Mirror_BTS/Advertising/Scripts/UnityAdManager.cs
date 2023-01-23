@@ -83,9 +83,15 @@ public class UnityAdManager : MonoBehaviour, IUnityAdsInitializationListener, IU
     {
         EnablePlayButton(false);
 
-        _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
-        ? _iOSGameId
-        : _androidGameId;
+#if UNITY_IOS
+        _gameId = _iOSGameId;
+#elif UNITY_ANDROID
+        _gameId = _androidGameId;
+#endif
+
+        //_gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
+        //? _iOSGameId
+        //: _androidGameId;
 
         if (!Advertisement.isInitialized)
         {
