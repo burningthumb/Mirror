@@ -297,7 +297,7 @@ public class NetworkManagerUI : MonoBehaviour
 			Button l_button = l_buttonGO.GetComponentInChildren<Button>();
 			TMP_Text l_buttonText = l_buttonGO.GetComponentInChildren<TMP_Text>();
 
-			l_buttonGO.transform.parent = ScrollViewContent.transform;
+			l_buttonGO.transform.SetParent(ScrollViewContent.transform, false);
 
 			l_buttonText.text = l_info.EndPoint.Address.ToString(); //  + " (" + l_info.serverId + ")"  ;
 
