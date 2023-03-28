@@ -29,6 +29,12 @@ public class AudioManager : MonoBehaviour
 
 	private void Awake()
 	{
+		if (this != Instance)
+        {
+			Destroy(gameObject);
+			return;
+        }
+
 		InitBanks();
 		musicSource.outputAudioMixerGroup = musicMixer;
 		DontDestroyOnLoad(gameObject);

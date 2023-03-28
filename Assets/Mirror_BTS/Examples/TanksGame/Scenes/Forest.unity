@@ -513,6 +513,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1765439933803145238, guid: 77956b64f7a1b403bb226dc777aa5d40,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765439933803145238, guid: 77956b64f7a1b403bb226dc777aa5d40,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4696984357894927783}
+    - target: {fileID: 1765439933803145238, guid: 77956b64f7a1b403bb226dc777aa5d40,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonYes
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765439933803145238, guid: 77956b64f7a1b403bb226dc777aa5d40,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PanelExit, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1765439933912750693, guid: 77956b64f7a1b403bb226dc777aa5d40,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -610,6 +630,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77956b64f7a1b403bb226dc777aa5d40, type: 3}
+--- !u!114 &4696984357894927783 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1765439934273963689, guid: 77956b64f7a1b403bb226dc777aa5d40,
+    type: 3}
+  m_PrefabInstance: {fileID: 4696984357894927782}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0a7b65015f034e26903a6bcad58dd7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7268539838107847386
 PrefabInstance:
   m_ObjectHideFlags: 0

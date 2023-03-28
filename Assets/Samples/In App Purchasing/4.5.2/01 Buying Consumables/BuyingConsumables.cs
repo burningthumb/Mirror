@@ -101,5 +101,10 @@ namespace Samples.Purchasing.Core.BuyingConsumables
             GoldCountText.text = $"Your Gold: {m_GoldCount}";
             DiamondCountText.text = $"Your Diamonds: {m_DiamondCount}";
         }
+
+        void IStoreListener.OnInitializeFailed(InitializationFailureReason error, string message)
+        {
+            Debug.Log($"In-App Purchasing initialize failed: {error} {message}");
+        }
     }
 }
