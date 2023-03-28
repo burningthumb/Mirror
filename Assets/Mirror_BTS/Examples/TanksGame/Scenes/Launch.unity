@@ -5398,7 +5398,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Watch to Play
+  m_text: 'Watch Ad. Play Game.
 
 '
   m_isRightToLeft: 0
