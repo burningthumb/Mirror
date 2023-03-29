@@ -4774,13 +4774,13 @@ MonoBehaviour:
 
 
     If Find
-    does not show any server IP address (a known issue on iOS) the other players
-    need to enter the IP address of the server under the Client button and then tap
-    Client to connect.
+    does not show any server IP address the other players need to enter the IP address
+    of the server under the Client button and then tap Client to connect.
 
 
-    As players are eliminated they become observers. When
-    only one player is left they are the winner and its time to play a new game.'
+    As
+    players are eliminated they become observers. When only one player is left they
+    are the winner and its time to play a new game.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
