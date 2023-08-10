@@ -36,6 +36,7 @@ namespace com.burningthumb.examples
         public NavMeshAgent agent;
         public Animator animator;
         public TextMesh healthBar;
+        public TextMesh projectileBar;
         public Transform turret;
 
         [Header("Movement")]
@@ -56,6 +57,7 @@ namespace com.burningthumb.examples
 
         [Header("Stats")]
         [SyncVar] public int health = 4;
+        [SyncVar] public int projectile = 4;
 
         public Camera m_mainCamera;
         public StarterAssetsInputs m_input;
@@ -121,8 +123,15 @@ namespace com.burningthumb.examples
         {
 
             // always update health bar.
-            // (SyncVar hook would only update on clients, not on server)
+            // (SyncVar hook would only update on clients, not on server) -- Really ?
             healthBar.text = new string('-', health);
+
+            // always update health bar.
+            // (SyncVar hook would only update on clients, not on server) -- Really ?
+            if (projectile >= 0)
+            {
+                projectileBar.text = new string('o', projectile);
+            }
 
             // movement for local player
             if (isLocalPlayer)
@@ -159,9 +168,34 @@ namespace com.burningthumb.examples
         [Command]
         void CmdFire()
         {
-            GameObject projectile = Instantiate(projectilePrefab, projectileMount.position, projectileMount.rotation);
-            NetworkServer.Spawn(projectile);
-            RpcOnFire();
+            if (projectile > 0)
+            {
+                projectile--;
+                GameObject projectileGO = Instantiate(projectilePrefab, projectileMount.position, projectileMount.rotation);
+                NetworkServer.Spawn(projectileGO);
+                RpcOnFire();
+
+                if (0 == projectile)
+                {
+                    StopAllCoroutines();
+                    StartCoroutine(AutoReload());
+                }
+            }
+            else
+            {
+                projectile = -1;
+                projectileBar.text = "wait";
+                StopAllCoroutines();
+                StartCoroutine(AutoReload());
+            }
+
+
+        }
+
+        IEnumerator AutoReload()
+        {
+            yield return new WaitForSeconds(10.0f);
+            projectile = 4;
         }
 
         // this is called on the tank that fired for all observers
