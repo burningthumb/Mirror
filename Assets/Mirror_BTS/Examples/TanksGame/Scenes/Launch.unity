@@ -4385,8 +4385,8 @@ MonoBehaviour:
   m_classname: AdmobAdManager
   m_minDice: 3
   m_noAdUnitID: unused
-  m_androidAdUnitID: ca-app-pub-3940256099942544/5224354917
-  m_iosAdUnitID: ca-app-pub-3940256099942544/1712485313
+  m_androidAdUnitID: ca-app-pub-4264411535552266/6829974217
+  m_iosAdUnitID: ca-app-pub-4264411535552266/6918955191
   m_playButton: {fileID: 725959387}
   m_playText: {fileID: 16123459}
   m_hintText: {fileID: 671570292}
