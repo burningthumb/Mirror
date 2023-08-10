@@ -110,7 +110,8 @@ public class PostBuildStep
 		{
 			if (!File.Exists(plistFilePath))
 			{ 
-				File.Create(plistFilePath);
+				plist.Create();
+				plist.WriteToFile(plistFilePath);
 				Debug.Log($"Strange bug, had to create Entitlements plist at {plistFilePath}");
 			}
 			// ...just snag the basename from the path.
