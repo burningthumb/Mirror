@@ -56,13 +56,18 @@ namespace com.burningthumb.examples
         public Transform projectileMount;
 
         [Header("Stats")]
-        [SyncVar] public int health = 4;
-        [SyncVar] public int projectile = 4;
+        public int m_maxHealth = 4;
+        public int m_maxProjectile = 4;
+        [SyncVar (hook = nameof(HealthChanged))]
+        public int health = -1;
+        [SyncVar (hook = nameof(ProjectileChanged))]
+        public int projectile = -1;
 
         public Camera m_mainCamera;
         public StarterAssetsInputs m_input;
 
         private const float m_threshold = 0.01f;
+        private Color m_saveProjectileBarColor;
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         private PlayerInput m_playerInput;
@@ -77,8 +82,24 @@ namespace com.burningthumb.examples
         private float m_verticalVelocity;
         private float m_terminalVelocity = 53.0f;
 
+        void HealthChanged(int a_old, int a_new)
+        {
+             healthBar.text = new string('-', a_new);
+
+        }
+
+        void ProjectileChanged (int a_old, int a_new)
+        {
+             if (a_new >= 0)
+            {
+                projectileBar.text = new string('-', a_new);
+            }
+        }
+
         public void Start()
         {
+            m_saveProjectileBarColor = projectileBar.color;
+
             if (isLocalPlayer)
             {
                 if (m_mainCamera == null)
@@ -105,12 +126,16 @@ namespace com.burningthumb.examples
                 }
             }
 
-
-
             ActivePlayers.Add(this);
             m_playerID.Add(this, m_playerID.Count);
 
             gameObject.name = "BTS Tank (" + m_playerID[this] + ")";
+
+            if (isServer)
+            {
+                health = m_maxHealth;
+                projectile = m_maxProjectile;
+            }
         }
 
         public void OnDestroy()
@@ -121,17 +146,6 @@ namespace com.burningthumb.examples
 
         void Update()
         {
-
-            // always update health bar.
-            // (SyncVar hook would only update on clients, not on server) -- Really ?
-            healthBar.text = new string('-', health);
-
-            // always update health bar.
-            // (SyncVar hook would only update on clients, not on server) -- Really ?
-            if (projectile >= 0)
-            {
-                projectileBar.text = new string('o', projectile);
-            }
 
             // movement for local player
             if (isLocalPlayer)
@@ -184,7 +198,8 @@ namespace com.burningthumb.examples
             else
             {
                 projectile = -1;
-                projectileBar.text = "wait";
+                projectileBar.text = "----";
+                projectileBar.color = Color.gray;
                 StopAllCoroutines();
                 StartCoroutine(AutoReload());
             }
@@ -195,7 +210,8 @@ namespace com.burningthumb.examples
         IEnumerator AutoReload()
         {
             yield return new WaitForSeconds(10.0f);
-            projectile = 4;
+            projectile = m_maxProjectile;
+            projectileBar.color = m_saveProjectileBarColor;
         }
 
         // this is called on the tank that fired for all observers
