@@ -12,6 +12,8 @@ public class AdmobAdManager : MonoBehaviour
 {
     public enum keys { AdDiceRoll };
 
+    [SerializeField] bool m_isTesting = false;
+
     // AdMob specific items
     public GameObject AdLoadedStatus;
     private RewardedAd _rewardedAd;
@@ -32,6 +34,9 @@ public class AdmobAdManager : MonoBehaviour
     [SerializeField] string m_disabledString = "Waiting...";
     [SerializeField] string m_unsupportedPlatformString = "Play";
 
+    [SerializeField] string m_showAdHint = "Watch Ad, Play Game";
+    [SerializeField] string m_noAdHint = "";
+
     [SerializeField] Sprite m_enabledSprite;
     [SerializeField] Sprite m_disabledSprite;
 
@@ -42,64 +47,107 @@ public class AdmobAdManager : MonoBehaviour
     private string _gameId;
 
     private int m_adDiceRoll = 7;
-    private bool m_needToShowAd = false;
 
-    private static bool _isInitialized = false;
+    private static bool m_isInitialized = false;
+    private static bool m_needToShowAd = false;
+
+    public static bool IsInitialized
+    {
+        get
+        {
+            return m_isInitialized;
+        }
+
+        set
+        {
+            m_isInitialized = value;
+        }
+    }
+
+    public static bool NeedToShowAd
+    {
+        get
+        {
+            return m_needToShowAd;
+        }
+
+        set
+        {
+            m_needToShowAd = value;
+        }
+    }
+
+    //void OnApplicationPause(bool isPaused)
+    //{
+    //    Debug.Log($"{m_classname}:  OnApplicationPause = " + isPaused);
+    //}
 
     void Awake()
     {
+        Debug.Log($"{m_classname} Awake");
+
+        // On Android, Unity is paused when displaying interstitial or rewarded video.
+        // This setting makes iOS behave consistently with Android.
+#if UNITY_IOS
+        MobileAds.SetiOSAppPauseOnBackground(true);
+#endif
+
+        // When true all events raised by GoogleMobileAds will be raised
+        // on the Unity main thread. The default value is false.
+        // https://developers.google.com/admob/unity/quick-start#raise_ad_events_on_the_unity_main_thread
+#if (UNITY_ANDROID || UNITY_IOS)
+        MobileAds.RaiseAdEventsOnUnityMainThread = true;
+#endif
+
 #if (UNITY_ANDROID || UNITY_IOS)
         m_adDiceRoll = PlayerPrefs.GetInt(keys.AdDiceRoll.ToString(), 6);
 #endif
 
         if (m_adDiceRoll > m_minDice)
         {
-            m_needToShowAd = false;
+            NeedToShowAd = false;
             PlayerPrefs.DeleteKey(keys.AdDiceRoll.ToString());
             PlayerPrefs.Save();
         }
         else
         {
-            m_needToShowAd = true;
+            NeedToShowAd = true;
         }
 
 #if (!(UNITY_ANDROID || UNITY_IOS)) || (UNITY_EDITOR)
-        m_needToShowAd = false;
+        NeedToShowAd = false;
 #endif
-       // Testing
-       //m_needToShowAd = true;
+        // Testing
+        if (m_isTesting)
+        { 
+            NeedToShowAd = true;
+        }
     }
 
-    public void Start()
+   // public void Start()
+   public void StartFromGDPRManager()
     {
-        // On Android, Unity is paused when displaying interstitial or rewarded video.
-        // This setting makes iOS behave consistently with Android.
-        MobileAds.SetiOSAppPauseOnBackground(true);
+        Debug.Log($"{m_classname} StartFromGDPRManager");
 
-        // When true all events raised by GoogleMobileAds will be raised
-        // on the Unity main thread. The default value is false.
-        // https://developers.google.com/admob/unity/quick-start#raise_ad_events_on_the_unity_main_thread
-        MobileAds.RaiseAdEventsOnUnityMainThread = true;
+        //        Debug.Log(m_adDiceRoll + " " + NeedToShowAd);
 
-        //        Debug.Log(m_adDiceRoll + " " + m_needToShowAd);
-
-        if (m_needToShowAd)
+        if (NeedToShowAd)
         {
             InitializeAds();
         }
         else
         {
-            m_playButton.interactable = true;
-            m_playText.text = m_unsupportedPlatformString;
-            m_hintText.text = "";
-            m_playImage.sprite = m_enabledSprite;
+            DoNotInitializeAds();
         }
 
     }
 
-    void OnApplicationPause(bool isPaused)
+    public void DoNotInitializeAds()
     {
-        Debug.Log($"{m_classname}:  OnApplicationPause = " + isPaused);
+        m_playButton.interactable = true;
+        m_playText.text = m_unsupportedPlatformString;
+        m_hintText.text = m_noAdHint;
+        m_playImage.sprite = m_enabledSprite;
     }
 
     public void InitializeAds()
@@ -114,7 +162,7 @@ public class AdmobAdManager : MonoBehaviour
         _adUnitId = m_noAdUnitID;
 #endif
 
-        if (!_isInitialized)
+        if (!IsInitialized)
         {
             // SDK init
             Debug.Log($"{m_classname}: Invoking InitializeGoogleMobileAds()");
@@ -132,7 +180,7 @@ public class AdmobAdManager : MonoBehaviour
     private void InitializeGoogleMobileAds()
     {
         // The Google Mobile Ads Unity plugin needs to be run only once and before loading any ads.
-        if (_isInitialized)
+        if (IsInitialized)
         {
             return;
         }
@@ -144,7 +192,7 @@ public class AdmobAdManager : MonoBehaviour
             if (initstatus == null)
             {
                 Debug.LogError($"{m_classname}: Google Mobile Ads initialization failed.");
-                _isInitialized = false;
+                IsInitialized = false;
                 return;
             }
 
@@ -159,7 +207,7 @@ public class AdmobAdManager : MonoBehaviour
             }
 
             Debug.Log($"{m_classname}: Google Mobile Ads initialization complete.");
-            _isInitialized = true;
+            IsInitialized = true;
             LoadRV();
         });
     }
@@ -334,9 +382,9 @@ public class AdmobAdManager : MonoBehaviour
 
     public void ShowRV()
     {
-        Debug.Log($"{m_classname}: m_needToShowAd = {m_needToShowAd}");
+        Debug.Log($"{m_classname}: NeedToShowAd = {NeedToShowAd}");
 
-        if (m_needToShowAd)
+        if (NeedToShowAd)
         {
             ShowAd();
         }
@@ -361,12 +409,14 @@ public class AdmobAdManager : MonoBehaviour
         {
             m_playButton.interactable = true;
             m_playText.text = m_enabledString;
+            m_hintText.text = m_showAdHint;
             m_playImage.sprite = m_enabledSprite;
         }
         else
         {
             m_playButton.interactable = false;
             m_playText.text = m_disabledString;
+            m_hintText.text = m_noAdHint;
             m_playImage.sprite = m_disabledSprite;
         }
     }
