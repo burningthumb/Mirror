@@ -160,6 +160,7 @@ public class PostBuildStep
 		foreach (var targetGuid in new[] { mainTargetGuid, project.GetUnityFrameworkTargetGuid() })
 		{
 			project.SetBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "NO");
+			project.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-ld_classic");
 		}
 
 		project.SetBuildProperty(mainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
