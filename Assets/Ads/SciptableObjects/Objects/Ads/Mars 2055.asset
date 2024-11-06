@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc92068c3789e4906af59cb0fd492025, type: 3}
+  m_Name: Mars 2055
+  m_EditorClassIdentifier: 
+  m_title: Mars 2055
+  m_subtitle: www.burningthumb.com
+  m_blurb: "You wake up, alone\u2026on Mars? Are you doomed to die in this lonely
+    and desolate place? When you\u2019ve pieced together the entire puzzle, then
+    you can escape."
+  m_adSprite: {fileID: 21300000, guid: 52e9b08a5cb624c26b734d6a93268379, type: 3}
+  m_url: https://burningthumb.com/mars2055

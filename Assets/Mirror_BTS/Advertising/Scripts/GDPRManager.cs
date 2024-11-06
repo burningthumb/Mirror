@@ -8,12 +8,14 @@ public class GDPRManager : MonoBehaviour
 {
     [SerializeField] bool m_isTesting = false;
     [SerializeField] string m_classname = "GDPRManager";
-    [SerializeField] AdmobAdManager m_admobAdManager;
+    [SerializeField] AdmobAdSingleton m_admobAdSingleton;
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log($"{m_classname} Start m_isTesting = {m_isTesting}");
+        Debug.Log($"{m_classname} Start");
+
+#if (UNITY_IOS || UNITY_ANDROID)
 
         if (m_isTesting)
         {
@@ -30,9 +32,16 @@ public class GDPRManager : MonoBehaviour
         }
         };
 
-        if (null == m_admobAdManager)
+        if (null == m_admobAdSingleton)
         {
-            m_admobAdManager = GetComponent<AdmobAdManager>();
+            if (null != AdmobAdSingleton.SharedInstance)
+			{
+                m_admobAdSingleton = AdmobAdSingleton.SharedInstance;
+			}
+            else
+            { 
+                m_admobAdSingleton = FindFirstObjectByType<AdmobAdSingleton>();
+            }
         }
 
         // Set tag for under age of consent.
@@ -59,6 +68,9 @@ public class GDPRManager : MonoBehaviour
 
         // Check the current consent information status.
         ConsentInformation.Update(request, OnConsentInfoUpdated);
+#else
+    m_admobAdSingleton.gameObject.SetActive(true);
+#endif
 
 
     }
@@ -104,25 +116,13 @@ public class GDPRManager : MonoBehaviour
             //    });
             //}
 
-            if (!ConsentInformation.CanRequestAds())
-            {
-                AdmobAdManager.NeedToShowAd = false;
-            }
-
-            m_admobAdManager.StartFromGDPRManager();
-
+            m_admobAdSingleton.gameObject.SetActive(ConsentInformation.CanRequestAds());
 
         });
 
     }
 
-    public void Update()
-    {
-        if (null != m_admobAdManager)
-        {
 
-        }
-    }
 
 
 }
