@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BTSAd : MonoBehaviour
 {
-    [SerializeField] Button m_buttonMoreInfo;
+   [SerializeField] Button m_buttonMoreInfo;
    [SerializeField] Button m_buttonContinue;
 
 	public void OnEnable()

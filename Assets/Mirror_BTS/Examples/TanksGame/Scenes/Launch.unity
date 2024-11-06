@@ -7016,8 +7016,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 561496986}
-        m_TargetAssemblyTypeName: AdmobAdManager, Assembly-CSharp
+      - m_Target: {fileID: 1733470598}
+        m_TargetAssemblyTypeName: AdmobAdSingletonUI, Assembly-CSharp
         m_MethodName: ShowRV
         m_Mode: 1
         m_Arguments:
@@ -14426,6 +14426,79 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1733470597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1733470599}
+  - component: {fileID: 1733470598}
+  m_Layer: 0
+  m_Name: AdmobSingletonUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1733470598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733470597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9fd5759cb3ff4a72b1baa75fb04bcd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_classname: AdmobAdSingletonUI
+  m_minDice: 99
+  m_playButton: {fileID: 725959387}
+  m_playText: {fileID: 16123459}
+  m_hintText: {fileID: 671570292}
+  m_playImage: {fileID: 1997923761}
+  m_enabledString: Show Ad
+  m_disabledString: Waiting...
+  m_unsupportedPlatformString: Play
+  m_playAdHint: Watch Ad, Play Game
+  m_enabledSprite: {fileID: 1328694606, guid: 20c43b43e14ae42449c36ee3459a382d, type: 3}
+  m_disabledSprite: {fileID: -986653582, guid: 20c43b43e14ae42449c36ee3459a382d, type: 3}
+  m_adPlayed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 250986670}
+        m_TargetAssemblyTypeName: SimpleLevelManager, Assembly-CSharp
+        m_MethodName: LoadGameScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Choose
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_adAvailableButtonInteractable: 1
+  m_adNotAvailableButtonInteractable: 0
+--- !u!4 &1733470599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733470597}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 561, y: 63.875, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1739709551
 GameObject:
   m_ObjectHideFlags: 0
@@ -15875,12 +15948,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e32d2ab36c040fd9684d6ee79cb8a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ads: []
-  m_titleText: {fileID: 0}
-  m_subtitleText: {fileID: 0}
-  m_blurbText: {fileID: 0}
-  m_image: {fileID: 0}
-  m_btsOpenWebSite: {fileID: 0}
+  m_ads:
+  - {fileID: 11400000, guid: cf3b3d14877b946f28d5b71e36fa25a0, type: 2}
+  - {fileID: 11400000, guid: 5326711aaf6ca47529eead5da690b637, type: 2}
+  - {fileID: 11400000, guid: e6b9b81421ca54b15b428cf3cc2e9bac, type: 2}
+  - {fileID: 11400000, guid: 6e531b1a45318415f87d3930fdb7cb62, type: 2}
+  - {fileID: 11400000, guid: 0d97eeef4a8ed4dc0965549fc2689bc6, type: 2}
+  - {fileID: 11400000, guid: 30b623ccf6a094a8f99ae77fe23d770a, type: 2}
+  m_titleText: {fileID: 597092851}
+  m_subtitleText: {fileID: 763479576}
+  m_blurbText: {fileID: 512757627}
+  m_image: {fileID: 633304220}
+  m_btsOpenWebSite: {fileID: 2005500856}
 --- !u!114 &1973148081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15939,7 +16018,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 10
@@ -16474,6 +16553,7 @@ GameObject:
   - component: {fileID: 2005500851}
   - component: {fileID: 2005500850}
   - component: {fileID: 2005500849}
+  - component: {fileID: 2005500856}
   m_Layer: 5
   m_Name: More
   m_TagString: Untagged
@@ -16601,16 +16681,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 561496986}
-        m_TargetAssemblyTypeName: AdmobAdManager, Assembly-CSharp
-        m_MethodName: ShowRV
-        m_Mode: 1
+      - m_Target: {fileID: 2005500856}
+        m_TargetAssemblyTypeName: BTSOpenWebSite, Assembly-CSharp
+        m_MethodName: OpenURL
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene
+          m_StringArgument: https://burningthumb.com/mars2055
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2005500854
@@ -16651,6 +16731,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2005500847}
   m_CullTransparentMesh: 1
+--- !u!114 &2005500856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005500847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f152dd37e72542108f4bf240732bb72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2054392601
 GameObject:
   m_ObjectHideFlags: 0
@@ -17572,3 +17664,4 @@ SceneRoots:
   - {fileID: 937947927}
   - {fileID: 1976130161}
   - {fileID: 561496987}
+  - {fileID: 1733470599}
