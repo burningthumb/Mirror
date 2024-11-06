@@ -19,7 +19,7 @@ public class EscKey : MonoBehaviour
 
             foreach (Canvas l_canvas in m_canvases)
             {
-                l_canvas.gameObject.SetActive(false);
+                l_canvas.gameObject.SetActive(true);
             }
         }
 
