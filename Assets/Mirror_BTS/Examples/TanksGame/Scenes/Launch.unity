@@ -597,16 +597,28 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 561496986}
-        m_TargetAssemblyTypeName: AdmobAdManager, Assembly-CSharp
-        m_MethodName: ShowRV
-        m_Mode: 1
+      - m_Target: {fileID: 502072262}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene
+          m_StringArgument: Choose
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 250986670}
+        m_TargetAssemblyTypeName: SimpleLevelManager, Assembly-CSharp
+        m_MethodName: LoadGameScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Choose
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &66830570
@@ -3655,14 +3667,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2463f34f4de9443d7b9948b49d53d24b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dba99d09e5bb949c3befc1118f6e95b4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5162,115 +5174,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!1 &561496984
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 561496987}
-  - component: {fileID: 561496986}
-  - component: {fileID: 561496985}
-  - component: {fileID: 561496988}
-  m_Layer: 0
-  m_Name: AdmobAdManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &561496985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561496984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f0c6ccc637064b31981616bfc724dcb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  contextScreenPrefab: {fileID: 114597661633457500, guid: fa79c615e83e14e2fbc0f083dee317e0,
-    type: 3}
-  m_mainCanvas: {fileID: 0}
---- !u!114 &561496986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561496984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6ddbc272ef5f4dccbce9b2a949cf52e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_isTesting: 0
-  AdLoadedStatus: {fileID: 0}
-  m_classname: AdmobAdManager
-  m_minDice: 3
-  m_noAdUnitID: unused
-  m_androidAdUnitID: ca-app-pub-4264411535552266/6829974217
-  m_iosAdUnitID: ca-app-pub-4264411535552266/6918955191
-  m_playButton: {fileID: 725959387}
-  m_playText: {fileID: 16123459}
-  m_hintText: {fileID: 671570292}
-  m_playImage: {fileID: 1997923761}
-  m_enabledString: Show Ad
-  m_disabledString: Waiting...
-  m_unsupportedPlatformString: Play
-  m_showAdHint: Watch Ad, Play Game
-  m_noAdHint: 
-  m_enabledSprite: {fileID: 1328694606, guid: 20c43b43e14ae42449c36ee3459a382d, type: 3}
-  m_disabledSprite: {fileID: -986653582, guid: 20c43b43e14ae42449c36ee3459a382d, type: 3}
-  m_adPlayed:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 250986670}
-        m_TargetAssemblyTypeName: SimpleLevelManager, Assembly-CSharp
-        m_MethodName: LoadGameScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Choose
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!4 &561496987
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561496984}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -26.201164, y: 2.2422628, z: 39.01516}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &561496988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561496984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bcd60c2a6e84145b8834f49a8fa730, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_isTesting: 0
-  m_classname: GDPRManager
-  m_admobAdSingleton: {fileID: 0}
 --- !u!1 &568795636
 GameObject:
   m_ObjectHideFlags: 0
@@ -6929,7 +6832,7 @@ GameObject:
   - component: {fileID: 725959390}
   - component: {fileID: 725959392}
   m_Layer: 5
-  m_Name: Play
+  m_Name: Play Ad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7016,6 +6919,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 717954431}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Scene
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1733470598}
         m_TargetAssemblyTypeName: AdmobAdSingletonUI, Assembly-CSharp
         m_MethodName: ShowRV
@@ -7025,7 +6940,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &725959388
@@ -14470,6 +14385,18 @@ MonoBehaviour:
   m_adPlayed:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 717954431}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Choose
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 250986670}
         m_TargetAssemblyTypeName: SimpleLevelManager, Assembly-CSharp
         m_MethodName: LoadGameScene
@@ -17663,5 +17590,4 @@ SceneRoots:
   - {fileID: 250986668}
   - {fileID: 937947927}
   - {fileID: 1976130161}
-  - {fileID: 561496987}
   - {fileID: 1733470599}
