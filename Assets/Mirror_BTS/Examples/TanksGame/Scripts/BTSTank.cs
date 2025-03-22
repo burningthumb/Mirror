@@ -96,7 +96,7 @@ namespace com.burningthumb.examples
             }
         }
 
-        public void Start()
+        public virtual void Start()
         {
             m_saveProjectileBarColor = projectileBar.color;
 
@@ -144,7 +144,7 @@ namespace com.burningthumb.examples
             m_playerID.Remove(this);
         }
 
-        void Update()
+        public virtual void Update()
         {
 
             // movement for local player
@@ -180,7 +180,7 @@ namespace com.burningthumb.examples
 
         // this is called on the server
         [Command]
-        void CmdFire()
+        public void CmdFire()
         {
             if (projectile > 0)
             {
