@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,11 +17,16 @@ namespace com.burningthumb.examples
         public float decisionInterval = 1f;
         [Tooltip("Patrol waypoints (if empty, tank will move randomly)")]
         public Transform[] patrolPoints;
+        [Tooltip("Minimum distance to maintain from target")]
+        public float minEngageDistance = 5f;
 
         private BTSTank targetEnemy;
         private int currentPatrolIndex = 0;
         private float lastDecisionTime;
         private Vector3 randomDestination;
+
+        // Event for when tank is destroyed
+        public event Action<BTSAITank> OnTankDestroyed;
 
         public override void Start()
         {
@@ -34,32 +40,41 @@ namespace com.burningthumb.examples
                     agent.SetDestination(randomDestination);
                 }
                 lastDecisionTime = Time.time;
+
+                if (!isLocalPlayer)
+                {
+                    if (m_mobileInput != null) m_mobileInput.SetActive(false);
+                }
             }
         }
 
         public override void Update()
         {
-            base.Update();
+            if (!isServer) return;
 
-            if (!isServer) return; // Only run AI logic on server
-
-            // Clear player input since this is an AI tank
-            m_input.move = Vector2.zero;
-            m_input.look = Vector2.zero;
-            m_input.jump = false;
-            m_input.sprint = false;
-
-            // Make decisions at regular intervals
             if (Time.time - lastDecisionTime >= decisionInterval)
             {
                 MakeAIDecision();
                 lastDecisionTime = Time.time;
             }
 
-            // Handle turret aiming if we have a target
             if (targetEnemy != null)
             {
                 AimAtTarget();
+            }
+
+            animator.SetBool("Moving", agent.velocity != Vector3.zero);
+        }
+
+        // Hook into the existing HealthChanged method to detect destruction
+        public override void HealthChanged(int oldHealth, int newHealth)
+        {
+            base.HealthChanged(oldHealth, newHealth); // Call base to update health bar
+            
+            if (isServer && newHealth <= 0)
+            {
+                OnTankDestroyed?.Invoke(this);
+                // Destruction is already handled in BTSTank's OnTriggerEnter
             }
         }
 
@@ -69,10 +84,21 @@ namespace com.burningthumb.examples
 
             if (targetEnemy != null)
             {
-                agent.SetDestination(transform.position);
-                if (Vector3.Distance(transform.position, targetEnemy.transform.position) <= firingRange)
+                float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.transform.position);
+                
+                if (distanceToTarget > minEngageDistance)
                 {
-                    CmdFire();
+                    Vector3 pursuePosition = targetEnemy.transform.position;
+                    agent.SetDestination(pursuePosition);
+                }
+                else
+                {
+                    agent.SetDestination(transform.position);
+                }
+
+                if (distanceToTarget <= firingRange)
+                {
+                    ServerFire();
                 }
             }
             else
@@ -88,7 +114,7 @@ namespace com.burningthumb.examples
 
             foreach (BTSTank potentialTarget in ActivePlayers)
             {
-                if (potentialTarget == this) continue;
+                if (potentialTarget == this || !potentialTarget.isLocalPlayer) continue;
 
                 float distance = Vector3.Distance(transform.position, potentialTarget.transform.position);
                 if (distance <= detectionRange && distance < minDistance)
@@ -119,13 +145,11 @@ namespace com.burningthumb.examples
                     agent.SetDestination(randomDestination);
                 }
             }
-
-            animator.SetBool("Moving", agent.velocity != Vector3.zero);
         }
 
         Vector3 GetRandomPosition()
         {
-            Vector3 randomPoint = transform.position + Random.insideUnitSphere * 20f;
+            Vector3 randomPoint = transform.position + UnityEngine.Random.insideUnitSphere * 20f;
             UnityEngine.AI.NavMesh.SamplePosition(randomPoint, out UnityEngine.AI.NavMeshHit hit, 20f, UnityEngine.AI.NavMesh.AllAreas);
             return hit.position;
         }

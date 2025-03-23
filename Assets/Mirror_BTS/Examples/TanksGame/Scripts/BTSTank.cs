@@ -10,7 +10,8 @@ namespace com.burningthumb.examples
 {
     public class BTSTank : NetworkBehaviour
     {
-        public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>();
+        public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>(); // All tanks
+        public static HashSet<BTSTank> PlayerTanks = new HashSet<BTSTank>();  // Only player-controlled tanks
         public static Hashtable m_playerID = new Hashtable();
 
         [Header("Destruction")]
@@ -58,9 +59,9 @@ namespace com.burningthumb.examples
         [Header("Stats")]
         public int m_maxHealth = 4;
         public int m_maxProjectile = 4;
-        [SyncVar (hook = nameof(HealthChanged))]
+        [SyncVar(hook = nameof(HealthChanged))]
         public int health = -1;
-        [SyncVar (hook = nameof(ProjectileChanged))]
+        [SyncVar(hook = nameof(ProjectileChanged))]
         public int projectile = -1;
 
         public Camera m_mainCamera;
@@ -82,15 +83,14 @@ namespace com.burningthumb.examples
         private float m_verticalVelocity;
         private float m_terminalVelocity = 53.0f;
 
-        void HealthChanged(int a_old, int a_new)
+        public virtual void HealthChanged(int a_old, int a_new)
         {
-             healthBar.text = new string('-', a_new);
-
+            healthBar.text = new string('-', a_new);
         }
 
-        void ProjectileChanged (int a_old, int a_new)
+        void ProjectileChanged(int a_old, int a_new)
         {
-             if (a_new >= 0)
+            if (a_new >= 0)
             {
                 projectileBar.text = new string('-', a_new);
             }
@@ -112,7 +112,7 @@ namespace com.burningthumb.examples
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
                 m_playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+                Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
                 if (null != m_mobileInput)
@@ -122,13 +122,14 @@ namespace com.burningthumb.examples
                     {
                         m_mobileInput.SetActive(true);
                     }
-
                 }
+
+                PlayerTanks.Add(this); // Add to player-specific set
+                Debug.Log($"Player tank initialized. Name: {gameObject.name}, isLocalPlayer: {isLocalPlayer}");
             }
 
             ActivePlayers.Add(this);
             m_playerID.Add(this, m_playerID.Count);
-
             gameObject.name = "BTS Tank (" + m_playerID[this] + ")";
 
             if (isServer)
@@ -141,33 +142,32 @@ namespace com.burningthumb.examples
         public void OnDestroy()
         {
             ActivePlayers.Remove(this);
+            PlayerTanks.Remove(this);
             m_playerID.Remove(this);
         }
 
         public virtual void Update()
         {
-
-            // movement for local player
             if (isLocalPlayer)
             {
-                // set target speed based on move speed, sprint speed and if sprint is pressed
+                // Debug player state
+                Debug.Log($"Player Update - Move: {m_input.move}, Jump: {m_input.jump}, Camera: {(m_mainCamera != null ? m_mainCamera.name : "null")}");
+
+                // Set target speed based on move speed, sprint speed and if sprint is pressed
                 float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
                 agent.speed = targetSpeed / MoveSpeed;
 
-                // rotate
-                //float horizontal = Input.GetAxis("Horizontal");
+                // Rotate
                 float horizontal = m_input.move.x;
                 transform.Rotate(0, horizontal * rotationSpeed * Time.deltaTime, 0);
 
-                // move
-                //float vertical = Input.GetAxis("Vertical");
+                // Move
                 float vertical = m_input.move.y;
                 Vector3 forward = transform.TransformDirection(Vector3.forward);
                 agent.velocity = forward * Mathf.Max(vertical, 0) * agent.speed;
                 animator.SetBool("Moving", agent.velocity != Vector3.zero);
 
-                // shoot
-                //if (Input.GetKeyDown(shootKey))
+                // Shoot
                 if (m_input.jump)
                 {
                     m_input.jump = false;
@@ -178,9 +178,9 @@ namespace com.burningthumb.examples
             }
         }
 
-        // this is called on the server
-        [Command]
-        public void CmdFire()
+        // Server-side firing method for AI
+        [Server]
+        protected void ServerFire()
         {
             if (projectile > 0)
             {
@@ -203,8 +203,12 @@ namespace com.burningthumb.examples
                 StopAllCoroutines();
                 StartCoroutine(AutoReload());
             }
+        }
 
-
+        [Command]
+        void CmdFire()
+        {
+            ServerFire(); // Delegate to server-side method
         }
 
         IEnumerator AutoReload()
@@ -214,14 +218,12 @@ namespace com.burningthumb.examples
             projectileBar.color = m_saveProjectileBarColor;
         }
 
-        // this is called on the tank that fired for all observers
         [ClientRpc]
         void RpcOnFire()
         {
             animator.SetTrigger("Shoot");
         }
 
-        // this is called on the tank that fired for all observers
         [ClientRpc]
         void RpcOnDestroy()
         {
@@ -245,7 +247,6 @@ namespace com.burningthumb.examples
                 if (health == 0)
                 {
                     RpcOnDestroy();
-                    //NetworkServer.Destroy(gameObject);
                 }
             }
         }
@@ -257,7 +258,7 @@ namespace com.burningthumb.examples
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
                 return m_playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+                return false;
 #endif
             }
         }
@@ -271,55 +272,16 @@ namespace com.burningthumb.examples
 
         void RotateTurret()
         {
-
-            // if there is an input
             if (m_input.look.sqrMagnitude >= m_threshold)
             {
-                //Don't multiply mouse input by Time.deltaTime
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
                 m_cinemachineTargetPitch += m_input.look.y * RotationSpeed * deltaTimeMultiplier;
                 m_rotationVelocity = m_input.look.x * RotationSpeed * deltaTimeMultiplier;
 
-                // clamp our pitch rotation
                 m_cinemachineTargetPitch = ClampAngle(m_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-                // Update Cinemachine camera target pitch
-                //CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(m_cinemachineTargetPitch, 0.0f, 0.0f);
-
-                // rotate the player left and right
                 turret.transform.Rotate(Vector3.up * m_rotationVelocity);
             }
-
-            //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //    RaycastHit hit;
-            //    if (Physics.Raycast(ray, out hit, 100))
-            //    {
-            //        Debug.DrawLine(ray.origin, hit.point);
-            //        Vector3 lookRotation = new Vector3(hit.point.x, turret.transform.position.y, hit.point.z);
-            //        turret.transform.LookAt(lookRotation);
-            //    }
-
-            //bool l_left = Input.GetKey(rotateLeftKey);
-            //bool l_right = Input.GetKey(rotateRightKey);
-
-
-            // ----------------------- The old way
-
-            //bool l_left = (m_input.look.x < -0.05f);
-            //bool l_right = (m_input.look.x > 0.05f);
-
-            //Debug.Log(m_input.look.x);
-
-            //if (l_left)
-            //{
-            //    turret.transform.Rotate(0, -1 * rotationSpeed * Time.deltaTime, 0);
-            //}
-
-            //if (l_right)
-            //{
-            //    turret.transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
-            //}
         }
     }
 }
