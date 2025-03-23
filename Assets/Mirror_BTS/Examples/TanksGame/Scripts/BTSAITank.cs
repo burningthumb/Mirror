@@ -19,13 +19,22 @@ namespace com.burningthumb.examples
         public Transform[] patrolPoints;
         [Tooltip("Minimum distance to maintain from target")]
         public float minEngageDistance = 5f;
+        [Tooltip("Delay in seconds before attacking a newly detected target")]
+        public float attackDelay = 3f;
+        [Tooltip("Distance to flee when out of projectiles")]
+        public float fleeDistance = 10f; // New setting for how far to run away
+
+        [Header("Line of Sight")]
+        [Tooltip("Layer mask for line of sight checks (exclude tank itself)")]
+        public LayerMask losLayerMask;
 
         private BTSTank targetEnemy;
         private int currentPatrolIndex = 0;
         private float lastDecisionTime;
         private Vector3 randomDestination;
+        private float targetDetectionTime;
+        private bool isDelayingAttack;
 
-        // Event for when tank is destroyed
         public event Action<BTSAITank> OnTankDestroyed;
 
         public override void Start()
@@ -40,6 +49,8 @@ namespace com.burningthumb.examples
                     agent.SetDestination(randomDestination);
                 }
                 lastDecisionTime = Time.time;
+                targetDetectionTime = 0f;
+                isDelayingAttack = false;
 
                 if (!isLocalPlayer)
                 {
@@ -66,45 +77,104 @@ namespace com.burningthumb.examples
             animator.SetBool("Moving", agent.velocity != Vector3.zero);
         }
 
-        // Hook into the existing HealthChanged method to detect destruction
         public override void HealthChanged(int oldHealth, int newHealth)
         {
-            base.HealthChanged(oldHealth, newHealth); // Call base to update health bar
+            base.HealthChanged(oldHealth, newHealth);
             
             if (isServer && newHealth <= 0)
             {
                 OnTankDestroyed?.Invoke(this);
-                // Destruction is already handled in BTSTank's OnTriggerEnter
             }
         }
 
         void MakeAIDecision()
         {
-            targetEnemy = FindNearestEnemy();
+            BTSTank newTarget = FindNearestEnemy();
+
+            if (newTarget != targetEnemy)
+            {
+                targetEnemy = newTarget;
+                if (targetEnemy != null)
+                {
+                    targetDetectionTime = Time.time;
+                    isDelayingAttack = true;
+                }
+                else
+                {
+                    isDelayingAttack = false;
+                }
+            }
 
             if (targetEnemy != null)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.transform.position);
-                
-                if (distanceToTarget > minEngageDistance)
-                {
-                    Vector3 pursuePosition = targetEnemy.transform.position;
-                    agent.SetDestination(pursuePosition);
-                }
-                else
-                {
-                    agent.SetDestination(transform.position);
-                }
 
-                if (distanceToTarget <= firingRange)
+                if (projectile <= 0) // Out of projectiles, flee
                 {
-                    ServerFire();
+                    Vector3 fleeDirection = (transform.position - targetEnemy.transform.position).normalized;
+                    Vector3 fleePosition = transform.position + fleeDirection * fleeDistance;
+                    if (UnityEngine.AI.NavMesh.SamplePosition(fleePosition, out UnityEngine.AI.NavMeshHit hit, fleeDistance, UnityEngine.AI.NavMesh.AllAreas))
+                    {
+                        agent.SetDestination(hit.position);
+                    }
+                    else
+                    {
+                        Patrol(); // Fallback to patrol if no valid flee position
+                    }
+                }
+                else // Normal behavior when projectiles are available
+                {
+                    if (distanceToTarget > minEngageDistance)
+                    {
+                        Vector3 pursuePosition = targetEnemy.transform.position;
+                        agent.SetDestination(pursuePosition);
+                    }
+                    else
+                    {
+                        agent.SetDestination(transform.position);
+                    }
+
+                    if (distanceToTarget <= firingRange)
+                    {
+                        if (isDelayingAttack)
+                        {
+                            if (Time.time - targetDetectionTime >= attackDelay)
+                            {
+                                isDelayingAttack = false;
+                                if (HasClearLineOfSight(targetEnemy))
+                                {
+                                    ServerFire();
+                                }
+                            }
+                        }
+                        else if (HasClearLineOfSight(targetEnemy))
+                        {
+                            ServerFire();
+                        }
+                    }
                 }
             }
             else
             {
                 Patrol();
             }
+        }
+
+        bool HasClearLineOfSight(BTSTank target)
+        {
+            Vector3 start = projectileMount.position;
+            Vector3 direction = (target.transform.position - start).normalized;
+            float distance = Vector3.Distance(start, target.transform.position);
+
+            RaycastHit hit;
+            if (Physics.Raycast(start, direction, out hit, distance, losLayerMask))
+            {
+                if (hit.transform != target.transform)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         BTSTank FindNearestEnemy()

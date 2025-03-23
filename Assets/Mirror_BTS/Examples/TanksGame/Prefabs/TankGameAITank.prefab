@@ -160,6 +160,12 @@ MonoBehaviour:
   firingRange: 15
   decisionInterval: 1
   patrolPoints: []
+  minEngageDistance: 5
+  attackDelay: 3
+  fleeDistance: 10
+  losLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!95 &2240606817507776182
 Animator:
   serializedVersion: 7
@@ -1136,7 +1142,7 @@ PrefabInstance:
     - target: {fileID: 4218008212571110479, guid: 3ba3c45f8524d48e19db7d0de595521e,
         type: 3}
       propertyPath: m_Name
-      value: Explosion Big
+      value: ExplosionBig
       objectReference: {fileID: 0}
     - target: {fileID: 4218008212571110479, guid: 3ba3c45f8524d48e19db7d0de595521e,
         type: 3}

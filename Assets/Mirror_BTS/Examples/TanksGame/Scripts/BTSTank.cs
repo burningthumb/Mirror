@@ -151,7 +151,7 @@ namespace com.burningthumb.examples
             if (isLocalPlayer)
             {
                 // Debug player state
-                Debug.Log($"Player Update - Move: {m_input.move}, Jump: {m_input.jump}, Camera: {(m_mainCamera != null ? m_mainCamera.name : "null")}");
+//                Debug.Log($"Player Update - Move: {m_input.move}, Jump: {m_input.jump}, Camera: {(m_mainCamera != null ? m_mainCamera.name : "null")}");
 
                 // Set target speed based on move speed, sprint speed and if sprint is pressed
                 float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
