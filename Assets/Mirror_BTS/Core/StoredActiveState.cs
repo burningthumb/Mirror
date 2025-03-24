@@ -8,7 +8,7 @@ public class StoredActiveState : MonoBehaviour
 {
     public enum StoredActiveStateKey { kUnknown,
         kSettingsButtonShow, kSettingsButtonHide, kSettingsPanel,
-        kNetworkButtonShow, kNetworkButtonHide, kNetworkPanel}
+        kNetworkButtonShow, kNetworkButtonHide, kNetworkPanel }
 
     [SerializeField] StoredActiveStateKey m_sasKey;
 

@@ -19,7 +19,7 @@ public class NetworkManagerUI : MonoBehaviour
 
 	[SerializeField] GameObject ScrollViewContent;
 
-	[SerializeField] Button buttonHost, buttonServer, buttonClient, buttonStop, buttonFind;
+	[SerializeField] Button buttonStart, buttonHost, buttonServer, buttonClient, buttonStop, buttonFind;
 
 	[SerializeField] TMP_InputField inputFieldAddress;
 
@@ -51,6 +51,7 @@ public class NetworkManagerUI : MonoBehaviour
 		inputFieldAddress.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
 
 		//Make sure to attach these Buttons in the Inspector
+		buttonStart.onClick.AddListener(ButtonStart);
 		buttonHost.onClick.AddListener(ButtonHost);
 		buttonServer.onClick.AddListener(ButtonServer);
 		buttonClient.onClick.AddListener(ButtonClient);
@@ -66,6 +67,11 @@ public class NetworkManagerUI : MonoBehaviour
 	{
 		NetworkManager.singleton.networkAddress = inputFieldAddress.text;
 	}
+
+	public void ButtonStart()
+    {
+		ButtonHost();
+    }
 
 	public void ButtonHost()
 	{

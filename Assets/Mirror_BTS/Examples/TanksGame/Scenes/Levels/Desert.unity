@@ -1130,6 +1130,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3507220760597246868, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_Name
+      value: Start (Host)
+      objectReference: {fileID: 0}
     - target: {fileID: 4774950595961843350, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
         type: 3}
       propertyPath: m_AnchorMax.x
