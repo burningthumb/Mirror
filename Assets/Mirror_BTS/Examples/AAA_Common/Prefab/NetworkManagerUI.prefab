@@ -51,6 +51,7 @@ MonoBehaviour:
   m_hideNetworkPanelOnClick: 1
   m_advertiseServer: 1
   m_buttonHide: {fileID: 5305667917820846659}
+  PanelStartOnePlayer: {fileID: 7312063833012172056}
   PanelStart: {fileID: 688167007899135416}
   PanelStop: {fileID: 688167007523185040}
   PanelFind: {fileID: 153516102025119343}
@@ -221,6 +222,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2704701371788576941, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
+      propertyPath: m_Size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2704701371788576941, guid: 6800f5569666443c0b6c0ad13cc5524c,
+        type: 3}
       propertyPath: m_Value
       value: 1
       objectReference: {fileID: 0}
@@ -236,18 +242,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2797014352214176982, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
+      propertyPath: m_Size
+      value: 0.9999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 2797014352214176982, guid: 6800f5569666443c0b6c0ad13cc5524c,
+        type: 3}
       propertyPath: m_Value
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3461085531780891951, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000005722046
+      value: -0.000019684434
       objectReference: {fileID: 0}
     - target: {fileID: 3461085531780891951, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000076293945
+      value: -0.0000016242266
       objectReference: {fileID: 0}
     - target: {fileID: 4785583969306649085, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
@@ -257,6 +268,11 @@ PrefabInstance:
     - target: {fileID: 4785583969306649085, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785583969306649085, guid: 6800f5569666443c0b6c0ad13cc5524c,
+        type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5235596361145980320, guid: 6800f5569666443c0b6c0ad13cc5524c,
@@ -301,12 +317,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5803265229554838356, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5803265229554838356, guid: 6800f5569666443c0b6c0ad13cc5524c,
-        type: 3}
-      propertyPath: m_SizeDelta.y
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6766596346112951080, guid: 6800f5569666443c0b6c0ad13cc5524c,
@@ -482,7 +493,7 @@ PrefabInstance:
     - target: {fileID: 8282147776125711114, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
-      value: 0
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8282147776475477296, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
@@ -538,11 +549,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9138870041454530403, guid: 6800f5569666443c0b6c0ad13cc5524c,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 9138870041454530403, guid: 6800f5569666443c0b6c0ad13cc5524c,
         type: 3}
@@ -708,6 +714,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7312063833012172056 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2163257148248848583, guid: 6800f5569666443c0b6c0ad13cc5524c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8898204369025600991}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8876591904492191092 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 23425043854061739, guid: 6800f5569666443c0b6c0ad13cc5524c,

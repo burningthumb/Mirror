@@ -5,6 +5,8 @@ using com.burningthumb.examples;
 
 public class BTSAITankManager : NetworkBehaviour
 {
+    private static bool m_shouldSpawn = false;
+
     [Header("AI Tank Settings")]
     [SerializeField]
     private GameObject aiTankPrefab;
@@ -20,11 +22,30 @@ public class BTSAITankManager : NetworkBehaviour
     private List<BTSAITank> activeAITanks = new List<BTSAITank>();
     private List<Transform> availableSpawnPoints = new List<Transform>();
     private float respawnTimer = 0f;
+
     private bool shouldRespawn = false;
+
+    public static bool ShouldSpawn
+    {
+        get
+        {
+           return m_shouldSpawn;
+        }
+
+        set
+        {
+            m_shouldSpawn = value;
+        }
+    }
 
     public override void OnStartServer()
     {
         base.OnStartServer();
+
+        if (!ShouldSpawn)
+        {
+            return;
+        }
         
         Debug.Log("BTSAITankManager: Starting server initialization.");
 
@@ -76,6 +97,11 @@ public class BTSAITankManager : NetworkBehaviour
     void Update()
     {
         if (!isServer) return;
+
+        if (!ShouldSpawn)
+        {
+            return;
+        }
 
         if (shouldRespawn)
         {
@@ -138,6 +164,11 @@ public class BTSAITankManager : NetworkBehaviour
     [Server]
     void SpawnAITank()
     {
+        if (!ShouldSpawn)
+        {
+            return;
+        }
+
         if (availableSpawnPoints.Count == 0 || aiTankPrefab == null)
         {
             Debug.LogWarning("BTSAITankManager: No available spawn points or prefab missing!");

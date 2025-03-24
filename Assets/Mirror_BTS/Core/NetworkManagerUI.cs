@@ -13,6 +13,7 @@ public class NetworkManagerUI : MonoBehaviour
 
 	[SerializeField] Button m_buttonHide;
 
+	[SerializeField] GameObject PanelStartOnePlayer;
 	[SerializeField] GameObject PanelStart;
 	[SerializeField] GameObject PanelStop;
 	[SerializeField] GameObject PanelFind;
@@ -70,11 +71,24 @@ public class NetworkManagerUI : MonoBehaviour
 
 	public void ButtonStart()
     {
-		ButtonHost();
+		BTSAITankManager.ShouldSpawn = true;
+
+		discoveredServers.Clear();
+		
+		NetworkManager.singleton.StartHost();
+
+		SetupCanvas();
+
+		if (null != m_buttonHide && m_hideNetworkPanelOnClick)
+		{
+			m_buttonHide.onClick.Invoke();
+		}
     }
 
 	public void ButtonHost()
 	{
+		BTSAITankManager.ShouldSpawn = false;
+
 		if (m_advertiseServer)
 		{
 			discoveredServers.Clear();
@@ -178,18 +192,21 @@ public class NetworkManagerUI : MonoBehaviour
 		{
 			if (NetworkClient.active)
 			{
+				PanelStartOnePlayer.SetActive(false);
 				PanelStart.SetActive(false);
 				PanelStop.SetActive(true);
 				clientText.text = "Connecting to " + NetworkManager.singleton.networkAddress + " ...";
 			}
 			else
 			{
+				PanelStartOnePlayer.SetActive(true);
 				PanelStart.SetActive(true);
 				PanelStop.SetActive(false);
 			}
 		}
 		else
 		{
+			PanelStartOnePlayer.SetActive(false);
 			PanelStart.SetActive(false);
 			PanelStop.SetActive(true);
 
