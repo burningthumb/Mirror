@@ -22,7 +22,9 @@ namespace com.burningthumb.examples
         [Tooltip("Delay in seconds before attacking a newly detected target")]
         public float attackDelay = 3f;
         [Tooltip("Distance to flee when out of projectiles")]
-        public float fleeDistance = 10f; // New setting for how far to run away
+        public float fleeDistance = 10f;
+        [Tooltip("Cooldown time in seconds between projectile firings")]
+        public float firingCooldown = 2f; // New configurable cooldown, default 2 seconds
 
         [Header("Line of Sight")]
         [Tooltip("Layer mask for line of sight checks (exclude tank itself)")]
@@ -34,6 +36,7 @@ namespace com.burningthumb.examples
         private Vector3 randomDestination;
         private float targetDetectionTime;
         private bool isDelayingAttack;
+        private float lastFireTime; // Tracks the last time the tank fired
 
         public event Action<BTSAITank> OnTankDestroyed;
 
@@ -51,6 +54,7 @@ namespace com.burningthumb.examples
                 lastDecisionTime = Time.time;
                 targetDetectionTime = 0f;
                 isDelayingAttack = false;
+                lastFireTime = -firingCooldown; // Allow immediate firing on start
 
                 if (!isLocalPlayer)
                 {
@@ -143,15 +147,17 @@ namespace com.burningthumb.examples
                             if (Time.time - targetDetectionTime >= attackDelay)
                             {
                                 isDelayingAttack = false;
-                                if (HasClearLineOfSight(targetEnemy))
+                                if (HasClearLineOfSight(targetEnemy) && CanFire())
                                 {
                                     ServerFire();
+                                    lastFireTime = Time.time; // Update last fire time
                                 }
                             }
                         }
-                        else if (HasClearLineOfSight(targetEnemy))
+                        else if (HasClearLineOfSight(targetEnemy) && CanFire())
                         {
                             ServerFire();
+                            lastFireTime = Time.time; // Update last fire time
                         }
                     }
                 }
@@ -160,6 +166,11 @@ namespace com.burningthumb.examples
             {
                 Patrol();
             }
+        }
+
+        bool CanFire()
+        {
+            return Time.time - lastFireTime >= firingCooldown; // Check if cooldown has elapsed
         }
 
         bool HasClearLineOfSight(BTSTank target)
