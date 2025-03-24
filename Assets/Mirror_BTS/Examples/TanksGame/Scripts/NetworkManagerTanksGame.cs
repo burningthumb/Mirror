@@ -5,20 +5,20 @@ using com.burningthumb.examples;
 public class NetworkManagerTanksGame : NetworkManager
 {
     [Header("Game Settings")]
-    public bool autoStartServer = false; // For testing in Editor
+    public bool autoStartServer = false;
 
-    private BTSAITankManager aiTankManager; // Reference to the AI tank manager
+    private BTSAITankManager aiTankManager;
 
     public override void OnStartServer()
     {
         base.OnStartServer();
         Debug.Log("Server started.");
 
-        // Find the BTSAITankManager in the scene
-        aiTankManager = FindObjectOfType<BTSAITankManager>();
+        aiTankManager = FindFirstObjectByType<BTSAITankManager>();
+
         if (aiTankManager == null)
         {
-            Debug.LogError("NetworkManagerTanksGame: Could not find BTSAITankManager in the scene!");
+            Debug.LogWarning("NetworkManagerTanksGame: Could not find BTSAITankManager in OnStartServer. Will retry in OnServerAddPlayer.");
         }
     }
 
@@ -26,7 +26,7 @@ public class NetworkManagerTanksGame : NetworkManager
     {
         base.OnStopServer();
         Debug.Log("Server stopped.");
-        BTSTank.ActivePlayers.Clear(); // Reset static player tracking
+        BTSTank.ActivePlayers.Clear();
         BTSTank.PlayerTanks.Clear();
         BTSTank.m_playerID.Clear();
     }
@@ -48,23 +48,35 @@ public class NetworkManagerTanksGame : NetworkManager
         Vector3 spawnPosition;
         Quaternion spawnRotation;
 
+        // Ensure aiTankManager is set
+        if (aiTankManager == null)
+        {
+            aiTankManager = FindFirstObjectByType<BTSAITankManager>();
+
+            if (aiTankManager == null)
+            {
+                Debug.LogError("NetworkManagerTanksGame: BTSAITankManager not found in scene!");
+            }
+        }
+
         // Try to replace an AI tank if one exists
         if (aiTankManager != null && aiTankManager.TryReplaceAITank(out spawnPosition, out spawnRotation))
         {
+            Debug.Log("NetworkManagerTanksGame: Successfully replaced an AI tank.");
             // Use the AI tank's position and rotation
         }
         else
         {
-            // Fallback to a random NetworkStartPosition if no AI tank is available
+            Debug.Log("NetworkManagerTanksGame: No AI tank replaced, using random spawn point.");
+            // Fallback to a random NetworkStartPosition
             NetworkStartPosition[] startPositions = FindObjectsByType<NetworkStartPosition>(FindObjectsSortMode.None);
             Transform startPos = startPositions.Length > 0 ?
                 startPositions[Random.Range(0, startPositions.Length)].transform :
-                transform; // Fallback to NetworkManager position
+                transform;
             spawnPosition = startPos.position;
             spawnRotation = startPos.rotation;
         }
 
-        // Use the inherited playerPrefab from NetworkManager
         GameObject player = Instantiate(playerPrefab != null ? playerPrefab : spawnPrefabs[0], 
             spawnPosition, spawnRotation);
         
@@ -82,7 +94,7 @@ public class NetworkManagerTanksGame : NetworkManager
 
     public override void Update()
     {
-        base.Update(); // Call base Update to maintain NetworkManager functionality
+        base.Update();
 
         if (autoStartServer && !NetworkServer.active && !NetworkClient.active)
         {

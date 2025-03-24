@@ -56,6 +56,8 @@ namespace com.burningthumb.examples
                 {
                     if (m_mobileInput != null) m_mobileInput.SetActive(false);
                 }
+
+                gameObject.name = "BTS AI Tank (" + m_playerID[this] + ")";
             }
         }
 

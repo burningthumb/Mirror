@@ -15,7 +15,7 @@ public class EscKey : MonoBehaviour
     {
         if (!Application.isMobilePlatform)
         {
-            m_canvases = FindObjectsOfType<Canvas>();
+            m_canvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
 
             foreach (Canvas l_canvas in m_canvases)
             {
@@ -34,11 +34,16 @@ public class EscKey : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.Escape))
             {
-                foreach (Canvas l_canvas in m_canvases)
+                if (null != m_canvases)
                 {
-                    l_didToggleVisible = !l_canvas.gameObject.activeSelf;
-
-                    l_canvas.gameObject.SetActive(l_didToggleVisible);
+                    foreach (Canvas l_canvas in m_canvases)
+                    {
+                        if (null != l_canvas)
+                        {
+                            l_didToggleVisible = !l_canvas.gameObject.activeSelf;
+                            l_canvas.gameObject.SetActive(l_didToggleVisible);
+                        }
+                    }
                 }
             }
 

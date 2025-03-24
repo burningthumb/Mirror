@@ -50,6 +50,9 @@ public class BTSAITankManager : NetworkBehaviour
             return;
         }
 
+        // Spawn an AI Tank at every spawnPoint
+        maxAITanks = spawnPoints.Length;
+
         Debug.Log($"BTSAITankManager: Found {spawnPoints.Length} spawn points, maxAITanks set to {maxAITanks}.");
 
         if (maxAITanks > spawnPoints.Length)
@@ -60,6 +63,14 @@ public class BTSAITankManager : NetworkBehaviour
 
         availableSpawnPoints.AddRange(spawnPoints);
         InitialSpawn();
+    }
+
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+        activeAITanks.Clear(); // Clear the list to remove stale references
+        availableSpawnPoints.Clear(); // Reset spawn points for next session
+        Debug.Log("BTSAITankManager: Server stopped, cleared active AI tanks and spawn points.");
     }
 
     void Update()
@@ -269,7 +280,7 @@ public class BTSAITankManager : NetworkBehaviour
             }
             NetworkServer.Destroy(tankToReplace.gameObject);
 
-            Debug.Log("BTSAITankManager: Replaced an AI tank with a player.");
+            Debug.Log("BTSAITankManager: Replaced an AI tank with a player. Remaining AI tanks: " + activeAITanks.Count);
             return true;
         }
 
