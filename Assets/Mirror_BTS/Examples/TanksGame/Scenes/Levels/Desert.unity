@@ -1060,6 +1060,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 765491593203727362, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 765491593203727362, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 843225348953791931, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 843225348953791931, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1510718473210143346, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1078,6 +1098,16 @@ PrefabInstance:
     - target: {fileID: 1510718473210143346, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1649190909789758366, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1649190909789758366, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3435104355766233233, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
@@ -1095,6 +1125,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BTS Mirror Networking
       objectReference: {fileID: 0}
+    - target: {fileID: 3480186558919196719, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4774950595961843350, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1113,6 +1148,16 @@ PrefabInstance:
     - target: {fileID: 5704540345965037290, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811914045708203880, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811914045708203880, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6758214748724988995, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
@@ -1184,6 +1229,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877875776813473460, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8461237586040888257, guid: 6afa921b6eda84ec4b5b6b3f8552d4dd,
         type: 3}
