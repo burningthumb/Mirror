@@ -161,7 +161,7 @@ MonoBehaviour:
   decisionInterval: 1
   patrolPoints: []
   minEngageDistance: 5
-  attackDelay: 3
+  attackDelay: 5
   fleeDistance: 10
   losLayerMask:
     serializedVersion: 2

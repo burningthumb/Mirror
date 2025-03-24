@@ -178,10 +178,10 @@ public class NetworkManagerUI : MonoBehaviour
 
 		SetupCanvas();
 
-		if (null != m_buttonHide && m_hideNetworkPanelOnClick)
-		{
-			m_buttonHide.onClick.Invoke();
-		}
+		//if (null != m_buttonHide && m_hideNetworkPanelOnClick)
+		//{
+		//	m_buttonHide.onClick.Invoke();
+		//}
 	}
 
 	public void SetupCanvas()

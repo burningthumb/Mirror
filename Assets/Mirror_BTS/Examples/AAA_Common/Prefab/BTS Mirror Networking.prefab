@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 7877875775952462778}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!114 &3300519329050177185
@@ -136,6 +136,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 688167006622072533, guid: b44b9d63aa3124f04b37832e4bc60bc5,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 688167006923730183, guid: b44b9d63aa3124f04b37832e4bc60bc5,
         type: 3}
@@ -307,12 +312,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b44b9d63aa3124f04b37832e4bc60bc5, type: 3}
---- !u!1 &7877875775952462778 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 688167006759289819, guid: b44b9d63aa3124f04b37832e4bc60bc5,
-    type: 3}
-  m_PrefabInstance: {fileID: 7268539836968280161}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7877875777467018075 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 688167007544560442, guid: b44b9d63aa3124f04b37832e4bc60bc5,
