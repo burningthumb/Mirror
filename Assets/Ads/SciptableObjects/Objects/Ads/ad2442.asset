@@ -10,11 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc92068c3789e4906af59cb0fd492025, type: 3}
-  m_Name: Video Kiosk
+  m_Name: ad2442
   m_EditorClassIdentifier: 
-  m_title: Video Kiosk
+  m_title: AD 2442
   m_subtitle: www.burningthumb.com
-  m_blurb: Turn your Android device into an easy to use, reliable, robust, secure
-    Android video kiosk to loop video, images, and web pages in minutes.
-  m_adSprite: {fileID: 21300000, guid: 1c1dd2b319cf648bfa09d9ed0abd916a, type: 3}
-  m_url: https://burningthumb.com/apps/video-kiosk/
+  m_blurb: "It\u2019s a Classic Match 3 \u2013 So many puzzles to solve! You are
+    traveling from one planet to the next alone in hostile space and short on the
+    resources\u2026"
+  m_adSprite: {fileID: 21300000, guid: 77e1d9ebf870d42c8aea7a02f940632f, type: 3}
+  m_url: https://burningthumb.com/games-bts/ad-2442/
+  m_gameID: 8
+  m_medium: 0
+  m_adID: 1
+  m_adVariant: 0

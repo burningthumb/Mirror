@@ -10,11 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc92068c3789e4906af59cb0fd492025, type: 3}
-  m_Name: Drive Download
+  m_Name: mirethmusic
   m_EditorClassIdentifier: 
-  m_title: Drive Download
-  m_subtitle: www.burningthumb.com
-  m_blurb: 'Drive Download makes it easy to remotely update the files on your Android
-    TV, Android TV Box, Android tablet or Android phone. '
-  m_adSprite: {fileID: 21300000, guid: 10c3c8d96472c4f4b9e60be7bdf85acf, type: 3}
-  m_url: https://burningthumb.com/apps/drive-download-android/
+  m_title: Mireth Music
+  m_subtitle: www.mireth.com
+  m_blurb: To own the Swiss Army Knife of music Apps for macOS, get mirethMusic.
+  m_adSprite: {fileID: 21300000, guid: 46fe8e1add80d4acb9152c1d5885134b, type: 3}
+  m_url: https://www.mireth.com/mirethmusic
+  m_gameID: 8
+  m_medium: 0
+  m_adID: 8
+  m_adVariant: 0

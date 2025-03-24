@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc92068c3789e4906af59cb0fd492025, type: 3}
+  m_Name: idrone
+  m_EditorClassIdentifier: 
+  m_title: iDrone
+  m_subtitle: www.burningthumb.com
+  m_blurb: iDrone is a classic endless runner game that lets you fly an unmanned
+    aerial vehicle over a 3D terrain. In addition to being an endless runner there
+    are a series of missions so you can still blow stuff up.
+  m_adSprite: {fileID: 21300000, guid: 757785544d0ea47c5a61a4876ebd7024, type: 3}
+  m_url: https://burningthumb.com/games-bts/idrone/
+  m_gameID: 8
+  m_medium: 0
+  m_adID: 5
+  m_adVariant: 0

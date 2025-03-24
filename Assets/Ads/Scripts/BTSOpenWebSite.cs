@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class BTSOpenWebSite : MonoBehaviour
 {
-
+	static SOBTSAd m_btsAd;
 	static string m_url;
 
 	static public string URL
@@ -20,16 +21,36 @@ public class BTSOpenWebSite : MonoBehaviour
 		}
 	}
 
-
-    public void OpenURL(string a_urlIfNull)
+	static public SOBTSAd BTSAd
 	{
-		if (null == m_url)
-		{ 
-			Application.OpenURL(a_urlIfNull);
+		get
+		{
+			return m_btsAd;
+		}
+
+		set
+		{
+			m_btsAd = value;
+		}
+	}
+
+    public void OpenURL(string a_defaultURL)
+	{
+		if (null != BTSAd)
+        {
+			string l_url = $"{BTSAd.URL}?utm_source={UnityWebRequest.EscapeURL(BTSAd.GameID)}&utm_medium={UnityWebRequest.EscapeURL(BTSAd.Medium)}&utm_campaign={UnityWebRequest.EscapeURL(BTSAd.AdID)}";
+
+			Application.OpenURL(l_url);
+
+			GA4Analytics.ClickAd(BTSAd);
+        }
+		else if (null != URL)
+		{
+			Application.OpenURL(URL);
 		}
 		else
 		{
-			Application.OpenURL(m_url);
+			Application.OpenURL(a_defaultURL);
 		}
 	}
 
