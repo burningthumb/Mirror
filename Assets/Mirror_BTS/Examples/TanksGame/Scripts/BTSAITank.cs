@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.AI;
 
 namespace com.burningthumb.examples
 {
@@ -15,28 +16,35 @@ namespace com.burningthumb.examples
         public float firingRange = 15f;
         [Tooltip("Time between AI decisions in seconds")]
         public float decisionInterval = 1f;
-        [Tooltip("Patrol waypoints (if empty, tank will move randomly)")]
-        public Transform[] patrolPoints;
         [Tooltip("Minimum distance to maintain from target")]
         public float minEngageDistance = 5f;
         [Tooltip("Delay in seconds before attacking a newly detected target")]
         public float attackDelay = 3f;
-        [Tooltip("Distance to flee when out of projectiles")]
-        public float fleeDistance = 10f;
         [Tooltip("Cooldown time in seconds between projectile firings")]
-        public float firingCooldown = 2f; // New configurable cooldown, default 2 seconds
+        public float firingCooldown = 2f;
+
+        [Header("Patrol Settings")]
+        [Tooltip("Minimum distance for random patrol points")]
+        public float minPatrolDistance = 10f;
+        [Tooltip("Maximum distance for random patrol points")]
+        public float maxPatrolDistance = 20f;
+        [Tooltip("Time window to check for stuck detection (seconds)")]
+        public float stuckCheckInterval = 2f;
 
         [Header("Line of Sight")]
         [Tooltip("Layer mask for line of sight checks (exclude tank itself)")]
         public LayerMask losLayerMask;
 
         private BTSTank targetEnemy;
-        private int currentPatrolIndex = 0;
         private float lastDecisionTime;
-        private Vector3 randomDestination;
         private float targetDetectionTime;
         private bool isDelayingAttack;
-        private float lastFireTime; // Tracks the last time the tank fired
+        private float lastFireTime;
+        private Vector3 patrolDestination;
+        private Vector3[] patrolPathCorners;
+        private int currentCornerIndex;
+        private Vector3 lastPosition; // For stuck detection
+        private float lastPositionTime; // Time of last position update
 
         public event Action<BTSAITank> OnTankDestroyed;
 
@@ -46,15 +54,14 @@ namespace com.burningthumb.examples
             
             if (isServer)
             {
-                if (patrolPoints.Length == 0)
-                {
-                    randomDestination = GetRandomPosition();
-                    agent.SetDestination(randomDestination);
-                }
+                patrolDestination = GetRandomPatrolPosition();
+                UpdatePatrolPath();
                 lastDecisionTime = Time.time;
                 targetDetectionTime = 0f;
                 isDelayingAttack = false;
-                lastFireTime = -firingCooldown; // Allow immediate firing on start
+                lastFireTime = -firingCooldown;
+                lastPosition = transform.position;
+                lastPositionTime = Time.time;
 
                 if (!isLocalPlayer)
                 {
@@ -75,9 +82,15 @@ namespace com.burningthumb.examples
                 lastDecisionTime = Time.time;
             }
 
-            if (targetEnemy != null)
+            // Handle turret and movement
+            if (targetEnemy != null && projectile > 0)
             {
                 AimAtTarget();
+            }
+            else
+            {
+                turret.localEulerAngles = Vector3.zero; // Face forward when patrolling or out of ammo
+                Patrol();
             }
 
             animator.SetBool("Moving", agent.velocity != Vector3.zero);
@@ -111,66 +124,122 @@ namespace com.burningthumb.examples
                 }
             }
 
-            if (targetEnemy != null)
+            if (targetEnemy != null && projectile > 0)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, targetEnemy.transform.position);
 
-                if (projectile <= 0) // Out of projectiles, flee
+                if (distanceToTarget > minEngageDistance)
                 {
-                    Vector3 fleeDirection = (transform.position - targetEnemy.transform.position).normalized;
-                    Vector3 fleePosition = transform.position + fleeDirection * fleeDistance;
-                    if (UnityEngine.AI.NavMesh.SamplePosition(fleePosition, out UnityEngine.AI.NavMeshHit hit, fleeDistance, UnityEngine.AI.NavMesh.AllAreas))
-                    {
-                        agent.SetDestination(hit.position);
-                    }
-                    else
-                    {
-                        Patrol(); // Fallback to patrol if no valid flee position
-                    }
+                    MoveToward(targetEnemy.transform.position);
                 }
-                else // Normal behavior when projectiles are available
+                else
                 {
-                    if (distanceToTarget > minEngageDistance)
-                    {
-                        Vector3 pursuePosition = targetEnemy.transform.position;
-                        agent.SetDestination(pursuePosition);
-                    }
-                    else
-                    {
-                        agent.SetDestination(transform.position);
-                    }
+                    StopMoving();
+                }
 
-                    if (distanceToTarget <= firingRange)
+                if (distanceToTarget <= firingRange)
+                {
+                    if (isDelayingAttack)
                     {
-                        if (isDelayingAttack)
+                        if (Time.time - targetDetectionTime >= attackDelay)
                         {
-                            if (Time.time - targetDetectionTime >= attackDelay)
+                            isDelayingAttack = false;
+                            if (HasClearLineOfSight(targetEnemy) && CanFire())
                             {
-                                isDelayingAttack = false;
-                                if (HasClearLineOfSight(targetEnemy) && CanFire())
-                                {
-                                    ServerFire();
-                                    lastFireTime = Time.time; // Update last fire time
-                                }
+                                ServerFire();
+                                lastFireTime = Time.time;
                             }
                         }
-                        else if (HasClearLineOfSight(targetEnemy) && CanFire())
-                        {
-                            ServerFire();
-                            lastFireTime = Time.time; // Update last fire time
-                        }
+                    }
+                    else if (HasClearLineOfSight(targetEnemy) && CanFire())
+                    {
+                        ServerFire();
+                        lastFireTime = Time.time;
                     }
                 }
+            }
+        }
+
+        void MoveToward(Vector3 targetPosition)
+        {
+            Vector3 direction = (targetPosition - transform.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            targetRotation.x = 0;
+            targetRotation.z = 0;
+
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            Vector3 forward = transform.forward;
+            agent.velocity = forward * MoveSpeed;
+        }
+
+        void StopMoving()
+        {
+            agent.velocity = Vector3.zero;
+        }
+
+        void Patrol()
+        {
+            // Check if stuck every 2 seconds
+            if (Time.time - lastPositionTime >= stuckCheckInterval)
+            {
+                float distanceMoved = Vector3.Distance(transform.position, lastPosition);
+                float tankSize = agent.radius * 2f; // Approximate tank size as diameter
+                if (distanceMoved < tankSize)
+                {
+                    // Stuck: Pick a new destination
+                    patrolDestination = GetRandomPatrolPosition();
+                    UpdatePatrolPath();
+                }
+                lastPosition = transform.position;
+                lastPositionTime = Time.time;
+            }
+
+            // If no path or we've reached the current corner, update the path
+            if (patrolPathCorners == null || currentCornerIndex >= patrolPathCorners.Length || Vector3.Distance(transform.position, patrolPathCorners[currentCornerIndex]) < 1f)
+            {
+                if (Vector3.Distance(transform.position, patrolDestination) < 2f || patrolPathCorners == null)
+                {
+                    patrolDestination = GetRandomPatrolPosition();
+                }
+                UpdatePatrolPath();
+            }
+
+            // Move toward the next corner
+            if (patrolPathCorners != null && currentCornerIndex < patrolPathCorners.Length)
+            {
+                Vector3 nextPosition = patrolPathCorners[currentCornerIndex];
+                MoveToward(nextPosition);
+            }
+        }
+
+        void UpdatePatrolPath()
+        {
+            NavMeshPath path = new NavMeshPath();
+            if (NavMesh.CalculatePath(transform.position, patrolDestination, NavMesh.AllAreas, path))
+            {
+                patrolPathCorners = path.corners;
+                currentCornerIndex = 1; // Start at the first corner after current position
             }
             else
             {
-                Patrol();
+                // If path fails, pick a new destination
+                patrolDestination = GetRandomPatrolPosition();
+                patrolPathCorners = null;
+                currentCornerIndex = 0;
             }
+        }
+
+        Vector3 GetRandomPatrolPosition()
+        {
+            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere.normalized * UnityEngine.Random.Range(minPatrolDistance, maxPatrolDistance);
+            Vector3 randomPoint = transform.position + randomDirection;
+            NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, maxPatrolDistance, NavMesh.AllAreas);
+            return hit.position;
         }
 
         bool CanFire()
         {
-            return Time.time - lastFireTime >= firingCooldown; // Check if cooldown has elapsed
+            return Time.time - lastFireTime >= firingCooldown;
         }
 
         bool HasClearLineOfSight(BTSTank target)
@@ -210,46 +279,31 @@ namespace com.burningthumb.examples
             return nearest;
         }
 
-        void Patrol()
-        {
-            if (patrolPoints.Length > 0)
-            {
-                if (agent.remainingDistance < 1f)
-                {
-                    currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
-                    agent.SetDestination(patrolPoints[currentPatrolIndex].position);
-                }
-            }
-            else
-            {
-                if (agent.remainingDistance < 1f)
-                {
-                    randomDestination = GetRandomPosition();
-                    agent.SetDestination(randomDestination);
-                }
-            }
-        }
-
-        Vector3 GetRandomPosition()
-        {
-            Vector3 randomPoint = transform.position + UnityEngine.Random.insideUnitSphere * 20f;
-            UnityEngine.AI.NavMesh.SamplePosition(randomPoint, out UnityEngine.AI.NavMeshHit hit, 20f, UnityEngine.AI.NavMesh.AllAreas);
-            return hit.position;
-        }
-
         void AimAtTarget()
         {
             Vector3 targetDirection = (targetEnemy.transform.position - turret.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            
             targetRotation.x = 0;
             targetRotation.z = 0;
-            
-            turret.rotation = Quaternion.RotateTowards(
-                turret.rotation,
-                targetRotation,
-                rotationSpeed * Time.deltaTime
-            );
+
+            Vector3 targetDirectionRelative = transform.InverseTransformDirection(targetDirection);
+            float targetYaw = Mathf.Atan2(targetDirectionRelative.x, targetDirectionRelative.z) * Mathf.Rad2Deg;
+
+            float currentTurretYaw = turret.localEulerAngles.y;
+            if (currentTurretYaw > 180f) currentTurretYaw -= 360f;
+
+            float newTurretYaw = Mathf.MoveTowardsAngle(currentTurretYaw, targetYaw, rotationSpeed * Time.deltaTime);
+            float clampedTurretYaw = Mathf.Clamp(newTurretYaw, BottomClamp, TopClamp);
+            turret.localEulerAngles = new Vector3(0, clampedTurretYaw, 0);
+
+            float yawError = Mathf.DeltaAngle(clampedTurretYaw, targetYaw);
+            if (Mathf.Abs(yawError) > 1f)
+            {
+                Quaternion tankTargetRotation = Quaternion.LookRotation(targetDirection);
+                tankTargetRotation.x = 0;
+                tankTargetRotation.z = 0;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, tankTargetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
     }
 }

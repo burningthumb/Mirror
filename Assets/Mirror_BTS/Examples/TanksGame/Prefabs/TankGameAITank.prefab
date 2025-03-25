@@ -146,10 +146,13 @@ MonoBehaviour:
   rotateRightKey: 101
   TopClamp: 90
   BottomClamp: -90
+  turretRotationSpeed: 50
+  backInputThreshold: 0.75
   shootKey: 32
   projectilePrefab: {fileID: 5890560936853567077, guid: b6946a38e89dd484b9b7be714079dfd5,
     type: 3}
   projectileMount: {fileID: 5718089106632469514}
+  m_autoReloadTime: 20
   m_maxHealth: 4
   m_maxProjectile: 4
   health: -1
@@ -159,10 +162,12 @@ MonoBehaviour:
   detectionRange: 20
   firingRange: 15
   decisionInterval: 1
-  patrolPoints: []
   minEngageDistance: 5
   attackDelay: 5
-  fleeDistance: 10
+  firingCooldown: 2
+  minPatrolDistance: 10
+  maxPatrolDistance: 20
+  stuckCheckInterval: 2
   losLayerMask:
     serializedVersion: 2
     m_Bits: 0

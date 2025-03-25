@@ -10,8 +10,8 @@ namespace com.burningthumb.examples
 {
     public class BTSTank : NetworkBehaviour
     {
-        public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>(); // All tanks
-        public static HashSet<BTSTank> PlayerTanks = new HashSet<BTSTank>();  // Only player-controlled tanks
+        public static HashSet<BTSTank> ActivePlayers = new HashSet<BTSTank>();
+        public static HashSet<BTSTank> PlayerTanks = new HashSet<BTSTank>();
         public static Hashtable m_playerID = new Hashtable();
 
         [Header("Destruction")]
@@ -46,15 +46,20 @@ namespace com.burningthumb.examples
         [Header("Turret")]
         public KeyCode rotateLeftKey = KeyCode.Q;
         public KeyCode rotateRightKey = KeyCode.E;
-        [Tooltip("How far in degrees can you move the camera up")]
+        [Tooltip("How far in degrees can you move the turret left/right from center")]
         public float TopClamp = 90.0f;
-        [Tooltip("How far in degrees can you move the camera down")]
+        [Tooltip("How far in degrees can you move the turret left/right from center")]
         public float BottomClamp = -90.0f;
+        [Tooltip("Speed of turret rotation when using D-pad back")]
+        public float turretRotationSpeed = 50f;
+        [Tooltip("Minimum input value for left stick/D-pad down to trigger turret rotation (0 to 1)")]
+        public float backInputThreshold = 0.75f;
 
         [Header("Firing")]
         public KeyCode shootKey = KeyCode.Space;
         public GameObject projectilePrefab;
         public Transform projectileMount;
+        public float m_autoReloadTime = 10.0f;
 
         [Header("Stats")]
         public int m_maxHealth = 4;
@@ -82,6 +87,11 @@ namespace com.burningthumb.examples
         private float m_rotationVelocity;
         private float m_verticalVelocity;
         private float m_terminalVelocity = 53.0f;
+
+        // Turret ping-pong rotation
+        private bool isRotatingTurret = false;
+        private float turretRotationDirection = 1f;
+        private bool wasBackPressedLastFrame = false;
 
         public virtual void HealthChanged(int a_old, int a_new)
         {
@@ -124,7 +134,7 @@ namespace com.burningthumb.examples
                     }
                 }
 
-                PlayerTanks.Add(this); // Add to player-specific set
+                PlayerTanks.Add(this);
                 Debug.Log($"Player tank initialized. Name: {gameObject.name}, isLocalPlayer: {isLocalPlayer}");
             }
 
@@ -137,6 +147,12 @@ namespace com.burningthumb.examples
                 health = m_maxHealth;
                 projectile = m_maxProjectile;
             }
+
+            // Configure NavMeshAgent
+            agent.updateRotation = false; // Manual rotation control
+            agent.updatePosition = true;  // Allow velocity to move the agent
+            agent.acceleration = 1000f;   // High acceleration to match velocity instantly
+            agent.angularSpeed = 0;       // Disable agent-driven rotation
         }
 
         public void OnDestroy()
@@ -150,22 +166,20 @@ namespace com.burningthumb.examples
         {
             if (isLocalPlayer)
             {
-                // Debug player state
-//                Debug.Log($"Player Update - Move: {m_input.move}, Jump: {m_input.jump}, Camera: {(m_mainCamera != null ? m_mainCamera.name : "null")}");
-
-                // Set target speed based on move speed, sprint speed and if sprint is pressed
+                // Set target speed based on sprint input
                 float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
-                agent.speed = targetSpeed / MoveSpeed;
+                agent.speed = targetSpeed;
 
-                // Rotate
+                // Rotate tank left/right
                 float horizontal = m_input.move.x;
                 transform.Rotate(0, horizontal * rotationSpeed * Time.deltaTime, 0);
 
-                // Move
+                // Move forward only
                 float vertical = m_input.move.y;
-                Vector3 forward = transform.TransformDirection(Vector3.forward);
-                agent.velocity = forward * Mathf.Max(vertical, 0) * agent.speed;
-                animator.SetBool("Moving", agent.velocity != Vector3.zero);
+                Vector3 forward = transform.forward;
+                Vector3 forwardVelocity = forward * Mathf.Max(vertical, 0) * agent.speed;
+                agent.velocity = new Vector3(forwardVelocity.x, agent.velocity.y, forwardVelocity.z); // Preserve y for gravity/slopes
+                animator.SetBool("Moving", agent.velocity.sqrMagnitude > 0.01f);
 
                 // Shoot
                 if (m_input.jump)
@@ -174,11 +188,12 @@ namespace com.burningthumb.examples
                     CmdFire();
                 }
 
+                // Turret rotation
                 RotateTurret();
+                HandleDPadTurretRotation();
             }
         }
 
-        // Server-side firing method for AI
         [Server]
         protected void ServerFire()
         {
@@ -208,14 +223,19 @@ namespace com.burningthumb.examples
         [Command]
         void CmdFire()
         {
-            ServerFire(); // Delegate to server-side method
+            ServerFire();
         }
 
         IEnumerator AutoReload()
         {
-            yield return new WaitForSeconds(10.0f);
-            projectile = m_maxProjectile;
-            projectileBar.color = m_saveProjectileBarColor;
+            yield return null;
+
+            if (m_autoReloadTime > 0)
+            {
+                yield return new WaitForSeconds(m_autoReloadTime);
+                projectile = m_maxProjectile;
+                projectileBar.color = m_saveProjectileBarColor;
+            }
         }
 
         [ClientRpc]
@@ -280,7 +300,46 @@ namespace com.burningthumb.examples
                 m_rotationVelocity = m_input.look.x * RotationSpeed * deltaTimeMultiplier;
 
                 m_cinemachineTargetPitch = ClampAngle(m_cinemachineTargetPitch, BottomClamp, TopClamp);
-                turret.transform.Rotate(Vector3.up * m_rotationVelocity);
+                float currentAngle = turret.localEulerAngles.y;
+                if (currentAngle > 180f) currentAngle -= 360f;
+                float newAngle = currentAngle + m_rotationVelocity;
+                newAngle = ClampAngle(newAngle, BottomClamp, TopClamp);
+                turret.localEulerAngles = new Vector3(0, newAngle, 0);
+            }
+        }
+
+        void HandleDPadTurretRotation()
+        {
+            float dPadVertical = m_input.move.y;
+
+            bool isBackPressed = dPadVertical < -backInputThreshold;
+            if (isBackPressed && !wasBackPressedLastFrame)
+            {
+                turretRotationDirection = -turretRotationDirection;
+                isRotatingTurret = true;
+            }
+            else if (!isBackPressed)
+            {
+                isRotatingTurret = false;
+            }
+
+            wasBackPressedLastFrame = isBackPressed;
+
+            if (isRotatingTurret)
+            {
+                float currentAngle = turret.localEulerAngles.y;
+                if (currentAngle > 180f) currentAngle -= 360f;
+
+                float rotationStep = turretRotationSpeed * turretRotationDirection * Time.deltaTime;
+                float newAngle = currentAngle + rotationStep;
+
+                if (newAngle >= TopClamp || newAngle <= BottomClamp)
+                {
+                    turretRotationDirection = -turretRotationDirection;
+                    newAngle = Mathf.Clamp(newAngle, BottomClamp, TopClamp);
+                }
+
+                turret.localEulerAngles = new Vector3(0, newAngle, 0);
             }
         }
     }
