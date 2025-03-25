@@ -77,6 +77,8 @@ public class EscKey : MonoBehaviour
 
 		Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true; // Hide cursor
+
+		Time.timeScale = 1.0f;
 	}
 
 	// Update is called once per frame
