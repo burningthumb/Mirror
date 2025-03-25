@@ -152,9 +152,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9361d4a6155624f379fb432115a2ecc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_canvases: []
+  m_pauseIA:
+    m_Name: Pause IA
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 5b8ef0b7-fc8a-4ff1-acfd-6a11fdadf0cc
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 85b58640-f61b-4ce7-a50c-d8e419efb211
+      m_Path: '*/{Menu}'
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause IA
+      m_Flags: 0
+    - m_Name: 
+      m_Id: d328879e-c0aa-486e-a317-8cbf98a1a625
+      m_Path: '*/{Back}'
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause IA
+      m_Flags: 0
+    m_Flags: 0
+  m_showCanvasImage: {fileID: 0}
+  m_hideNMUI: 0
+  m_nmui: {fileID: 0}
+  m_settingsPanel: {fileID: 1765439934273963693}
   m_show: {fileID: 1765439934511540154}
   m_hide: {fileID: 1765439933849224856}
+  m_selectThisOnShow: {fileID: 1765439934604123293}
+  m_savedSelectedGO: {fileID: 0}
+  m_lockCursor: 1
 --- !u!1001 &4696984357729095034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -273,6 +304,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasGame
       objectReference: {fileID: 0}
+    - target: {fileID: 6462401750068497367, guid: 7b5a93497a68b464d8d7e8ff39708eec,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6462401750134550438, guid: 7b5a93497a68b464d8d7e8ff39708eec,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -307,6 +343,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462401750883480480, guid: 7b5a93497a68b464d8d7e8ff39708eec,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 6462401751303863811, guid: 7b5a93497a68b464d8d7e8ff39708eec,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 6462401751476369825, guid: 7b5a93497a68b464d8d7e8ff39708eec,
         type: 3}
@@ -445,6 +491,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1765439934273963693 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6462401750068497367, guid: 7b5a93497a68b464d8d7e8ff39708eec,
+    type: 3}
+  m_PrefabInstance: {fileID: 4696984357729095034}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1765439934306526807 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6462401750033984301, guid: 7b5a93497a68b464d8d7e8ff39708eec,
@@ -461,5 +513,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1765439934604123293 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6462401751874818535, guid: 7b5a93497a68b464d8d7e8ff39708eec,
+    type: 3}
+  m_PrefabInstance: {fileID: 4696984357729095034}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

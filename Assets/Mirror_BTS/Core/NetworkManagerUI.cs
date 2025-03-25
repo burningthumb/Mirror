@@ -13,6 +13,7 @@ public class NetworkManagerUI : MonoBehaviour
 
 	[SerializeField] Button m_buttonHide;
 
+	[SerializeField] public GameObject PanelMain;
 	[SerializeField] GameObject PanelStartOnePlayer;
 	[SerializeField] GameObject PanelStart;
 	[SerializeField] GameObject PanelStop;
