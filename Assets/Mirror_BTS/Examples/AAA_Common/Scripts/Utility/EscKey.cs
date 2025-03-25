@@ -172,7 +172,7 @@ public class EscKey : MonoBehaviour
             Cursor.visible = false; // Hide cursor
 		}
 
-		Debug.Log($"{Time.time} a_makeVisible  {a_makeVisible} Cursor.lockState = {Cursor.lockState} Cursor.visible = {Cursor.visible}");
+//		Debug.Log($"{Time.time} a_makeVisible  {a_makeVisible} Cursor.lockState = {Cursor.lockState} Cursor.visible = {Cursor.visible}");
 
 		//if (m_hide.gameObject.activeSelf)
 		//{
