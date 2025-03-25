@@ -11,8 +11,6 @@ public class NetworkManagerUI : MonoBehaviour
 	[SerializeField] bool m_hideNetworkPanelOnClick = true;
 	[SerializeField] bool m_advertiseServer = true;
 
-	[SerializeField] Button m_buttonHide;
-
 	[SerializeField] public GameObject PanelMain;
 	[SerializeField] GameObject PanelStartOnePlayer;
 	[SerializeField] GameObject PanelStart;
@@ -80,9 +78,9 @@ public class NetworkManagerUI : MonoBehaviour
 
 		SetupCanvas();
 
-		if (null != m_buttonHide && m_hideNetworkPanelOnClick)
+		if (m_hideNetworkPanelOnClick)
 		{
-			m_buttonHide.onClick.Invoke();
+			PanelMain.SetActive(false);
 		}
     }
 
@@ -104,9 +102,9 @@ public class NetworkManagerUI : MonoBehaviour
 
 		SetupCanvas();
 
-		if (null != m_buttonHide && m_hideNetworkPanelOnClick)
+		if (m_hideNetworkPanelOnClick)
 		{
-			m_buttonHide.onClick.Invoke();
+			PanelMain.SetActive(false);
 		}
 	}
 
@@ -126,9 +124,9 @@ public class NetworkManagerUI : MonoBehaviour
 
 		SetupCanvas();
 
-		if (null != m_buttonHide && m_hideNetworkPanelOnClick)
+		if (m_hideNetworkPanelOnClick)
 		{
-			m_buttonHide.onClick.Invoke();
+			PanelMain.SetActive(false);;
 		}
 	}
 
@@ -143,9 +141,9 @@ public class NetworkManagerUI : MonoBehaviour
 
 		SetupCanvas();
 
-		if (null != m_buttonHide && m_hideNetworkPanelOnClick)
+		if (m_hideNetworkPanelOnClick)
 		{
-			m_buttonHide.onClick.Invoke();
+			PanelMain.SetActive(false);;
 		}
 	}
 
@@ -261,9 +259,9 @@ public class NetworkManagerUI : MonoBehaviour
 
 		SetupCanvas();
 
-		if (null != m_buttonHide && m_hideNetworkPanelOnClick)
+		if (m_hideNetworkPanelOnClick)
 		{
-			m_buttonHide.onClick.Invoke();
+			PanelMain.SetActive(false);;
 		}
 	}
 
