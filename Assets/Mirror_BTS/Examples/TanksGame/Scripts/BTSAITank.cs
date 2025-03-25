@@ -30,6 +30,8 @@ namespace com.burningthumb.examples
         public float maxPatrolDistance = 20f;
         [Tooltip("Time window to check for stuck detection (seconds)")]
         public float stuckCheckInterval = 2f;
+        [Tooltip("Number of patrol points to evaluate when out of ammo")]
+        public int patrolPointCandidates = 5;
 
         [Header("Line of Sight")]
         [Tooltip("Layer mask for line of sight checks (exclude tank itself)")]
@@ -45,6 +47,7 @@ namespace com.burningthumb.examples
         private int currentCornerIndex;
         private Vector3 lastPosition; // For stuck detection
         private float lastPositionTime; // Time of last position update
+        private bool wasOutOfAmmo; // Track ammo state to trigger new patrol selection
 
         public event Action<BTSAITank> OnTankDestroyed;
 
@@ -62,6 +65,7 @@ namespace com.burningthumb.examples
                 lastFireTime = -firingCooldown;
                 lastPosition = transform.position;
                 lastPositionTime = Time.time;
+                wasOutOfAmmo = projectile <= 0;
 
                 if (!isLocalPlayer)
                 {
@@ -123,6 +127,15 @@ namespace com.burningthumb.examples
                     isDelayingAttack = false;
                 }
             }
+
+            // Check if we just ran out of ammo
+            bool isOutOfAmmo = projectile <= 0;
+            if (isOutOfAmmo && !wasOutOfAmmo)
+            {
+                patrolDestination = ChooseSafestPatrolPosition();
+                UpdatePatrolPath();
+            }
+            wasOutOfAmmo = isOutOfAmmo;
 
             if (targetEnemy != null && projectile > 0)
             {
@@ -186,8 +199,8 @@ namespace com.burningthumb.examples
                 float tankSize = agent.radius * 2f; // Approximate tank size as diameter
                 if (distanceMoved < tankSize)
                 {
-                    // Stuck: Pick a new destination
-                    patrolDestination = GetRandomPatrolPosition();
+                    // Stuck: Pick a new destination (or safest if out of ammo)
+                    patrolDestination = projectile > 0 ? GetRandomPatrolPosition() : ChooseSafestPatrolPosition();
                     UpdatePatrolPath();
                 }
                 lastPosition = transform.position;
@@ -199,7 +212,7 @@ namespace com.burningthumb.examples
             {
                 if (Vector3.Distance(transform.position, patrolDestination) < 2f || patrolPathCorners == null)
                 {
-                    patrolDestination = GetRandomPatrolPosition();
+                    patrolDestination = projectile > 0 ? GetRandomPatrolPosition() : ChooseSafestPatrolPosition();
                 }
                 UpdatePatrolPath();
             }
@@ -223,7 +236,7 @@ namespace com.burningthumb.examples
             else
             {
                 // If path fails, pick a new destination
-                patrolDestination = GetRandomPatrolPosition();
+                patrolDestination = projectile > 0 ? GetRandomPatrolPosition() : ChooseSafestPatrolPosition();
                 patrolPathCorners = null;
                 currentCornerIndex = 0;
             }
@@ -235,6 +248,43 @@ namespace com.burningthumb.examples
             Vector3 randomPoint = transform.position + randomDirection;
             NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, maxPatrolDistance, NavMesh.AllAreas);
             return hit.position;
+        }
+
+        Vector3 ChooseSafestPatrolPosition()
+        {
+            Vector3[] candidates = new Vector3[patrolPointCandidates];
+            float[] minDistancesToPlayers = new float[patrolPointCandidates];
+
+            // Generate 5 random patrol points
+            for (int i = 0; i < patrolPointCandidates; i++)
+            {
+                candidates[i] = GetRandomPatrolPosition();
+                minDistancesToPlayers[i] = float.MaxValue;
+
+                // Find the minimum distance to any human player
+                foreach (BTSTank player in ActivePlayers)
+                {
+                    if (player.isLocalPlayer)
+                    {
+                        float distance = Vector3.Distance(candidates[i], player.transform.position);
+                        minDistancesToPlayers[i] = Mathf.Min(minDistancesToPlayers[i], distance);
+                    }
+                }
+            }
+
+            // Choose the point with the maximum minimum distance to any player
+            int safestIndex = 0;
+            float maxMinDistance = minDistancesToPlayers[0];
+            for (int i = 1; i < patrolPointCandidates; i++)
+            {
+                if (minDistancesToPlayers[i] > maxMinDistance)
+                {
+                    maxMinDistance = minDistancesToPlayers[i];
+                    safestIndex = i;
+                }
+            }
+
+            return candidates[safestIndex];
         }
 
         bool CanFire()
