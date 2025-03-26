@@ -146,10 +146,11 @@ MonoBehaviour:
   projectileBar: {fileID: 7280268980042811620}
   turret: {fileID: 7831918942946891958}
   rotationSpeed: 80
-  rotateLeftKey: 113
-  rotateRightKey: 101
   TopClamp: 90
   BottomClamp: -90
+  turretRotationSpeed: 50
+  turretPingPongSpeed: 50
+  backInputThreshold: 0.75
   shootKey: 32
   projectilePrefab: {fileID: 5890560936853567077, guid: b6946a38e89dd484b9b7be714079dfd5,
     type: 3}
@@ -212,7 +213,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1916082411674582}
   m_Enabled: 1
-  m_AgentTypeID: 0
+  m_AgentTypeID: -1372625422
   m_Radius: 0.5
   m_Speed: 1
   m_Acceleration: 1
@@ -297,6 +298,7 @@ MonoBehaviour:
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
+  turretRotate: 0
 --- !u!114 &1976751978236371947
 MonoBehaviour:
   m_ObjectHideFlags: 0
