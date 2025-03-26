@@ -24,6 +24,10 @@ namespace StarterAssets
         private Vector2 leftStickInput;
         private Vector2 dPadInput;
 
+        // Float to hold the axis value
+        public float turretRotate;
+
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         public void OnMove(InputValue value)
         {
@@ -35,6 +39,11 @@ namespace StarterAssets
         {
             dPadInput = value.Get<Vector2>();
             UpdateMoveInput();
+        }
+
+        public void OnTurretRotate(InputValue value)
+        {
+            turretRotate = value.Get<float>(); // Axis outputs a float (-1 to 1)
         }
 
         public void OnLook(InputValue value)

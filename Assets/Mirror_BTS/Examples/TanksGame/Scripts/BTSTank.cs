@@ -44,14 +44,14 @@ namespace com.burningthumb.examples
         public float rotationSpeed = 100;
 
         [Header("Turret")]
-        public KeyCode rotateLeftKey = KeyCode.Q;
-        public KeyCode rotateRightKey = KeyCode.E;
         [Tooltip("How far in degrees can you move the turret left/right from center")]
         public float TopClamp = 90.0f;
         [Tooltip("How far in degrees can you move the turret left/right from center")]
         public float BottomClamp = -90.0f;
-        [Tooltip("Speed of turret rotation when using D-pad back")]
+        [Tooltip("Speed of turret rotation with Q/E keys")]
         public float turretRotationSpeed = 50f;
+        [Tooltip("Speed of turret rotation when using D-pad back")]
+        public float turretPingPongSpeed = 50f;
         [Tooltip("Minimum input value for left stick/D-pad down to trigger turret rotation (0 to 1)")]
         public float backInputThreshold = 0.75f;
 
@@ -59,7 +59,6 @@ namespace com.burningthumb.examples
         public KeyCode shootKey = KeyCode.Space;
         public GameObject projectilePrefab;
         public Transform projectileMount;
-        public float m_autoReloadTime = 10.0f;
 
         [Header("Stats")]
         public int m_maxHealth = 4;
@@ -79,16 +78,9 @@ namespace com.burningthumb.examples
         private PlayerInput m_playerInput;
 #endif
 
-        // cinemachine
+        // Turret variables for original logic
         private float m_cinemachineTargetPitch;
-
-        // player
-        private float m_speed;
         private float m_rotationVelocity;
-        private float m_verticalVelocity;
-        private float m_terminalVelocity = 53.0f;
-
-        // Turret ping-pong rotation
         private bool isRotatingTurret = false;
         private float turretRotationDirection = 1f;
         private bool wasBackPressedLastFrame = false;
@@ -148,7 +140,6 @@ namespace com.burningthumb.examples
                 projectile = m_maxProjectile;
             }
 
-            // Configure NavMeshAgent
             agent.updateRotation = false; // Manual rotation control
             agent.updatePosition = true;  // Allow velocity to move the agent
             agent.acceleration = 1000f;   // High acceleration to match velocity instantly
@@ -166,31 +157,27 @@ namespace com.burningthumb.examples
         {
             if (isLocalPlayer)
             {
-                // Set target speed based on sprint input
                 float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
                 agent.speed = targetSpeed;
 
-                // Rotate tank left/right
                 float horizontal = m_input.move.x;
                 transform.Rotate(0, horizontal * rotationSpeed * Time.deltaTime, 0);
 
-                // Move forward only
                 float vertical = m_input.move.y;
                 Vector3 forward = transform.forward;
                 Vector3 forwardVelocity = forward * Mathf.Max(vertical, 0) * agent.speed;
-                agent.velocity = new Vector3(forwardVelocity.x, agent.velocity.y, forwardVelocity.z); // Preserve y for gravity/slopes
+                agent.velocity = new Vector3(forwardVelocity.x, agent.velocity.y, forwardVelocity.z);
                 animator.SetBool("Moving", agent.velocity.sqrMagnitude > 0.01f);
 
-                // Shoot
                 if (m_input.jump)
                 {
                     m_input.jump = false;
                     CmdFire();
                 }
 
-                // Turret rotation
-                RotateTurret();
-                HandleDPadTurretRotation();
+                RotateTurret(); // Original mouse/joystick logic
+                HandleDPadTurretRotation(); // Original D-pad logic
+                RotateTurretWithKeys(); // New Q/E key logic
             }
         }
 
@@ -228,14 +215,9 @@ namespace com.burningthumb.examples
 
         IEnumerator AutoReload()
         {
-            yield return null;
-
-            if (m_autoReloadTime > 0)
-            {
-                yield return new WaitForSeconds(m_autoReloadTime);
-                projectile = m_maxProjectile;
-                projectileBar.color = m_saveProjectileBarColor;
-            }
+            yield return new WaitForSeconds(10.0f);
+            projectile = m_maxProjectile;
+            projectileBar.color = m_saveProjectileBarColor;
         }
 
         [ClientRpc]
@@ -290,7 +272,7 @@ namespace com.burningthumb.examples
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
-        void RotateTurret()
+        void RotateTurret() // Original mouse/joystick logic
         {
             if (m_input.look.sqrMagnitude >= m_threshold)
             {
@@ -308,7 +290,7 @@ namespace com.burningthumb.examples
             }
         }
 
-        void HandleDPadTurretRotation()
+        void HandleDPadTurretRotation() // Original D-pad ping-pong logic
         {
             float dPadVertical = m_input.move.y;
 
@@ -330,7 +312,7 @@ namespace com.burningthumb.examples
                 float currentAngle = turret.localEulerAngles.y;
                 if (currentAngle > 180f) currentAngle -= 360f;
 
-                float rotationStep = turretRotationSpeed * turretRotationDirection * Time.deltaTime;
+                float rotationStep = turretPingPongSpeed * turretRotationDirection * Time.deltaTime;
                 float newAngle = currentAngle + rotationStep;
 
                 if (newAngle >= TopClamp || newAngle <= BottomClamp)
@@ -340,6 +322,22 @@ namespace com.burningthumb.examples
                 }
 
                 turret.localEulerAngles = new Vector3(0, newAngle, 0);
+            }
+        }
+
+        void RotateTurretWithKeys() // New Q/E key logic
+        {
+            float rotationInput = m_input.turretRotate; // -1 for Q, 1 for E, 0 if neither
+            if (Mathf.Abs(rotationInput) > m_threshold)
+            {
+                float currentYaw = turret.localEulerAngles.y;
+                if (currentYaw > 180f) currentYaw -= 360f; // Normalize to -180 to 180
+
+                float rotationDelta = rotationInput * turretRotationSpeed * Time.deltaTime;
+                float newYaw = currentYaw + rotationDelta;
+                newYaw = Mathf.Clamp(newYaw, BottomClamp, TopClamp);
+
+                turret.localEulerAngles = new Vector3(0, newYaw, 0);
             }
         }
     }
