@@ -8,9 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: a9be0633574444027b5c4374ff93c486
-  m_OcclusionCullingData: {fileID: 36300000, guid: 82a102e4e95974b0e8042631736e5017,
-    type: 2}
+  m_SceneGUID: 00000000000000000000000000000000
+  m_OcclusionCullingData: {fileID: 0}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -398,6 +397,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615865298294834244, guid: edf2c2d97850b453ca843a53ab656732,
+        type: 3}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615865298294834245, guid: edf2c2d97850b453ca843a53ab656732,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -179.81898
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615865298294834245, guid: edf2c2d97850b453ca843a53ab656732,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -119.6092
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615865298294834245, guid: edf2c2d97850b453ca843a53ab656732,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.0000000547158
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615865298294834245, guid: edf2c2d97850b453ca843a53ab656732,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.000000010078596
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615865298294834245, guid: edf2c2d97850b453ca843a53ab656732,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.98345524
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615865298294834245, guid: edf2c2d97850b453ca843a53ab656732,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.18115145
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
