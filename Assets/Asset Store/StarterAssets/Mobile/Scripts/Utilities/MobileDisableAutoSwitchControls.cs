@@ -22,7 +22,10 @@ public class MobileDisableAutoSwitchControls : MonoBehaviour
 
     void Start()
     {
-        DisableAutoSwitchControls();
+        if (!BTS_TV_Type.IsAndroidTV)
+        {
+            DisableAutoSwitchControls();
+        }
     }
 
     void DisableAutoSwitchControls()

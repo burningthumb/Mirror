@@ -25,11 +25,10 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ads.ios-support": {
-      "version": "1.0.0",
+      "version": "file:/Users/robert/SafePlace/BTS Source Code/github/com.unity.ads.ios-support/com.unity.ads.ios-support",
       "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.ai.navigation": {
       "version": "2.0.5",

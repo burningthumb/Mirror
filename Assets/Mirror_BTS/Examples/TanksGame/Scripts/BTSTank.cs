@@ -119,7 +119,7 @@ namespace com.burningthumb.examples
 
                 if (null != m_mobileInput)
                 {
-                    if ((Application.platform == RuntimePlatform.Android) ||
+                    if (((Application.platform == RuntimePlatform.Android) && (!BTS_TV_Type.IsAndroidTV)) ||
                         (Application.platform == RuntimePlatform.IPhonePlayer))
                     {
                         m_mobileInput.SetActive(true);

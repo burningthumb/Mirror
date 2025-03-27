@@ -10,13 +10,12 @@ namespace Unity.Advertisement.IosSupport.Samples
 	/// </summary>
 	public class ContextScreenManager : MonoBehaviour
 	{
-		public static string kATTFirstTime = "kATTFirstTime";
-		public static bool s_aTTFirstTime = true;
-
 		/// <summary>
 		/// The prefab that will be instantiated by this component.
 		/// The prefab has to have an ContextScreenView component on its root GameObject.
 		/// </summary>
+		/// 
+		public bool m_doCheck = true;
 		public ContextScreenView contextScreenPrefab;
 		public GameObject m_mainCanvas;
 
@@ -25,6 +24,8 @@ namespace Unity.Advertisement.IosSupport.Samples
 #if UNITY_IOS || UNITY_TVOS
 			// check with iOS to see if the user has accepted or declined tracking
 
+			if (m_doCheck)
+			{ 
 			var status = ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED;
 
 			try
@@ -39,35 +40,41 @@ namespace Unity.Advertisement.IosSupport.Samples
 				status = ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED;
 			}
 
-			// TODO: tvOS Bug
-//#if UNITY_TVOS
-//				s_aTTFirstTime = (PlayerPrefs.GetInt(kATTFirstTime, 1) == 1) ? true:false;
-
-//				PlayerPrefs.SetInt(kATTFirstTime, 0);
-//				PlayerPrefs.Save();
-
-//				if (!s_aTTFirstTime)
-//				{
-//					status = ATTrackingStatusBinding.AuthorizationTrackingStatus.AUTHORIZED;
-//				}
-//#endif
 
 			Debug.Log($"ContextScreenManager status={status}");
 
 			if (status == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
 			{
 
-				m_mainCanvas.SetActive(false);
+				if (m_mainCanvas != null)
+				{
+					m_mainCanvas.SetActive(false);
+				}
 
 				var contextScreen = Instantiate(contextScreenPrefab).GetComponent<ContextScreenView>();
 
 				// after the Continue button is pressed, and the tracking request
 				// has been sent, automatically destroy the popup to conserve memory
-				contextScreen.sentTrackingAuthorizationRequest += () => m_mainCanvas.SetActive(true);
-				contextScreen.sentTrackingAuthorizationRequest += () => Destroy(contextScreen.gameObject);
+				contextScreen.sentTrackingAuthorizationRequest += () =>
+				{
+					if (m_mainCanvas != null)
+					{
+						m_mainCanvas.SetActive(true);
+					}
+				};
+
+				if (null != contextScreen)
+				{ 
+					contextScreen.sentTrackingAuthorizationRequest += () => Destroy(contextScreen.gameObject);
+				}
+			}
+			}
+			else
+			{
+				Debug.Log("Unity iOS Support: App Tracking Transparency status not checked, because the flag is false");
 			}
 #else
-            Debug.Log("Unity iOS Support: App Tracking Transparency status not checked, because the platform is not iOS.");
+            Debug.Log("Unity iOS Support: App Tracking Transparency status not checked, because the platform is not iOS or tvOS.");
 #endif
 		}
 	}

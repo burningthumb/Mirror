@@ -21,7 +21,7 @@ namespace Unity.Advertisement.IosSupport.Components
 
         public void RequestAuthorizationTracking()
         {
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_TVOS
             Debug.Log("Unity iOS Support: Requesting iOS App Tracking Transparency native dialog.");
 
             ATTrackingStatusBinding.RequestAuthorizationTracking();
@@ -29,7 +29,7 @@ namespace Unity.Advertisement.IosSupport.Components
             sentTrackingAuthorizationRequest?.Invoke();
 #else
             Debug.LogWarning("Unity iOS Support: Tried to request iOS App Tracking Transparency native dialog, " +
-                             "but the current platform is not iOS.");
+                             "but the current platform is not iOS or tvOS.");
 #endif
         }
     }

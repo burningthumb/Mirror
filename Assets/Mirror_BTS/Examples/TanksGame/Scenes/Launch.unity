@@ -1793,6 +1793,7 @@ GameObject:
   - component: {fileID: 203422429}
   - component: {fileID: 203422431}
   - component: {fileID: 203422430}
+  - component: {fileID: 203422432}
   m_Layer: 5
   m_Name: Music Volume
   m_TagString: Untagged
@@ -1899,6 +1900,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &203422432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203422428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75545781834344daeaf1e528d5b76836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Theme: {fileID: 11400000, guid: 120d09b5fe1a4475fb5619a9d1b85faa, type: 2}
 --- !u!1 &227230026
 GameObject:
   m_ObjectHideFlags: 0
@@ -2311,6 +2325,7 @@ GameObject:
   - component: {fileID: 264922501}
   - component: {fileID: 264922503}
   - component: {fileID: 264922502}
+  - component: {fileID: 264922504}
   m_Layer: 5
   m_Name: Master Volume
   m_TagString: Untagged
@@ -2417,6 +2432,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &264922504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264922500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75545781834344daeaf1e528d5b76836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Theme: {fileID: 11400000, guid: 120d09b5fe1a4475fb5619a9d1b85faa, type: 2}
 --- !u!1 &268010628
 GameObject:
   m_ObjectHideFlags: 0
@@ -5563,22 +5591,26 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'NetTanks is a multiplayer local area network game.
+  m_text: 'NetTanks is a single or multiplayer local area network game.
 
 
-    To play, one
-    player needs to host a game and the other one to three players need to tap Find
-    and then join the game by tapping on the found server IP Address.
+    To
+    play a single player game, tap Start.
 
 
-    If Find
-    does not show any server IP address the other players need to enter the IP address
-    of the server under the Client button and then tap Client to connect.
+    To play a multiplayer network game,
+    one player taps Host to host a game and the other players tap Find and then tap
+    on the found host IP Address to join the game.
 
 
-    As
-    players are eliminated they become observers. When only one player is left they
-    are the winner and its time to play a new game.'
+    If Find does not display
+    a host IP address the other players can  enter the IP address of the host in
+    the field under the Client button and then tap Client to connect.
+
+
+    As players
+    are eliminated they become observers. When only one player is left they are the
+    winner and its time to play a new game.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8688,6 +8720,7 @@ GameObject:
   - component: {fileID: 962957672}
   - component: {fileID: 962957674}
   - component: {fileID: 962957673}
+  - component: {fileID: 962957675}
   m_Layer: 5
   m_Name: UI Volume
   m_TagString: Untagged
@@ -8794,6 +8827,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &962957675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962957671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75545781834344daeaf1e528d5b76836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Theme: {fileID: 11400000, guid: 120d09b5fe1a4475fb5619a9d1b85faa, type: 2}
 --- !u!1 &972775910
 GameObject:
   m_ObjectHideFlags: 0
@@ -13337,6 +13383,7 @@ GameObject:
   - component: {fileID: 1550683889}
   - component: {fileID: 1550683891}
   - component: {fileID: 1550683890}
+  - component: {fileID: 1550683892}
   m_Layer: 5
   m_Name: SFX Volume
   m_TagString: Untagged
@@ -13443,6 +13490,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1550683892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550683888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75545781834344daeaf1e528d5b76836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Theme: {fileID: 11400000, guid: 120d09b5fe1a4475fb5619a9d1b85faa, type: 2}
 --- !u!1 &1582575078
 GameObject:
   m_ObjectHideFlags: 0
@@ -16167,7 +16227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1976130159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16180,6 +16240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f0c6ccc637064b31981616bfc724dcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_doCheck: 1
   contextScreenPrefab: {fileID: 114597661633457500, guid: fa79c615e83e14e2fbc0f083dee317e0,
     type: 3}
   m_mainCanvas: {fileID: 250986664}

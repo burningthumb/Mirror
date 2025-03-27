@@ -1,23 +1,20 @@
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
-#if UNITY_IOS
-//using UnityEditor.iOS.Xcode;
-#endif
 using System.IO;
 
 using UnityEngine;
 
 public class PostBuildStep
 {
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_TVOS
 	private const string CodeSignEntitlementsPropertyName = "CODE_SIGN_ENTITLEMENTS";
 	private const string EntitlementsPlistFilenameExtension = ".entitlements";
 	private const string NetworkingMulticastEntitlementKey = "com.apple.developer.networking.multicast";
 	private const string GameCenterEntitlementKey = "com.apple.developer.game-center";
 	private const bool NetworkingMulticastEntitlementValue = true;
 	private const bool GameCenterEntitlementValue = true;
-#endif // UNITY_IOS
+#endif // UNITY_IOS  || UNITY_TVOS
 
 	// Set the IDFA request description:
 	const string k_TrackingDescription = "Your data will be used to provide you a better and personalized ad experience.";
@@ -25,7 +22,7 @@ public class PostBuildStep
 	[PostProcessBuild(0)]
 	public static void OnPostProcessBuild0(BuildTarget buildTarget, string pathToXcode)
 	{
-		if (buildTarget == BuildTarget.iOS)
+		if (buildTarget == BuildTarget.iOS || buildTarget == BuildTarget.tvOS)
 		{
 			AddPListValues(pathToXcode);
 		}
@@ -61,6 +58,7 @@ public class PostBuildStep
 		switch (target)
 		{
 			case BuildTarget.iOS:
+			case BuildTarget.tvOS:
 				PostProcessEntitlements(pathToBuiltProject);
 				break;
 			default:
@@ -71,7 +69,7 @@ public class PostBuildStep
 
 	private static void PostProcessEntitlements(string pathToBuiltProject)
 	{
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_TVOS
 		// load project
 		string projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
 		var project = new PBXProject();
@@ -136,13 +134,13 @@ public class PostBuildStep
 			project.WriteToFile(projectPath);
 			Debug.Log($"Added Entitlements plist to project (target: {targetGuid})");
 		}
-#endif // UNITY_IOS
+#endif // UNITY_IOS || UNITY_TVOS
 	}
 
 	[PostProcessBuild(999)]
 	public static void OnPostProcessBuild999(BuildTarget buildTarget, string path)
 	{
-		if (buildTarget == BuildTarget.iOS)
+		if (buildTarget == BuildTarget.iOS || buildTarget == BuildTarget.tvOS )
 		{
 			ModifyFrameworks(path);
 		}
@@ -160,7 +158,6 @@ public class PostBuildStep
 		foreach (var targetGuid in new[] { mainTargetGuid, project.GetUnityFrameworkTargetGuid() })
 		{
 			project.SetBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "NO");
-			project.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-ld_classic");
 		}
 
 		project.SetBuildProperty(mainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
