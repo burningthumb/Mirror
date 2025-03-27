@@ -1726,7 +1726,7 @@ GameObject:
   - component: {fileID: 5932341935357772207}
   - component: {fileID: 3428153087483807983}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: Hint (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1746,8 +1746,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4536685987966826652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1.25}
+  m_AnchorMin: {x: 0, y: 1.05}
+  m_AnchorMax: {x: 1, y: 1.3}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

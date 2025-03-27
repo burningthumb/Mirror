@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 3925781425652039304}
   - component: {fileID: 1035130768554401295}
   - component: {fileID: 8375675451333600451}
+  - component: {fileID: 320130692995547573}
   m_Layer: 5
   m_Name: IngameCanvas
   m_TagString: Untagged
@@ -481,6 +482,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afa2d590c474413d9fc183551385ed85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &320130692995547573
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528260097345992010}
+  m_Enabled: 1
+  m_Alpha: 0.5
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3170201599412872235
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +594,7 @@ TextMesh:
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
-    rgba: 4285923191
+    rgba: 2155216759
 --- !u!114 &5048110225452870724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,7 +894,7 @@ TextMesh:
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
-    rgba: 4285887999
+    rgba: 2155181567
 --- !u!114 &4969305952766559653
 MonoBehaviour:
   m_ObjectHideFlags: 0
