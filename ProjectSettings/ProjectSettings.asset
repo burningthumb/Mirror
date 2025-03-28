@@ -169,7 +169,7 @@ PlayerSettings:
     Android: com.burningthumb.game.nettanks
     Standalone: com.burningthumb.game.nettanks
     iPhone: com.burningthumb.game.nettanks
-    tvOS: com.burningthumb.game.netpong
+    tvOS: com.burningthumb.game.nettanks
   buildNumber:
     Bratwurst: 0
     Standalone: 250327
