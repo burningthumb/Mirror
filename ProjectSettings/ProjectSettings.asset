@@ -175,7 +175,7 @@ PlayerSettings:
     Standalone: 250327
     VisionOS: 0
     iPhone: 250310
-    tvOS: 250310
+    tvOS: 250329
   overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 10
   AndroidMinSdkVersion: 23
