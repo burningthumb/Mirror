@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6049736197951068195}
   - component: {fileID: 1099106896883344094}
   - component: {fileID: 8385310764348317404}
+  - component: {fileID: 5215341760957742584}
   m_Layer: 5
   m_Name: ShowHideSettings
   m_TagString: Untagged
@@ -122,6 +123,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ControlPath: <keyboard>/escape
+--- !u!114 &5215341760957742584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236514248573959215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d44e7f5790b04c35bdc81d9d39069f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  juggleInterval: 10
+  initialDelay: 2.5
+  buttonHint: {fileID: 3428153087483807983}
+  slideDuration: 0.5
+  juggleDuration: 1
+  pulseScale: 1.1
+  jiggleAngle: 4
+  slideDistance: 50
 --- !u!1 &5382103766821857449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1725,6 +1746,7 @@ GameObject:
   - component: {fileID: 4866253287814129860}
   - component: {fileID: 5932341935357772207}
   - component: {fileID: 3428153087483807983}
+  - component: {fileID: 8883983576809503733}
   m_Layer: 5
   m_Name: Hint (TMP)
   m_TagString: Untagged
@@ -1851,6 +1873,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8883983576809503733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7467889823644365649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09c7f742f12fd44048952189e927dd63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Theme: {fileID: 11400000, guid: ce6d9c9ef8c774ca49656d0b3fa33177, type: 2}
 --- !u!1 &8408658996845961699
 GameObject:
   m_ObjectHideFlags: 0
