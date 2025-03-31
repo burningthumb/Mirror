@@ -19,7 +19,7 @@ MonoBehaviour:
     start running. Every game is different."
   m_adSprite: {fileID: 21300000, guid: 7fc668a3b449341d9a6c4dae4b7a237b, type: 3}
   m_url: https://burningthumb.com/games-bts/bts-canyon-run/
-  m_gameID: 8
+  m_gameID: 1
   m_medium: 0
   m_adID: 2
   m_adVariant: 0

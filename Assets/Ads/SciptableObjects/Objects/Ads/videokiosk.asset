@@ -18,7 +18,10 @@ MonoBehaviour:
     Android video kiosk to loop video, images, and web pages in minutes.
   m_adSprite: {fileID: 21300000, guid: 1c1dd2b319cf648bfa09d9ed0abd916a, type: 3}
   m_url: https://burningthumb.com/apps/video-kiosk/
-  m_gameID: 8
+  m_gameID: 1
   m_medium: 0
   m_adID: 13
   m_adVariant: 0
+  m_platformAlternatives:
+  - m_platforms: 01000000080000001f000000
+    m_btsAd: {fileID: 11400000, guid: 0d97eeef4a8ed4dc0965549fc2689bc6, type: 2}

@@ -17,7 +17,10 @@ MonoBehaviour:
   m_blurb: To keep your web browser running smoothly, get NetShred for macOS.
   m_adSprite: {fileID: 21300000, guid: d67c5511e07494fbaa29c51abfb5963f, type: 3}
   m_url: https://mireth.com/products/netshred/
-  m_gameID: 8
+  m_gameID: 1
   m_medium: 0
   m_adID: 10
   m_adVariant: 0
+  m_platformAlternatives:
+  - m_platforms: 0b000000
+    m_btsAd: {fileID: 11400000, guid: 0d97eeef4a8ed4dc0965549fc2689bc6, type: 2}

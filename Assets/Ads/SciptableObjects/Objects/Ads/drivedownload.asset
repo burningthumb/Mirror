@@ -18,7 +18,10 @@ MonoBehaviour:
     TV, Android TV Box, Android tablet or Android phone. '
   m_adSprite: {fileID: 21300000, guid: 10c3c8d96472c4f4b9e60be7bdf85acf, type: 3}
   m_url: https://burningthumb.com/apps/drive-download-android/
-  m_gameID: 8
+  m_gameID: 1
   m_medium: 0
   m_adID: 4
   m_adVariant: 0
+  m_platformAlternatives:
+  - m_platforms: 080000001f00000001000000
+    m_btsAd: {fileID: 11400000, guid: 0d97eeef4a8ed4dc0965549fc2689bc6, type: 2}

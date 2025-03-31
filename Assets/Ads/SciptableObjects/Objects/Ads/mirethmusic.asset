@@ -16,8 +16,11 @@ MonoBehaviour:
   m_subtitle: www.mireth.com
   m_blurb: To own the Swiss Army Knife of music Apps for macOS, get mirethMusic.
   m_adSprite: {fileID: 21300000, guid: 46fe8e1add80d4acb9152c1d5885134b, type: 3}
-  m_url: https://www.mireth.com/mirethmusic
-  m_gameID: 8
+  m_url: https://mireth.com/products/mirethmusic/
+  m_gameID: 1
   m_medium: 0
   m_adID: 8
   m_adVariant: 0
+  m_platformAlternatives:
+  - m_platforms: 0b000000
+    m_btsAd: {fileID: 11400000, guid: 0d97eeef4a8ed4dc0965549fc2689bc6, type: 2}

@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_title: Net Tanks
   m_subtitle: www.burningthumb.com
-  m_blurb: "It\u2019s the kind of game that someone who likes to blow stuff up,\nin
-    that retro cool kind of way, can enjoy! BTS NetTanks is a local area network
-    tank battle for two to four players with four arenas from which to choose"
+  m_blurb: "It\u2019s the kind of game that someone who likes to blow stuff up, in
+    that retro cool kind of way, can enjoy! BTS NetTanks is a one player or multiplayer
+    local network tank battle for two to four players with four arenas from which
+    to choose."
   m_adSprite: {fileID: 21300000, guid: 4a4a431c4d6dc45deb9ad90667ff541b, type: 3}
   m_url: https://burningthumb.com/games-bts/bts-net-tanks/
-  m_gameID: 8
+  m_gameID: 1
   m_medium: 0
   m_adID: 11
   m_adVariant: 0
