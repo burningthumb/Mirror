@@ -141,7 +141,7 @@ PlayerSettings:
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
-  tvOSBundleVersion: 2.0.1
+  tvOSBundleVersion: 2.0.2
   bundleVersion: 2.0.2
   preloadedAssets:
   - {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
