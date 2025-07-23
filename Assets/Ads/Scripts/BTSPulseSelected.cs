@@ -21,7 +21,7 @@ public class BTSPulseSelected : MonoBehaviour
 
 		a_selectable.Select();
 
-		Debug.Log($"Added and selected: {a_selectable.name}", a_selectable.gameObject);
+//		Debug.Log($"Added and selected: {a_selectable.name}", a_selectable.gameObject);
 	}
 
 	public static void RemoveSelectThis(Selectable a_selectable)
@@ -112,9 +112,9 @@ public class BTSPulseSelected : MonoBehaviour
 
 		yield return new WaitForSecondsRealtime(l_secondsPerFrame);
 
-		while (a_transform.gameObject.activeInHierarchy)
+		while (null != a_transform && a_transform.gameObject.activeInHierarchy)
 		{
-//			Debug.Log($"{a_transform.name} {a_transform.gameObject.activeInHierarchy}", a_transform.gameObject);
+			//			Debug.Log($"{a_transform.name} {a_transform.gameObject.activeInHierarchy}", a_transform.gameObject);
 
 			float timer = 0f;
 
@@ -139,7 +139,8 @@ public class BTSPulseSelected : MonoBehaviour
 			}
 
 			// Return to normal
-			while (a_transform.localScale.x > a_originalSize.x)
+
+			while ((null != a_transform) && (a_transform.localScale.x > a_originalSize.x))
 			{
 				yield return new WaitForSecondsRealtime(l_secondsPerFrame);
 
@@ -153,6 +154,7 @@ public class BTSPulseSelected : MonoBehaviour
 				}
 			}
 
+
 			if (null != a_transform)
 			{
 				a_transform.localScale = a_originalSize;
@@ -162,7 +164,7 @@ public class BTSPulseSelected : MonoBehaviour
 		}
 
 		// The selected item went AWOL
-		if (!a_transform.gameObject.activeInHierarchy)
+		if (null == a_transform || !a_transform.gameObject.activeInHierarchy)
 		{
 			SelectFirstOrNothing();
 		}

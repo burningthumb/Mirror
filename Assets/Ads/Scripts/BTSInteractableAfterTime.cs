@@ -1,16 +1,41 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BTSInteractableAfterTime : MonoBehaviour
 {
-    [SerializeField] float m_time = 30;
+    [SerializeField] float m_countdownTime = 15;
     [SerializeField] Button m_button;
     [SerializeField] TMP_Text m_hintText;
 
     string m_saveText;
 
-    public void Start()
+    public float CountdownTime
+	{
+		get
+		{
+			return m_countdownTime;
+		}
+	}
+
+	public string HintText
+	{
+		get
+		{
+			return m_hintText.text;
+		}
+
+		set
+		{
+			if (null != m_hintText)
+			{
+				m_hintText.text = value;
+			}
+		}
+	}
+
+    public void OnEnable()
     {
         if (null == m_button)
         {
@@ -29,29 +54,27 @@ public class BTSInteractableAfterTime : MonoBehaviour
         }
 
         // Start the countdown using a coroutine instead of Invoke
+        SetHintText(m_countdownTime);
         StartCoroutine(CountdownCoroutine());
     }
 
-    private System.Collections.IEnumerator CountdownCoroutine()
+    private IEnumerator CountdownCoroutine()
     {
-        float remainingTime = m_time;
+        float remainingTime = m_countdownTime;
 
         while (remainingTime > 0)
-        {
-            // Wait for 1 second using unscaled time
-            float startTime = Time.realtimeSinceStartup;
-            yield return new WaitUntil(() => Time.realtimeSinceStartup - startTime >= 1.0f);
+		{
+			// Wait for 1 second using unscaled time
+			float startTime = Time.realtimeSinceStartup;
+			yield return new WaitUntil(() => Time.realtimeSinceStartup - startTime >= 1.0f);
 
-            remainingTime--;
+			remainingTime--;
 
-            if (null != m_hintText)
-            {
-                m_hintText.text = $"{remainingTime} Seconds";
-            }
-        }
+			SetHintText(remainingTime);
+		}
 
-        // When countdown reaches 0, enable the button and restore text
-        if (null != m_button)
+		// When countdown reaches 0, enable the button and restore text
+		if (null != m_button)
         {
             m_button.interactable = true;
             //m_button.enabled = true;
@@ -62,4 +85,12 @@ public class BTSInteractableAfterTime : MonoBehaviour
             m_hintText.text = m_saveText;
         }
     }
+
+	private void SetHintText(float remainingTime)
+	{
+		if (null != m_hintText)
+		{
+			m_hintText.text = $"{remainingTime} Seconds";
+		}
+	}
 }

@@ -19,7 +19,9 @@ MonoBehaviour:
     you can escape."
   m_adSprite: {fileID: 21300000, guid: 52e9b08a5cb624c26b734d6a93268379, type: 3}
   m_url: https://burningthumb.com/games-bts/mars-2055/
-  m_gameID: 1
+  m_jpgUrlPath: https://burningthumb.com/BTSAds/
+  m_gameID: 8
   m_medium: 0
   m_adID: 7
   m_adVariant: 0
+  m_platformAlternatives: []

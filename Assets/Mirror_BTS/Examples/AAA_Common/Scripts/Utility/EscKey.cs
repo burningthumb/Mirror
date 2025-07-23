@@ -16,9 +16,6 @@ public class EscKey : MonoBehaviour
 
 	[SerializeField] GameObject m_settingsPanel;
 
-	[SerializeField] Button m_show;
-	[SerializeField] Button m_hide;
-
 	[SerializeField] Selectable m_selectThisOnShow;
 	[SerializeField] GameObject m_savedSelectedGO;
 
@@ -30,16 +27,6 @@ public class EscKey : MonoBehaviour
 
 		Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false; // Show cursor
-
-		//m_canvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
-
-		//if (!Application.isMobilePlatform)
-		//{
-		//foreach (Canvas l_canvas in m_canvases)
-		//{
-		//	l_canvas.gameObject.SetActive(false);
-		//}
-		//}
 
 		m_nmui = FindFirstObjectByType<NetworkManagerUI>();
 
@@ -102,6 +89,8 @@ public class EscKey : MonoBehaviour
 
     private void ToggleMenu(bool a_andTimescale)
     {
+		Debug.Log($"{Time.time} ToggleMenu: {a_andTimescale}");
+
         bool l_didToggleVisible = false;
 
         if (null != m_settingsPanel)
@@ -125,7 +114,7 @@ public class EscKey : MonoBehaviour
 
 		if (a_makeVisible)
         {
-            Time.timeScale = 0.01f;
+            Time.timeScale = 0.001f;
         }
         else
         {

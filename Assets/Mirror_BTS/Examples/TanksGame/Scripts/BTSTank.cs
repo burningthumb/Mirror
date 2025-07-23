@@ -327,7 +327,8 @@ namespace com.burningthumb.examples
 
         void RotateTurretWithKeys() // New Q/E key logic
         {
-            float rotationInput = m_input.turretRotate; // -1 for Q, 1 for E, 0 if neither
+            float rotationInput = m_input.TurretRotate; // -1 for Q, 1 for E, 0 if neither
+
             if (Mathf.Abs(rotationInput) > m_threshold)
             {
                 float currentYaw = turret.localEulerAngles.y;

@@ -225,6 +225,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasGame
       objectReference: {fileID: 0}
+    - target: {fileID: 6462401750068497360, guid: 7b5a93497a68b464d8d7e8ff39708eec,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6462401750068497367, guid: 7b5a93497a68b464d8d7e8ff39708eec,
         type: 3}
       propertyPath: m_IsActive
@@ -248,17 +253,17 @@ PrefabInstance:
     - target: {fileID: 6462401750134550438, guid: 7b5a93497a68b464d8d7e8ff39708eec,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 16.22895
       objectReference: {fileID: 0}
     - target: {fileID: 6462401750445512479, guid: 7b5a93497a68b464d8d7e8ff39708eec,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6462401750445512479, guid: 7b5a93497a68b464d8d7e8ff39708eec,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6462401750445512479, guid: 7b5a93497a68b464d8d7e8ff39708eec,
         type: 3}

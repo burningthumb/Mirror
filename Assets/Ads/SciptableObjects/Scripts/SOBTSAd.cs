@@ -24,6 +24,7 @@ public class SOBTSAd : ScriptableObject
     [TextArea(1, 4)] [SerializeField] string m_blurb = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
     [SerializeField] Sprite m_adSprite;
     [SerializeField] string m_url = "https://www.domain.com/";
+    [SerializeField] string m_jpgUrlPath = "https://www.domain.com/BTSAds/jpg/";
     [SerializeField] GAMEID m_gameID = GAMEID.none;
     [SerializeField] MEDIUM m_medium = MEDIUM.affiliate;
     [SerializeField] ADID m_adID = ADID.none;
@@ -92,6 +93,15 @@ public class SOBTSAd : ScriptableObject
         get
         {
             return GetPlatformSpecificAd().m_url;
+        }
+    }
+
+    public string JpgURL
+    {
+        get
+        {
+            SOBTSAd l_ad = GetPlatformSpecificAd();
+            return $"{l_ad.m_jpgUrlPath}V{l_ad.m_adVariant}/{l_ad.m_adID}.jpg";
         }
     }
 

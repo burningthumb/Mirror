@@ -17,21 +17,6 @@ public class SetupBTSAd : MonoBehaviour
 	[SerializeField] Image m_image;
 	[SerializeField] BTSOpenWebSite m_btsOpenWebSite;
 
-	// Start is called before the first frame update
-	void Awake()
-	{
-		int l_choice = Random.Range(0, m_ads.Length);
-
-		m_titleText.text = m_ads[l_choice].Title;
-		m_subtitleText.text = m_ads[l_choice].Subtitle;
-		m_blurbText.text = m_ads[l_choice].Blurb;
-
-		m_image.sprite = m_ads[l_choice].AdSprite;
-
-		BTSOpenWebSite.URL = m_ads[l_choice].URL;
-
-	}
-
 	void OnEnable()
 	{
 		int l_choice = Random.Range(0, m_ads.Length);
