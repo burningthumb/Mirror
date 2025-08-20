@@ -7,474 +7,520 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using GoogleMobileAds.Api;
 using System;
+using GoogleMobileAds.Common;
 
 public class AdmobAdSingleton : MonoBehaviour
 {
-	public enum AdmobState { initializing, initialized, unknown }
+    public enum AdmobState { initializing, initialized, unknown }
 
-	public delegate void AdAvailableDelegate(bool a_flag);
-	public static AdAvailableDelegate m_adAvailableDelegate;
+    public delegate void AdAvailableDelegate(bool a_flag);
+    public static AdAvailableDelegate m_adAvailableDelegate;
 
-	public delegate void AdPlayedDelegate(bool a_flag);
-	public static AdPlayedDelegate m_adPlayedDelegate;
+    public delegate void AdPlayedDelegate(bool a_flag);
+    public static AdPlayedDelegate m_adPlayedDelegate;
 
-	private static RewardedAd m_rewardedAd;
+    private static RewardedAd m_rewardedAd;
 
-	[SerializeField] BTSAd m_BTSAd;
+    [SerializeField] BTSAd m_BTSAd;
 
-	[SerializeField] bool m_dontDestroyOnLoad = false;
+    [SerializeField] bool m_dontDestroyOnLoad = false;
 
-	[SerializeField] string m_classname = "AdmobAdSingleton";
+    [SerializeField] string m_classname = "AdmobAdSingleton";
 
-	[SerializeField] string m_noAdUnitID = "unused";
-	[SerializeField] string m_androidAdUnitID = "ca-app-pub-3940256099942544/5224354917";
-	[SerializeField] string m_iosAdUnitID = "ca-app-pub-3940256099942544/1712485313";
+    [SerializeField] string m_noAdUnitID = "unused";
+    [SerializeField] string m_androidAdUnitID = "ca-app-pub-3940256099942544/5224354917";
+    [SerializeField] string m_iosAdUnitID = "ca-app-pub-3940256099942544/1712485313";
 
-	string _adUnitId = null; // This will be set to unused for unsupported platforms
+    string _adUnitId = null; // This will be set to unused for unsupported platforms
 
-	private string _gameId;
+    private string _gameId;
 
-	private bool m_needToLoadAd = false;
+    private bool m_needToLoadAd = false;
 
-	private static AdmobState m_admobState = AdmobState.unknown;
+    private static AdmobState m_admobState = AdmobState.unknown;
 
-	static bool m_isAdAvailable = false;
+    static bool m_isAdAvailable = false;
 
-	static string m_static_classname = "AdmobAdSingleton";
+    static string m_static_classname = "AdmobAdSingleton";
 
-	static AdmobAdSingleton m_sharedInstance = null;
+    static AdmobAdSingleton m_sharedInstance = null;
 
-	public static BTSAd MyBTSAd
-	{
-		get
-		{
-			if (null == SharedInstance)
-			{
-				return null;
-			}
+    // Coroutine references
+    private Coroutine m_retryLoadCoroutine;
+    private Coroutine m_retryShowCoroutine;
 
-			return SharedInstance.m_BTSAd;
-		}
-	}
+    public static BTSAd MyBTSAd
+    {
+        get
+        {
+            if (null == SharedInstance)
+            {
+                return null;
+            }
 
-	public static AdmobAdSingleton SharedInstance
-	{
-		get
-		{
-			return m_sharedInstance;
-		}
+            return SharedInstance.m_BTSAd;
+        }
+    }
 
-		set
-		{
-			m_sharedInstance = value;
-		}
-	}
+    public static AdmobAdSingleton SharedInstance
+    {
+        get
+        {
+            return m_sharedInstance;
+        }
 
-	public static AdAvailableDelegate AdAvailable
-	{
-		get
-		{
-			return m_adAvailableDelegate;
-		}
+        set
+        {
+            m_sharedInstance = value;
+        }
+    }
 
-		set
-		{
-			m_adAvailableDelegate = value;
+    public static AdAvailableDelegate AdAvailable
+    {
+        get
+        {
+            return m_adAvailableDelegate;
+        }
 
-			int l_count = 0;
+        set
+        {
+            m_adAvailableDelegate = value;
 
-			if (null != m_adAvailableDelegate)
-			{
-				Delegate[] l_delegates = m_adAvailableDelegate.GetInvocationList();
+            int l_count = 0;
 
-				if (null != l_delegates)
-				{
-					l_count = l_delegates.Length;
-				}
-			}
+            if (null != m_adAvailableDelegate)
+            {
+                Delegate[] l_delegates = m_adAvailableDelegate.GetInvocationList();
 
-			Debug.Log($"{m_static_classname}: m_adAvailableDelegate.GetInvocationList().Length = {l_count}");
-		}
-	}
+                if (null != l_delegates)
+                {
+                    l_count = l_delegates.Length;
+                }
+            }
 
-	public static AdPlayedDelegate AdPlayed
-	{
-		get
-		{
-			return m_adPlayedDelegate;
-		}
+            Debug.Log($"{m_static_classname}: m_adAvailableDelegate.GetInvocationList().Length = {l_count}");
+        }
+    }
 
-		set
-		{
-			m_adPlayedDelegate = value;
+    public static AdPlayedDelegate AdPlayed
+    {
+        get
+        {
+            return m_adPlayedDelegate;
+        }
 
-			int l_count = 0;
+        set
+        {
+            m_adPlayedDelegate = value;
 
-			if (null != m_adPlayedDelegate)
-			{
-				Delegate[] l_delegates = m_adPlayedDelegate.GetInvocationList();
+            int l_count = 0;
+
+            if (null != m_adPlayedDelegate)
+            {
+                Delegate[] l_delegates = m_adPlayedDelegate.GetInvocationList();
 
 
-				if (null != l_delegates)
-				{
-					l_count = l_delegates.Length;
-				}
-			}
+                if (null != l_delegates)
+                {
+                    l_count = l_delegates.Length;
+                }
+            }
 
-			Debug.Log($"{m_static_classname}: m_adPlayedDelegate.GetInvocationList().Length = {l_count}");
+            Debug.Log($"{m_static_classname}: m_adPlayedDelegate.GetInvocationList().Length = {l_count}");
 
-		}
-	}
+        }
+    }
 
-	public static bool IsAdAvailable
-	{
-		get
-		{
-			return m_isAdAvailable;
-		}
+    public static bool IsAdAvailable
+    {
+        get
+        {
+            return m_isAdAvailable;
+        }
 
-		set
-		{
-			m_isAdAvailable = value;
+        set
+        {
+            m_isAdAvailable = value;
 
-			m_adAvailableDelegate?.Invoke(m_isAdAvailable);
-		}
-	}
+            m_adAvailableDelegate?.Invoke(m_isAdAvailable);
+        }
+    }
 
-	void Awake()
-	{
-		if (m_dontDestroyOnLoad)
-		{
-			// There can be only one
-			if (null != SharedInstance)
-			{
-				Debug.LogWarning($"{m_classname} - There can be only 1. Self destruct second instance!");
-				Destroy(gameObject);
-				return;
-			}
+    void Awake()
+    {
+        if (m_dontDestroyOnLoad)
+        {
+            // There can be only one
+            if (null != SharedInstance)
+            {
+                Debug.LogWarning($"{m_classname} - There can be only 1. Self destruct second instance!");
+                Destroy(gameObject);
+                return;
+            }
 
-			DontDestroyOnLoad(gameObject);
-		}
+            DontDestroyOnLoad(gameObject);
+        }
 
-		SharedInstance = this;
+        SharedInstance = this;
 
-		m_static_classname = m_classname;
+        m_static_classname = m_classname;
 
 #if (UNITY_IOS || UNITY_ANDROID)
-		m_needToLoadAd = true;
+        m_needToLoadAd = true;
 #else
 		m_needToLoadAd = false;
 #endif
-	}
+    }
 
-	public void Start()
-	{
-		// On Android, Unity is paused when displaying interstitial or rewarded video.
-		// This setting makes iOS behave consistently with Android.
+    public void Start()
+    {
+        // On Android, Unity is paused when displaying interstitial or rewarded video.
+        // This setting makes iOS behave consistently with Android.
 #if UNITY_IOS
 		MobileAds.SetiOSAppPauseOnBackground(true);
 #endif
 
-		// When true all events raised by GoogleMobileAds will be raised
-		// on the Unity main thread. The default value is false.
-		// https://developers.google.com/admob/unity/quick-start#raise_ad_events_on_the_unity_main_thread
+        // When true all events raised by GoogleMobileAds will be raised
+        // on the Unity main thread. The default value is false.
+        // https://developers.google.com/admob/unity/quick-start#raise_ad_events_on_the_unity_main_thread
 #if (UNITY_IOS || UNITY_ANDROID)
-		MobileAds.RaiseAdEventsOnUnityMainThread = true;
+        MobileAds.RaiseAdEventsOnUnityMainThread = true;
 #endif
 
-		if (m_needToLoadAd)
-		{
-			InitializeAds();
-		}
+        if (m_needToLoadAd)
+        {
+            InitializeAds();
+        }
 
-	}
+    }
 
-	public void InitializeAds()
-	{
+    public void InitializeAds()
+    {
 
 #if UNITY_IOS
 		_adUnitId = m_iosAdUnitID;
 #elif UNITY_ANDROID
-		_adUnitId = m_androidAdUnitID;
+        _adUnitId = m_androidAdUnitID;
 #else
 		_adUnitId = m_noAdUnitID;
 #endif
 
-		if (AdmobState.unknown == m_admobState)
-		{
-			// Need to Init the SDK
-			m_admobState = AdmobState.initializing;
-			Debug.Log($"{m_classname}: Invoking InitializeGoogleMobileAds()");
-			InitializeGoogleMobileAds(); // --> The callback MUST call LoadRV()
+        if (AdmobState.unknown == m_admobState)
+        {
+            // Need to Init the SDK
+            m_admobState = AdmobState.initializing;
+            Debug.Log($"{m_classname}: Invoking InitializeGoogleMobileAds()");
+            InitializeGoogleMobileAds(); // --> The callback MUST call LoadRV()
 
-		}
-		else
-		{
+        }
+        else
+        {
 
-			if (AdmobState.initialized == m_admobState)
-			{
-				LoadRV();
-			}
-			else
-			{
-				StopAllCoroutines();
-				StartCoroutine(RetryLoadRV());
-			}
-
-
-		}
-	}
-
-	/// <summary>
-	/// Initializes the Google Mobile Ads Unity plugin.
-	/// </summary>
-	private void InitializeGoogleMobileAds()
-	{
-
-		// The Google Mobile Ads Unity plugin needs to be run only once and before loading any ads.
-		if (AdmobState.initialized == m_admobState)
-		{
-			return;
-		}
-
-		// Initialize the Google Mobile Ads Unity plugin.
-		Debug.Log($"{m_classname}: Google Mobile Ads Initializing.");
-
-		MobileAds.Initialize((InitializationStatus initstatus) =>
-		{
-			if (initstatus == null)
-			{
-				Debug.LogError($"{m_classname}: Google Mobile Ads initialization failed.");
-				m_admobState = AdmobState.unknown;
-				Invoke(nameof(InitializeGoogleMobileAds), 5.0f);
-				return;
-			}
-
-			// If you use mediation, you can check the status of each adapter.
-			var adapterStatusMap = initstatus.getAdapterStatusMap();
-			if (adapterStatusMap != null)
-			{
-				foreach (var item in adapterStatusMap)
-				{
-					Debug.Log($"{m_classname}: Adapter {item.Key} is {item.Value.InitializationState}");
-				}
-			}
-
-			Debug.Log($"{m_classname}: Google Mobile Ads initialization complete.");
-			m_admobState = AdmobState.initialized;
-
-			LoadRV();
-		});
-	}
-
-	public void LoadAd()
-	{
-		// Clean up the old ad before loading a new one.
-		if (m_rewardedAd != null)
-		{
-			DestroyAd();
-
-			// Invoking DestroyAd()informs the delegates so no need to do it again here
-		}
-
-		Debug.Log($"{m_classname}: Loading rewarded ad.");
-
-		// Create our request used to load the ad.
-		var adRequest = new AdRequest();
-
-		// Send the request to load the ad.
-		RewardedAd.Load(_adUnitId, adRequest, (RewardedAd ad, LoadAdError error) =>
-		{
-			// If the operation failed with a reason.
-			if (error != null)
-			{
-				Debug.LogError($"{m_classname}: Rewarded ad failed to load an ad with error : {error.GetMessage()}");
-
-				StopCoroutine(RetryLoadRV());
-				StartCoroutine(RetryLoadRV());
-
-				return;
-			}
-
-			// If the operation failed for unknown reasons.
-			// This is an unexpected error, please report this bug if it happens.
-			if (ad == null)
-			{
-				Debug.LogError($"{m_classname}: Unexpected error: Rewarded load event fired with null ad and null error.");
-
-				StopCoroutine(RetryLoadRV());
-				StartCoroutine(RetryLoadRV());
-
-				return;
-			}
-
-			// The operation completed successfully.
-			Debug.Log($"{m_classname}: Rewarded ad loaded with response : " + ad.GetResponseInfo());
-			m_rewardedAd = ad;
-
-			// Register to ad events to extend functionality.
-			RegisterEventHandlers(ad);
-
-			// Inform the UI (or anyone else that cares) that the ad is ready.
-			IsAdAvailable = true;
-
-		});
-	}
-
-	public static void ShowAd()
-	{
-		if (m_rewardedAd != null && m_rewardedAd.CanShowAd())
-		{
-			Debug.Log($"{m_static_classname}: Showing rewarded ad.");
-			m_rewardedAd.Show((Reward reward) =>
-			{
-				Debug.Log($"{m_static_classname}: Rewarded ad granted a reward: {reward.Amount} {reward.Type}");
-			});
-		}
-		else
-		{
-			if (null != SharedInstance)
-			{
-				if (null != SharedInstance.m_BTSAd)
-				{
-					Debug.Log($"{m_static_classname}: Rewarded ad is not ready yet - show your BTS Ad here");
-					SharedInstance.m_BTSAd.gameObject.SetActive(true);
-				}
-				else
-				{
-					Debug.LogWarning($"{m_static_classname}: Rewarded ad is not ready yet - no BTS Ad - play the game");
-					m_adPlayedDelegate.Invoke(true);
-				}
-			}
-			else
-			{
-				Debug.LogError($"{m_static_classname}: What the Puck! SharedInstance is NULL!");
-			}
+            if (AdmobState.initialized == m_admobState)
+            {
+                LoadRV();
+            }
+            else
+            {
+                StopAllCoroutines();
+                StartCoroutine(RetryLoadRV());
+            }
 
 
-		}
+        }
+    }
 
-		// Inform the UI (or anyone else that cares) that the ad is not ready.
-		IsAdAvailable = false;
-	}
+    /// <summary>
+    /// Initializes the Google Mobile Ads Unity plugin.
+    /// </summary>
+    private void InitializeGoogleMobileAds()
+    {
 
-	public void DestroyAd()
-	{
-		if (m_rewardedAd != null)
-		{
-			Debug.Log($"{m_classname}: Destroying rewarded ad.");
-			m_rewardedAd.Destroy();
-			m_rewardedAd = null;
-		}
+        // The Google Mobile Ads Unity plugin needs to be run only once and before loading any ads.
+        if (AdmobState.initialized == m_admobState)
+        {
+            return;
+        }
 
-		// Inform the UI (or anyone else that cares) that the ad is not ready.
-		IsAdAvailable = false;
+        // Initialize the Google Mobile Ads Unity plugin.
+        Debug.Log($"{m_classname}: Google Mobile Ads Initializing.");
 
-	}
+        MobileAds.Initialize((InitializationStatus initstatus) =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
+                if (initstatus == null)
+                {
+                    Debug.LogError($"{m_classname}: Google Mobile Ads initialization failed.");
+                    m_admobState = AdmobState.unknown;
+                    Invoke(nameof(InitializeGoogleMobileAds), 5.0f);
+                    return;
+                }
 
-	private void RegisterEventHandlers(RewardedAd ad)
-	{
-		// Raised when the ad is estimated to have earned money.
-		ad.OnAdPaid += (AdValue adValue) =>
-		{
-			Debug.Log($"{m_classname}: Rewarded ad paid {adValue.Value} {adValue.CurrencyCode}.");
-		};
+                // If you use mediation, you can check the status of each adapter.
+                var adapterStatusMap = initstatus.getAdapterStatusMap();
+                if (adapterStatusMap != null)
+                {
+                    foreach (var item in adapterStatusMap)
+                    {
+                        Debug.Log($"{m_classname}: Adapter {item.Key} is {item.Value.InitializationState}");
+                    }
+                }
 
-		// Raised when an impression is recorded for an ad.
-		ad.OnAdImpressionRecorded += () =>
-		{
-			Debug.Log($"{m_classname}: Rewarded ad recorded an impression.");
-		};
+                Debug.Log($"{m_classname}: Google Mobile Ads initialization complete.");
+                m_admobState = AdmobState.initialized;
 
-		// Raised when a click is recorded for an ad.
-		ad.OnAdClicked += () =>
-		{
-			Debug.Log($"{m_classname}: Rewarded ad was clicked.");
-		};
+                LoadRV();
+            });
+        });
+    }
 
-		// Raised when the ad opened full screen content.
-		ad.OnAdFullScreenContentOpened += () =>
-		{
-			Debug.Log($"{m_classname}: Rewarded ad full screen content opened.");
-		};
+    public void LoadAd()
+    {
+        // Clean up the old ad before loading a new one.
+        if (m_rewardedAd != null)
+        {
+            DestroyAd();
 
-		// Raised when the ad closed full screen content.
-		ad.OnAdFullScreenContentClosed += () =>
-		{
-			Debug.Log($"{m_classname}: Rewarded ad full screen content closed.");
+            // Invoking DestroyAd()informs the delegates so no need to do it again here
+        }
 
-			// Load another ad
-			DestroyAd();
-			LoadRV();
+        Debug.Log($"{m_classname}: Loading rewarded ad.");
 
-			m_adPlayedDelegate.Invoke(true);
-		};
+        // Create our request used to load the ad.
+        var adRequest = new AdRequest();
 
-		// Raised when the ad failed to open full screen content.
-		ad.OnAdFullScreenContentFailed += (AdError error) =>
-		{
-			Debug.LogError($"{m_classname}: Rewarded ad failed to open full screen content with error : {error.GetMessage()}");
+        // Send the request to load the ad.
+        RewardedAd.Load(_adUnitId, adRequest, (RewardedAd ad, LoadAdError error) =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
 
-			StopCoroutine(RetryShowRV());
-			StartCoroutine(RetryShowRV());
-		};
-	}
+                // If the operation failed with a reason.
+                if (error != null)
+                {
+                    Debug.LogError($"{m_classname}: Rewarded ad failed to load an ad with error : {error.GetMessage()}");
+
+                    RestartRetryLoadRV();
+
+                    return;
+                }
+
+                // If the operation failed for unknown reasons.
+                // This is an unexpected error, please report this bug if it happens.
+                if (ad == null)
+                {
+                    Debug.LogError($"{m_classname}: Unexpected error: Rewarded load event fired with null ad and null error.");
+
+                    RestartRetryLoadRV();
+
+                    return;
+                }
+
+                // The operation completed successfully.
+                Debug.Log($"{m_classname}: Rewarded ad loaded with response : " + ad.GetResponseInfo());
+    m_rewardedAd = ad;
+
+                // Register to ad events to extend functionality.
+                RegisterEventHandlers(ad);
+
+                // Inform the UI (or anyone else that cares) that the ad is ready.
+                IsAdAvailable = true;
+            });
+
+        });
+    }
+
+    public static void ShowAd()
+    {
+        if (m_rewardedAd != null && m_rewardedAd.CanShowAd())
+        {
+            Debug.Log($"{m_static_classname}: Showing rewarded ad.");
+            m_rewardedAd.Show((Reward reward) =>
+            {
+                Debug.Log($"{m_static_classname}: Rewarded ad granted a reward: {reward.Amount} {reward.Type}");
+            });
+        }
+        else
+        {
+            if (null != SharedInstance)
+            {
+                if (null != SharedInstance.m_BTSAd)
+                {
+                    Debug.Log($"{m_static_classname}: Rewarded ad is not ready yet - show your BTS Ad here");
+                    SharedInstance.m_BTSAd.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.LogWarning($"{m_static_classname}: Rewarded ad is not ready yet - no BTS Ad - play the game");
+                    m_adPlayedDelegate?.Invoke(true);
+                }
+            }
+            else
+            {
+                Debug.LogError($"{m_static_classname}: What the Puck! SharedInstance is NULL!");
+            }
 
 
-	void LoadRV()
-	{
-		if (AdmobState.initialized != m_admobState)
-		{
-			StopCoroutine(RetryLoadRV());
-			StartCoroutine(RetryLoadRV());
+        }
 
-			IsAdAvailable = false;
+        // Inform the UI (or anyone else that cares) that the ad is not ready.
+        IsAdAvailable = false;
+    }
 
-			return;
-		}
+    public void DestroyAd()
+    {
+        if (m_rewardedAd != null)
+        {
+            Debug.Log($"{m_classname}: Destroying rewarded ad.");
+            m_rewardedAd.Destroy();
+            m_rewardedAd = null;
+        }
 
-		if (null == m_rewardedAd)
-		{
-			LoadAd();
-		}
-		else
-		{
-			IsAdAvailable = true;
-		}
+        // Inform the UI (or anyone else that cares) that the ad is not ready.
+        IsAdAvailable = false;
 
-	}
+    }
 
-	// Try to load the rewarded video in 5 seconds
-	IEnumerator RetryLoadRV()
-	{
-		Debug.Log($"{m_classname}: Waiting 5 seconds");
-		yield return new WaitForSeconds(5.0f);
+    private void RegisterEventHandlers(RewardedAd ad)
+    {
+        // Raised when the ad is estimated to have earned money.
+        ad.OnAdPaid += (AdValue adValue) =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
+                Debug.Log($"{m_classname}: Rewarded ad paid {adValue.Value} {adValue.CurrencyCode}.");
+            });
+        };
 
-		LoadRV();
+        // Raised when an impression is recorded for an ad.
+        ad.OnAdImpressionRecorded += () =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
+                Debug.Log($"{m_classname}: Rewarded ad recorded an impression.");
+            });
+        };
 
-	}
+        // Raised when a click is recorded for an ad.
+        ad.OnAdClicked += () =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
+                Debug.Log($"{m_classname}: Rewarded ad was clicked.");
+            });
+        };
 
-	public static void ShowRV()
-	{
-		Debug.Log($"{m_static_classname}: ShowRV");
+        // Raised when the ad opened full screen content.
+        ad.OnAdFullScreenContentOpened += () =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
+                Debug.Log($"{m_classname}: Rewarded ad full screen content opened.");
+            });
+        };
 
-		ShowAd();
+        // Raised when the ad closed full screen content.
+        ad.OnAdFullScreenContentClosed += () =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
+                Debug.Log($"{m_classname}: Rewarded ad full screen content closed.");
 
-	}
+                // Load another ad
+                DestroyAd();
+                LoadRV();
 
-	IEnumerator RetryShowRV()
-	{
+                m_adPlayedDelegate?.Invoke(true);
+            });
+        };
 
-		yield return new WaitForSeconds(5.0f);
+        // Raised when the ad failed to open full screen content.
+        ad.OnAdFullScreenContentFailed += (AdError error) =>
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(() =>
+            {
+                Debug.LogError($"{m_classname}: Rewarded ad failed to open full screen content with error : {error.GetMessage()}");
 
-		ShowRV();
+                RestartRetryShowRV();
+            });
+        };
+    }
 
-	}
 
-	public static void ContinueFromBTSAd()
-	{
-		MyBTSAd.gameObject.SetActive(false);
-		m_adPlayedDelegate.Invoke(true);
-	}
+    void LoadRV()
+    {
+        if (AdmobState.initialized != m_admobState)
+        {
+            RestartRetryLoadRV();
+
+            IsAdAvailable = false;
+
+            return;
+        }
+
+        if (null == m_rewardedAd)
+        {
+            LoadAd();
+        }
+        else
+        {
+            IsAdAvailable = true;
+        }
+
+    }
+
+    // Try to load the rewarded video in 5 seconds
+    IEnumerator RetryLoadRV()
+    {
+        Debug.Log($"{m_classname}: Waiting 5 seconds");
+        yield return new WaitForSeconds(5.0f);
+
+        LoadRV();
+
+    }
+
+    IEnumerator RetryShowRV()
+    {
+
+        yield return new WaitForSeconds(5.0f);
+
+        ShowRV();
+
+    }
+
+    private void RestartRetryLoadRV()
+    {
+        if (m_retryLoadCoroutine != null)
+        {
+            StopCoroutine(m_retryLoadCoroutine);
+        }
+
+        m_retryLoadCoroutine = StartCoroutine(RetryLoadRV());
+    }
+
+    private void RestartRetryShowRV()
+    {
+        if (m_retryShowCoroutine != null)
+        {
+            StopCoroutine(m_retryShowCoroutine);
+        }
+
+        m_retryShowCoroutine = StartCoroutine(RetryShowRV());
+    }
+
+    public static void ShowRV()
+    {
+        Debug.Log($"{m_static_classname}: ShowRV");
+
+        ShowAd();
+
+    }
+
+    public static void ContinueFromBTSAd()
+    {
+        MyBTSAd.gameObject.SetActive(false);
+        m_adPlayedDelegate?.Invoke(true);
+    }
 
 }

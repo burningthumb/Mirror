@@ -50,6 +50,10 @@ public class ManifestProcessor : IPreprocessBuild
     private const string METADATA_OPTIMIZE_AD_LOADING =
             "com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING";
 
+    // LINT.IfChange
+    private const string METADATA_UNITY_VERSION  = "com.google.unity.ads.UNITY_VERSION";
+    // LINT.ThenChange(//depot/google3/javatests/com/google/android/gmscore/integ/modules/admob/tests/robolectric/src/com/google/android/gms/ads/nonagon/signals/StaticDeviceSignalSourceTest.java)
+
     private XNamespace ns = "http://schemas.android.com/apk/res/android";
 
     public int callbackOrder { get { return 0; } }
@@ -82,6 +86,12 @@ public class ManifestProcessor : IPreprocessBuild
         if (AssetDatabase.IsValidFolder("Packages/com.google.ads.mobile"))
         {
             manifestPath = Path.Combine("Packages/com.google.ads.mobile", MANIFEST_RELATIVE_PATH);
+        }
+
+        if (!File.Exists(manifestPath))
+        {
+            manifestPath = Path.Combine(Path.GetDirectoryName(manifestPath), "src", "main",
+                                        "AndroidManifest.xml");
         }
 
         XDocument manifest = null;
@@ -127,45 +137,22 @@ public class ManifestProcessor : IPreprocessBuild
 
         SetMetadataElement(elemApplication,
                            metas,
-                           METADATA_DELAY_APP_MEASUREMENT_INIT,
-                           instance.DelayAppMeasurementInit);
-
-        SetMetadataElement(elemApplication,
-                           metas,
                            METADATA_OPTIMIZE_INITIALIZATION,
-                           instance.OptimizeInitialization);
+                           !instance.DisableOptimizeInitialization,
+                           true);
 
         SetMetadataElement(elemApplication,
                            metas,
                            METADATA_OPTIMIZE_AD_LOADING,
-                           instance.OptimizeAdLoading);
+                           !instance.DisableOptimizeAdLoading,
+                           true);
+
+        SetMetadataElement(elemApplication,
+                           metas,
+                           METADATA_UNITY_VERSION,
+                           Application.unityVersion);
 
         elemManifest.Save(manifestPath);
-
-        // If GMA is imported via Unity Package Manager, we need to make sure that the
-        // AndroidManifest.xml and project.properties files exist under Assets. Otherwise Unity
-        // will ignore the AndroidManifest.xml.
-        if (!AssetDatabase.IsValidFolder("Assets/Plugins"))
-        {
-            AssetDatabase.CreateFolder("Assets", "Plugins");
-        }
-        if (!AssetDatabase.IsValidFolder("Assets/Plugins/Android"))
-        {
-            AssetDatabase.CreateFolder("Assets/Plugins", "Android");
-        }
-        if (!Directory.Exists("Assets/Plugins/Android/GoogleMobileAdsPlugin.androidlib"))
-        {
-            AssetDatabase.CreateFolder("Assets/Plugins/Android",
-                                       "GoogleMobileAdsPlugin.androidlib");
-        }
-        if (!File.Exists("Assets/" + MANIFEST_RELATIVE_PATH))
-        {
-            File.Copy(manifestPath, "Assets/" + MANIFEST_RELATIVE_PATH);
-        }
-        if (!File.Exists("Assets/" + PROPERTIES_RELATIVE_PATH))
-        {
-            File.Copy(propertiesPath, "Assets/" + PROPERTIES_RELATIVE_PATH);
-        }
     }
 
     private XElement CreateMetaElement(string name, object value)

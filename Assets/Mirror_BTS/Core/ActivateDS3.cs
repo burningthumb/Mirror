@@ -7,14 +7,18 @@ public class ActivateDS3 : MonoBehaviour
     [DllImport("ActivateDS3")]
     private static extern void activate();
 
-    private float checkInterval = 1.0f; // Check every 1 second
+    private float checkInterval = 2.0f; // Check every 2 seconds
     private float lastCheckTime = 0f;
     private bool hasActivated = false; // Track if activation has occurred
+
+    private int m_checklimit = 30;
+    private int m_checkCount = 0;
 
     void Awake()
     {
         // Ensure only one instance exists
-        ActivateDS3[] instances = FindObjectsOfType<ActivateDS3>();
+        ActivateDS3[] instances = FindObjectsByType<ActivateDS3>(FindObjectsSortMode.None);
+
         if (instances.Length > 1)
         {
             // Destroy this instance if another already exists
@@ -34,6 +38,13 @@ public class ActivateDS3 : MonoBehaviour
 
     void Update()
     {
+        if (m_checkCount >= m_checklimit)
+        {
+            return;
+        }
+
+        m_checkCount++;
+
         // Check once per second if not yet activated
         if (!hasActivated && Time.time - lastCheckTime >= checkInterval)
         {
@@ -47,14 +58,14 @@ public class ActivateDS3 : MonoBehaviour
         var gamepads = Gamepad.all;
         if (gamepads.Count == 0)
         {
-            Debug.Log("No gamepads detected.");
+//            Debug.Log("No gamepads detected.");
             return;
         }
 
         bool ps3Detected = false;
         foreach (var gamepad in gamepads)
         {
-            Debug.Log($"Detected gamepad: {gamepad.name} (ID: {gamepad.deviceId})");
+ //           Debug.Log($"Detected gamepad: {gamepad.name} (ID: {gamepad.deviceId})");
             if (gamepad.name.ToLower().Contains("playstation") || gamepad.name.ToLower().Contains("dualshock"))
             {
                 ps3Detected = true;
@@ -68,7 +79,7 @@ public class ActivateDS3 : MonoBehaviour
         }
         else
         {
-            Debug.Log("No PS3 controller detected among connected gamepads.");
+ //           Debug.Log("No PS3 controller detected among connected gamepads.");
         }
     }
 
@@ -77,12 +88,12 @@ public class ActivateDS3 : MonoBehaviour
         try
         {
             activate();
-            Debug.Log("PS3 controller activation attempted!");
+ //           Debug.Log("PS3 controller activation attempted!");
             hasActivated = true; // Stop further checks after successful attempt
         }
-        catch (System.Exception e)
+        catch (System.Exception ignored)
         {
-            Debug.LogError($"Activation failed: {e.Message}");
+ //           Debug.LogError($"Activation failed: {e.Message}");
         }
     }
 }
