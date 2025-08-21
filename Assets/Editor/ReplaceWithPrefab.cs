@@ -559,7 +559,8 @@ namespace Community
                     ResetPreview();
                     objectPreview.Clear();
                     objectsToReplace.Clear();
-                    var allGameObjects = FindObjectsOfType<GameObject>();
+                    //var allGameObjects = FindObjectsOfType<GameObject>();
+                    var allGameObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
                     foreach (var gg in allGameObjects)
                     {
                         if (gg.tag == TagForSearch)
@@ -578,7 +579,8 @@ namespace Community
                         ResetPreview();
                         objectPreview.Clear();
                         objectsToReplace.Clear();
-                        var allGameObjects = FindObjectsOfType<GameObject>();
+                        //var allGameObjects = FindObjectsOfType<GameObject>();
+                        var allGameObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
                         foreach (var gg in allGameObjects)
                         {
                             if (gg.layer == LayerForSearch)

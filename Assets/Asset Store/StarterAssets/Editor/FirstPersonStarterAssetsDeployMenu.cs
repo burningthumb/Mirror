@@ -15,7 +15,8 @@ namespace StarterAssets
         [MenuItem(MenuRoot + "/Reset First Person Controller", false)]
         static void ResetFirstPersonControllerCapsule()
         {
-            var firstPersonControllers = FindObjectsOfType<FirstPersonController>();
+            //var firstPersonControllers = FindObjectsOfType<FirstPersonController>();
+            var firstPersonControllers = FindObjectsByType<FirstPersonController>(FindObjectsSortMode.InstanceID);
             var player = firstPersonControllers.FirstOrDefault(controller => controller.CompareTag(PlayerTag));
 
             GameObject playerGameObject = null;
