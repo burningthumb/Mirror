@@ -168,7 +168,7 @@ public class AdmobAdSingleton : MonoBehaviour
 #if (UNITY_IOS || UNITY_ANDROID)
         m_needToLoadAd = true;
 #else
-		m_needToLoadAd = false;
+        m_needToLoadAd = false;
 #endif
     }
 
@@ -202,7 +202,7 @@ public class AdmobAdSingleton : MonoBehaviour
 #elif UNITY_ANDROID
         _adUnitId = m_androidAdUnitID;
 #else
-		_adUnitId = m_noAdUnitID;
+        _adUnitId = m_noAdUnitID;
 #endif
 
         if (AdmobState.unknown == m_admobState)
@@ -225,8 +225,6 @@ public class AdmobAdSingleton : MonoBehaviour
                 StopAllCoroutines();
                 StartCoroutine(RetryLoadRV());
             }
-
-
         }
     }
 
@@ -319,7 +317,7 @@ public class AdmobAdSingleton : MonoBehaviour
 
                 // The operation completed successfully.
                 Debug.Log($"{m_classname}: Rewarded ad loaded with response : " + ad.GetResponseInfo());
-    m_rewardedAd = ad;
+                m_rewardedAd = ad;
 
                 // Register to ad events to extend functionality.
                 RegisterEventHandlers(ad);

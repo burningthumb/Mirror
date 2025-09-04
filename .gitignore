@@ -79,3 +79,10 @@ Thumbs.db
 
 # CompilationLog.txt created by tests
 Assets/Mirror/Tests/Editor/Weaver/*/CompilationLog.txt
+
+#Gradle
+Assets/Plugins/Android/mainTemplate.gradle.backup*
+
+#Lightmap
+Assets/Fantasy Skybox FREE/Scenes/Demo with terrain/Lightmap*
+Assets/Fantasy Skybox FREE/Scenes/Demo with terrain/ReflectionProbe*

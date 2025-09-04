@@ -4,6 +4,10 @@ using com.burningthumb.examples;
 
 public class NetworkManagerTanksGame : NetworkManager
 {
+    [Header("Tanks")]
+    public int m_selectedTank = -1;
+    public GameObject[] playerPrefabs;
+
     [Header("Game Settings")]
     public bool autoStartServer = false;
 
@@ -19,6 +23,35 @@ public class NetworkManagerTanksGame : NetworkManager
         if (aiTankManager == null)
         {
             Debug.LogWarning("NetworkManagerTanksGame: Could not find BTSAITankManager in OnStartServer. Will retry in OnServerAddPlayer.");
+        }
+    }
+
+    public override void OnValidate()
+    {
+        Random.InitState(System.DateTime.Now.Millisecond);
+
+        if (playerPrefabs.Length > 0)
+        {
+            if (-1 == m_selectedTank)
+            { 
+                playerPrefab = playerPrefabs[Random.Range(0, playerPrefabs.Length)];
+            }
+        }
+
+        // always >= 0
+        maxConnections = Mathf.Max(maxConnections, 0);
+
+        if (playerPrefab != null && !playerPrefab.TryGetComponent<NetworkIdentity>(out _))
+        {
+            Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
+            playerPrefab = null;
+        }
+
+        // This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
+        if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
+        {
+            Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
+            spawnPrefabs.Remove(playerPrefab);
         }
     }
 
@@ -77,9 +110,9 @@ public class NetworkManagerTanksGame : NetworkManager
             spawnRotation = startPos.rotation;
         }
 
-        GameObject player = Instantiate(playerPrefab != null ? playerPrefab : spawnPrefabs[0], 
+        GameObject player = Instantiate(playerPrefab != null ? playerPrefab : spawnPrefabs[0],
             spawnPosition, spawnRotation);
-        
+
         BTSTank tank = player.GetComponent<BTSTank>();
         if (tank == null)
         {

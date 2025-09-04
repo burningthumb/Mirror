@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 38b49695fc0a4418bbc350f2366660c5
+guid: 3d34565b974bc4f7786cb2778acc9f79
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable:
@@ -111,7 +111,17 @@ ModelImporter:
   - first:
       137: 13700000
     second: Recon_Tank
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Recon_Tank
+    second: {fileID: 2100000, guid: cf311d3c8edb4423abcbb7cfb982d8b6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SD_Tiger-I_Base
+    second: {fileID: 2100000, guid: 90f27b25b6f814a0cb6bfafa5785d4c7, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -130,7 +140,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 0
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -150,7 +160,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -171,15 +181,15 @@ ModelImporter:
       name: Recon_Tank_Rig|Forward
       takeName: Recon_Tank_Rig|Forward
       internalID: 0
-      firstFrame: 0
-      lastFrame: 25
+      firstFrame: 3
+      lastFrame: 4
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

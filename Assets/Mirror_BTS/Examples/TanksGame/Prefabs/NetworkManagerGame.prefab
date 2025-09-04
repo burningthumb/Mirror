@@ -105,7 +105,11 @@ MonoBehaviour:
   spawnPrefabs:
   - {fileID: 5890560936853567077, guid: b6946a38e89dd484b9b7be714079dfd5, type: 3}
   - {fileID: 1916082411674582, guid: af66bbd7faa9b4f64b33d2f5beb79216, type: 3}
+  - {fileID: 1916082411674582, guid: 17817216084184d12a0720057585d6d8, type: 3}
   timeInterpolationGui: 0
+  playerPrefabs:
+  - {fileID: 1916082411674582, guid: cc83b5a0ffd6943f0930816abe2f2d91, type: 3}
+  - {fileID: 1916082411674582, guid: 17817216084184d12a0720057585d6d8, type: 3}
   autoStartServer: 0
 --- !u!1001 &4696984357729095034
 PrefabInstance:

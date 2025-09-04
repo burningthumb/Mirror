@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 38b49695fc0a4418bbc350f2366660c5
+guid: 50cf7c53d643a4f97ba4b9a77b2f70f2
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable:
@@ -111,7 +111,12 @@ ModelImporter:
   - first:
       137: 13700000
     second: Recon_Tank
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Recon_Tank
+    second: {fileID: 2100000, guid: cf311d3c8edb4423abcbb7cfb982d8b6, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -150,7 +155,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -179,7 +184,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
