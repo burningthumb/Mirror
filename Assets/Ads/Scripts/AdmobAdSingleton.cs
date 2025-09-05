@@ -25,8 +25,6 @@ public class AdmobAdSingleton : MonoBehaviour
 
     [SerializeField] bool m_dontDestroyOnLoad = false;
 
-    [SerializeField] string m_classname = "AdmobAdSingleton";
-
     [SerializeField] string m_noAdUnitID = "unused";
     [SerializeField] string m_androidAdUnitID = "ca-app-pub-3940256099942544/5224354917";
     [SerializeField] string m_iosAdUnitID = "ca-app-pub-3940256099942544/1712485313";
@@ -35,13 +33,11 @@ public class AdmobAdSingleton : MonoBehaviour
 
     private string _gameId;
 
-    private bool m_needToLoadAd = false;
+    private bool m_needToLoadAdmobAd = false;
 
     private static AdmobState m_admobState = AdmobState.unknown;
 
-    static bool m_isAdAvailable = false;
-
-    static string m_static_classname = "AdmobAdSingleton";
+    static bool m_isAdmobAdAvailable = false;
 
     static AdmobAdSingleton m_sharedInstance = null;
 
@@ -85,21 +81,7 @@ public class AdmobAdSingleton : MonoBehaviour
         set
         {
             m_adAvailableDelegate = value;
-
-            int l_count = 0;
-
-            if (null != m_adAvailableDelegate)
-            {
-                Delegate[] l_delegates = m_adAvailableDelegate.GetInvocationList();
-
-                if (null != l_delegates)
-                {
-                    l_count = l_delegates.Length;
-                }
-            }
-
-            Debug.Log($"{m_static_classname}: m_adAvailableDelegate.GetInvocationList().Length = {l_count}");
-        }
+         }
     }
 
     public static AdPlayedDelegate AdPlayed
@@ -112,37 +94,21 @@ public class AdmobAdSingleton : MonoBehaviour
         set
         {
             m_adPlayedDelegate = value;
-
-            int l_count = 0;
-
-            if (null != m_adPlayedDelegate)
-            {
-                Delegate[] l_delegates = m_adPlayedDelegate.GetInvocationList();
-
-
-                if (null != l_delegates)
-                {
-                    l_count = l_delegates.Length;
-                }
-            }
-
-            Debug.Log($"{m_static_classname}: m_adPlayedDelegate.GetInvocationList().Length = {l_count}");
-
         }
     }
 
-    public static bool IsAdAvailable
+    public static bool IsAdmobAdAvailable
     {
         get
         {
-            return m_isAdAvailable;
+            return m_isAdmobAdAvailable;
         }
 
         set
         {
-            m_isAdAvailable = value;
+            m_isAdmobAdAvailable = value;
 
-            m_adAvailableDelegate?.Invoke(m_isAdAvailable);
+            m_adAvailableDelegate?.Invoke(m_isAdmobAdAvailable);
         }
     }
 
@@ -153,7 +119,7 @@ public class AdmobAdSingleton : MonoBehaviour
             // There can be only one
             if (null != SharedInstance)
             {
-                Debug.LogWarning($"{m_classname} - There can be only 1. Self destruct second instance!");
+                Debug.LogWarning($"There can be only 1. Self destruct second instance!");
                 Destroy(gameObject);
                 return;
             }
@@ -163,12 +129,10 @@ public class AdmobAdSingleton : MonoBehaviour
 
         SharedInstance = this;
 
-        m_static_classname = m_classname;
-
 #if (UNITY_IOS || UNITY_ANDROID)
-        m_needToLoadAd = true;
+        m_needToLoadAdmobAd = true;
 #else
-        m_needToLoadAd = false;
+        m_needToLoadAdmobAd = false;
 #endif
     }
 
@@ -187,7 +151,7 @@ public class AdmobAdSingleton : MonoBehaviour
         MobileAds.RaiseAdEventsOnUnityMainThread = true;
 #endif
 
-        if (m_needToLoadAd)
+        if (m_needToLoadAdmobAd)
         {
             InitializeAds();
         }
@@ -209,7 +173,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             // Need to Init the SDK
             m_admobState = AdmobState.initializing;
-            Debug.Log($"{m_classname}: Invoking InitializeGoogleMobileAds()");
+
             InitializeGoogleMobileAds(); // --> The callback MUST call LoadRV()
 
         }
@@ -241,31 +205,17 @@ public class AdmobAdSingleton : MonoBehaviour
         }
 
         // Initialize the Google Mobile Ads Unity plugin.
-        Debug.Log($"{m_classname}: Google Mobile Ads Initializing.");
-
         MobileAds.Initialize((InitializationStatus initstatus) =>
         {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
                 if (initstatus == null)
                 {
-                    Debug.LogError($"{m_classname}: Google Mobile Ads initialization failed.");
                     m_admobState = AdmobState.unknown;
                     Invoke(nameof(InitializeGoogleMobileAds), 5.0f);
                     return;
                 }
 
-                // If you use mediation, you can check the status of each adapter.
-                var adapterStatusMap = initstatus.getAdapterStatusMap();
-                if (adapterStatusMap != null)
-                {
-                    foreach (var item in adapterStatusMap)
-                    {
-                        Debug.Log($"{m_classname}: Adapter {item.Key} is {item.Value.InitializationState}");
-                    }
-                }
-
-                Debug.Log($"{m_classname}: Google Mobile Ads initialization complete.");
                 m_admobState = AdmobState.initialized;
 
                 LoadRV();
@@ -283,8 +233,6 @@ public class AdmobAdSingleton : MonoBehaviour
             // Invoking DestroyAd()informs the delegates so no need to do it again here
         }
 
-        Debug.Log($"{m_classname}: Loading rewarded ad.");
-
         // Create our request used to load the ad.
         var adRequest = new AdRequest();
 
@@ -296,9 +244,7 @@ public class AdmobAdSingleton : MonoBehaviour
 
                 // If the operation failed with a reason.
                 if (error != null)
-                {
-                    Debug.LogError($"{m_classname}: Rewarded ad failed to load an ad with error : {error.GetMessage()}");
-
+                { 
                     RestartRetryLoadRV();
 
                     return;
@@ -308,22 +254,20 @@ public class AdmobAdSingleton : MonoBehaviour
                 // This is an unexpected error, please report this bug if it happens.
                 if (ad == null)
                 {
-                    Debug.LogError($"{m_classname}: Unexpected error: Rewarded load event fired with null ad and null error.");
-
+  
                     RestartRetryLoadRV();
 
                     return;
                 }
 
                 // The operation completed successfully.
-                Debug.Log($"{m_classname}: Rewarded ad loaded with response : " + ad.GetResponseInfo());
                 m_rewardedAd = ad;
 
                 // Register to ad events to extend functionality.
                 RegisterEventHandlers(ad);
 
                 // Inform the UI (or anyone else that cares) that the ad is ready.
-                IsAdAvailable = true;
+                IsAdmobAdAvailable = true;
             });
 
         });
@@ -333,10 +277,9 @@ public class AdmobAdSingleton : MonoBehaviour
     {
         if (m_rewardedAd != null && m_rewardedAd.CanShowAd())
         {
-            Debug.Log($"{m_static_classname}: Showing rewarded ad.");
             m_rewardedAd.Show((Reward reward) =>
             {
-                Debug.Log($"{m_static_classname}: Rewarded ad granted a reward: {reward.Amount} {reward.Type}");
+                // Show must be invoked, this callback does nothing
             });
         }
         else
@@ -345,38 +288,36 @@ public class AdmobAdSingleton : MonoBehaviour
             {
                 if (null != SharedInstance.m_BTSAd)
                 {
-                    Debug.Log($"{m_static_classname}: Rewarded ad is not ready yet - show your BTS Ad here");
                     SharedInstance.m_BTSAd.gameObject.SetActive(true);
                 }
                 else
                 {
-                    Debug.LogWarning($"{m_static_classname}: Rewarded ad is not ready yet - no BTS Ad - play the game");
+                    // This should never happen
                     m_adPlayedDelegate?.Invoke(true);
                 }
             }
             else
             {
-                Debug.LogError($"{m_static_classname}: What the Puck! SharedInstance is NULL!");
+                // This should never happen
+                Debug.LogError("Shared instance is null. Something went wrong");
+                m_adPlayedDelegate?.Invoke(true);
             }
-
-
         }
 
         // Inform the UI (or anyone else that cares) that the ad is not ready.
-        IsAdAvailable = false;
+        IsAdmobAdAvailable = false;
     }
 
     public void DestroyAd()
     {
         if (m_rewardedAd != null)
         {
-            Debug.Log($"{m_classname}: Destroying rewarded ad.");
-            m_rewardedAd.Destroy();
+             m_rewardedAd.Destroy();
             m_rewardedAd = null;
         }
 
         // Inform the UI (or anyone else that cares) that the ad is not ready.
-        IsAdAvailable = false;
+        IsAdmobAdAvailable = false;
 
     }
 
@@ -387,7 +328,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
-                Debug.Log($"{m_classname}: Rewarded ad paid {adValue.Value} {adValue.CurrencyCode}.");
+                //Debug.Log($"{m_classname}: Rewarded ad paid {adValue.Value} {adValue.CurrencyCode}.");
             });
         };
 
@@ -396,7 +337,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
-                Debug.Log($"{m_classname}: Rewarded ad recorded an impression.");
+                //Debug.Log($"{m_classname}: Rewarded ad recorded an impression.");
             });
         };
 
@@ -405,7 +346,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
-                Debug.Log($"{m_classname}: Rewarded ad was clicked.");
+                //Debug.Log($"{m_classname}: Rewarded ad was clicked.");
             });
         };
 
@@ -414,7 +355,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
-                Debug.Log($"{m_classname}: Rewarded ad full screen content opened.");
+                //Debug.Log($"{m_classname}: Rewarded ad full screen content opened.");
             });
         };
 
@@ -423,7 +364,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
-                Debug.Log($"{m_classname}: Rewarded ad full screen content closed.");
+                //Debug.Log($"{m_classname}: Rewarded ad full screen content closed.");
 
                 // Load another ad
                 DestroyAd();
@@ -438,7 +379,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             MobileAdsEventExecutor.ExecuteInUpdate(() =>
             {
-                Debug.LogError($"{m_classname}: Rewarded ad failed to open full screen content with error : {error.GetMessage()}");
+                //Debug.LogError($"{m_classname}: Rewarded ad failed to open full screen content with error : {error.GetMessage()}");
 
                 RestartRetryShowRV();
             });
@@ -452,7 +393,7 @@ public class AdmobAdSingleton : MonoBehaviour
         {
             RestartRetryLoadRV();
 
-            IsAdAvailable = false;
+            IsAdmobAdAvailable = false;
 
             return;
         }
@@ -463,7 +404,7 @@ public class AdmobAdSingleton : MonoBehaviour
         }
         else
         {
-            IsAdAvailable = true;
+            IsAdmobAdAvailable = true;
         }
 
     }
@@ -471,16 +412,13 @@ public class AdmobAdSingleton : MonoBehaviour
     // Try to load the rewarded video in 5 seconds
     IEnumerator RetryLoadRV()
     {
-        Debug.Log($"{m_classname}: Waiting 5 seconds");
         yield return new WaitForSeconds(5.0f);
 
         LoadRV();
-
     }
 
     IEnumerator RetryShowRV()
     {
-
         yield return new WaitForSeconds(5.0f);
 
         ShowRV();
@@ -509,10 +447,7 @@ public class AdmobAdSingleton : MonoBehaviour
 
     public static void ShowRV()
     {
-        Debug.Log($"{m_static_classname}: ShowRV");
-
         ShowAd();
-
     }
 
     public static void ContinueFromBTSAd()
