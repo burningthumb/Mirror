@@ -137,7 +137,7 @@ MonoBehaviour:
   m_explosion: {fileID: 3986754218556082156}
   m_mobileInput: {fileID: 6550123947223323596}
   MoveSpeed: 1.25
-  SprintSpeed: 2
+  SprintSpeed: 2.5
   RotationSpeed: 10
   SpeedChangeRate: 10
   agent: {fileID: 6900008319038825817}
@@ -145,11 +145,11 @@ MonoBehaviour:
   healthBar: {fileID: 1985504562751981867}
   projectileBar: {fileID: 7280268980042811620}
   turret: {fileID: 6449878159091557362}
-  rotationSpeed: 80
+  rotationSpeed: 100
   TopClamp: 90
   BottomClamp: -90
-  turretRotationSpeed: 50
-  turretPingPongSpeed: 50
+  turretRotationSpeed: 60
+  turretPingPongSpeed: 60
   backInputThreshold: 0.75
   shootKey: 32
   projectilePrefab: {fileID: 5890560936853567077, guid: b6946a38e89dd484b9b7be714079dfd5,

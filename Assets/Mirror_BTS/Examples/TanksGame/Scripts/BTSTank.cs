@@ -28,7 +28,7 @@ namespace com.burningthumb.examples
         public float MoveSpeed = 4.0f;
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 6.0f;
-        [Tooltip("Rotation speed of the character")]
+        [Tooltip("Rotation speed of the character - not used with tanks")]
         public float RotationSpeed = 1.0f;
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
@@ -40,7 +40,7 @@ namespace com.burningthumb.examples
         public TextMesh projectileBar;
         public Transform turret;
 
-        [Header("Movement")]
+        [Header("Tank Movement")]
         public float rotationSpeed = 100;
 
         [Header("Turret")]
@@ -200,7 +200,10 @@ namespace com.burningthumb.examples
             else
             {
                 projectile = -1;
-                projectileBar.text = "----";
+
+                string l_greyDash = new string ('-', m_maxProjectile);
+
+                projectileBar.text = l_greyDash; // "----"; //new string('-', m_maxProjectile); // "----";
                 projectileBar.color = Color.gray;
                 StopAllCoroutines();
                 StartCoroutine(AutoReload());
@@ -272,14 +275,14 @@ namespace com.burningthumb.examples
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
-        void RotateTurret() // Original mouse/joystick logic
+        void RotateTurret() // Original mouse/joystick logic -- updated to use turretRotationSpeed
         {
             if (m_input.look.sqrMagnitude >= m_threshold)
             {
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                m_cinemachineTargetPitch += m_input.look.y * RotationSpeed * deltaTimeMultiplier;
-                m_rotationVelocity = m_input.look.x * RotationSpeed * deltaTimeMultiplier;
+                m_cinemachineTargetPitch += m_input.look.y * turretRotationSpeed * deltaTimeMultiplier;
+                m_rotationVelocity = m_input.look.x * turretRotationSpeed * deltaTimeMultiplier;
 
                 m_cinemachineTargetPitch = ClampAngle(m_cinemachineTargetPitch, BottomClamp, TopClamp);
                 float currentAngle = turret.localEulerAngles.y;

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4696984356882579412}
   - component: {fileID: 4696984356882579413}
   - component: {fileID: 4696984356882579410}
+  - component: {fileID: 3251584014849473420}
   m_Layer: 0
   m_Name: NetworkManagerGame
   m_TagString: Untagged
@@ -98,7 +99,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 100
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 1916082411674582, guid: d464d7e7c2aaa435cbbe0d9cf931706a,
+  playerPrefab: {fileID: 1916082411674582, guid: 17817216084184d12a0720057585d6d8,
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
@@ -112,6 +113,19 @@ MonoBehaviour:
   - {fileID: 1916082411674582, guid: 17817216084184d12a0720057585d6d8, type: 3}
   - {fileID: 1916082411674582, guid: d464d7e7c2aaa435cbbe0d9cf931706a, type: 3}
   autoStartServer: 0
+--- !u!114 &3251584014849473420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4696984356882579403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e328c53c7f95470f8eece2b4a05f15e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PushClientGlobalsToNetworkGameManager
+  m_networkGameManager: {fileID: 0}
 --- !u!1001 &4696984357729095034
 PrefabInstance:
   m_ObjectHideFlags: 0

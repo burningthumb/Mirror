@@ -28,16 +28,6 @@ public class NetworkManagerTanksGame : NetworkManager
 
     public override void OnValidate()
     {
-        Random.InitState(System.DateTime.Now.Millisecond);
-
-        if (playerPrefabs.Length > 0)
-        {
-            if (-1 == m_selectedTank)
-            { 
-                playerPrefab = playerPrefabs[Random.Range(0, playerPrefabs.Length)];
-            }
-        }
-
         // always >= 0
         maxConnections = Mathf.Max(maxConnections, 0);
 
@@ -80,6 +70,21 @@ public class NetworkManagerTanksGame : NetworkManager
     {
         Vector3 spawnPosition;
         Quaternion spawnRotation;
+
+        // Update the selected Player
+        Random.InitState(System.DateTime.Now.Millisecond);
+
+        if (playerPrefabs.Length > 0)
+        {
+            if (-1 == m_selectedTank)
+            { 
+                playerPrefab = playerPrefabs[Random.Range(0, playerPrefabs.Length)];
+            }
+            else
+            {
+                playerPrefab = playerPrefabs[m_selectedTank];
+            }
+        }
 
         // Ensure aiTankManager is set
         if (aiTankManager == null)

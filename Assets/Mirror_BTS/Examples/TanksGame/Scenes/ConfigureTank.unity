@@ -2230,6 +2230,7 @@ GameObject:
   - component: {fileID: 725959390}
   - component: {fileID: 725959392}
   - component: {fileID: 725959393}
+  - component: {fileID: 725959394}
   m_Layer: 5
   m_Name: Recon
   m_TagString: Untagged
@@ -2353,6 +2354,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 725959394}
+        m_TargetAssemblyTypeName: ClientGlobals, Assembly-CSharp
+        m_MethodName: set_SelectedTank
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &725959388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2442,6 +2455,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0356f3c788e7c414dad67756b02c80e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &725959394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725959384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d72c14afdd2e84f779a75854156a894a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClientGlobals
 --- !u!1 &794035087
 GameObject:
   m_ObjectHideFlags: 0
@@ -3121,6 +3146,7 @@ GameObject:
   - component: {fileID: 1066229933}
   - component: {fileID: 1066229932}
   - component: {fileID: 1066229934}
+  - component: {fileID: 1066229935}
   m_Layer: 5
   m_Name: Tiger
   m_TagString: Untagged
@@ -3244,6 +3270,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1066229935}
+        m_TargetAssemblyTypeName: ClientGlobals, Assembly-CSharp
+        m_MethodName: set_SelectedTank
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1066229930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3321,6 +3359,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Theme: {fileID: 11400000, guid: 120d09b5fe1a4475fb5619a9d1b85faa, type: 2}
+--- !u!114 &1066229935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066229926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d72c14afdd2e84f779a75854156a894a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClientGlobals
 --- !u!1 &1103653212
 GameObject:
   m_ObjectHideFlags: 0
@@ -4136,6 +4186,7 @@ GameObject:
   - component: {fileID: 1540481797}
   - component: {fileID: 1540481796}
   - component: {fileID: 1540481795}
+  - component: {fileID: 1540481802}
   m_Layer: 5
   m_Name: Firefly
   m_TagString: Untagged
@@ -4298,6 +4349,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1540481802}
+        m_TargetAssemblyTypeName: ClientGlobals, Assembly-CSharp
+        m_MethodName: set_SelectedTank
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1540481800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4336,6 +4399,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540481793}
   m_CullTransparentMesh: 1
+--- !u!114 &1540481802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540481793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d72c14afdd2e84f779a75854156a894a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClientGlobals
 --- !u!1001 &1642127007
 PrefabInstance:
   m_ObjectHideFlags: 0
