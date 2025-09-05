@@ -10403,7 +10403,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 171.8
+  m_fontSize: 200
   m_fontSizeBase: 55
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -14641,7 +14641,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Choose
+          m_StringArgument: ConfigureTank
           m_BoolArgument: 0
         m_CallState: 2
   m_adAvailableButtonInteractable: 1
@@ -18016,8 +18016,8 @@ SceneRoots:
   - {fileID: 451245870}
   - {fileID: 250986668}
   - {fileID: 937947927}
-  - {fileID: 1976130161}
   - {fileID: 1733470599}
+  - {fileID: 1976130161}
   - {fileID: 3313931321135897020}
   - {fileID: 1223119787}
   - {fileID: 151092145213285745}
