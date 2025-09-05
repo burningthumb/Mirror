@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6900008319038825817}
   - component: {fileID: 5194388907919410155}
   m_Layer: 0
-  m_Name: TankGameAITank
+  m_Name: TankGameAITank1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

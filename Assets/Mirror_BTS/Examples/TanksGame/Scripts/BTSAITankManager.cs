@@ -118,6 +118,7 @@ public class BTSAITankManager : NetworkBehaviour
     void FindAITankPrefab()
     {
         NetworkManager networkManager = NetworkManager.singleton;
+
         if (networkManager == null)
         {
             Debug.LogError("BTSAITankManager: NetworkManager not found!");

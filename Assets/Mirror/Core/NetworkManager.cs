@@ -160,6 +160,8 @@ namespace Mirror
             }
 
             // This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
+            // Its not a mystery, its because the player is registered independently of the spawnPrefabs so the second registration
+            // triggers the warning
             if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
             {
                 Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
@@ -711,7 +713,12 @@ namespace Mirror
                 NetworkClient.RegisterPrefab(playerPrefab);
 
             foreach (GameObject prefab in spawnPrefabs.Where(t => t != null))
-                NetworkClient.RegisterPrefab(prefab);
+            {
+                if (prefab != playerPrefab)
+                { 
+                    NetworkClient.RegisterPrefab(prefab);
+                }
+            }
         }
 
         // This is the only way to clear the singleton, so another instance can be created.

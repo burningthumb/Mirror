@@ -8,6 +8,9 @@ public class NetworkManagerTanksGame : NetworkManager
     public int m_selectedTank = -1;
     public GameObject[] playerPrefabs;
 
+    [Header("AI Tanks")]
+    public GameObject[] aiPrefabs;
+
     [Header("Game Settings")]
     public bool autoStartServer = false;
 
@@ -26,24 +29,24 @@ public class NetworkManagerTanksGame : NetworkManager
         }
     }
 
-    public override void OnValidate()
-    {
-        // always >= 0
-        maxConnections = Mathf.Max(maxConnections, 0);
+    //public override void OnValidate()
+    //{
+    //    // always >= 0
+    //    maxConnections = Mathf.Max(maxConnections, 0);
 
-        if (playerPrefab != null && !playerPrefab.TryGetComponent<NetworkIdentity>(out _))
-        {
-            Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
-            playerPrefab = null;
-        }
+    //    if (playerPrefab != null && !playerPrefab.TryGetComponent<NetworkIdentity>(out _))
+    //    {
+    //        Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
+    //        playerPrefab = null;
+    //    }
 
-        // This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
-        if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
-        {
-            Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
-            spawnPrefabs.Remove(playerPrefab);
-        }
-    }
+    //    //// This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
+    //    //if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
+    //    //{
+    //    //    Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
+    //    //    spawnPrefabs.Remove(playerPrefab);
+    //    //}
+    //}
 
     public override void OnStopServer()
     {
