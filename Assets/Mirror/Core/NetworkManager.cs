@@ -159,14 +159,12 @@ namespace Mirror
                 playerPrefab = null;
             }
 
-            // This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
-            // Its not a mystery, its because the player is registered independently of the spawnPrefabs so the second registration
-            // triggers the warning
-            if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
-            {
-                Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
-                spawnPrefabs.Remove(playerPrefab);
-            }
+            //// This avoids the mysterious "Replacing existing prefab with assetId ... Old prefab 'Player', New prefab 'Player'" warning.
+            //if (playerPrefab != null && spawnPrefabs.Contains(playerPrefab))
+            //{
+            //    Debug.LogWarning("NetworkManager - Player Prefab should not be added to Registered Spawnable Prefabs list...removed it.");
+            //    spawnPrefabs.Remove(playerPrefab);
+            //}
         }
 
         // virtual so that inheriting classes' Reset() can call base.Reset() too
@@ -714,6 +712,7 @@ namespace Mirror
 
             foreach (GameObject prefab in spawnPrefabs.Where(t => t != null))
             {
+                // The player prefab was registered above, so it does not need to be registered again here
                 if (prefab != playerPrefab)
                 { 
                     NetworkClient.RegisterPrefab(prefab);

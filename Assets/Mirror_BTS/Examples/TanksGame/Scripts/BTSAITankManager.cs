@@ -2,14 +2,14 @@ using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
 using com.burningthumb.examples;
+using System.Collections;
 
 public class BTSAITankManager : NetworkBehaviour
 {
     private static bool m_shouldSpawn = false;
 
     [Header("AI Tank Settings")]
-    [SerializeField]
-    private GameObject aiTankPrefab;
+    [SerializeField] private ArrayList aiTankPrefabs;
     public int maxAITanks = 3;
     public float respawnDelay = 5f;
     
@@ -49,12 +49,12 @@ public class BTSAITankManager : NetworkBehaviour
         
         Debug.Log("BTSAITankManager: Starting server initialization.");
 
-        if (aiTankPrefab == null)
+        if (aiTankPrefabs == null || 0 == aiTankPrefabs.Count)
         {
             FindAITankPrefab();
         }
         
-        if (aiTankPrefab == null)
+        if (aiTankPrefabs == null || 0 == aiTankPrefabs.Count)
         {
             Debug.LogError("BTSAITankManager: No BTSAITank prefab found!");
             return;
@@ -125,15 +125,23 @@ public class BTSAITankManager : NetworkBehaviour
             return;
         }
 
-        foreach (GameObject prefab in networkManager.spawnPrefabs)
+        //foreach (GameObject prefab in networkManager.spawnPrefabs)
+        //{
+        //    if (prefab.GetComponent<BTSAITank>() != null)
+        //    {
+        //        aiTankPrefab = prefab;
+        //        Debug.Log("BTSAITankManager: Found BTSAITank prefab: " + prefab.name);
+        //        break;
+        //    }
+        //}
+
+        aiTankPrefabs = new ArrayList();
+        foreach (GameObject prefab in ((NetworkManagerTanksGame)networkManager).aiPrefabs)
         {
-            if (prefab.GetComponent<BTSAITank>() != null)
-            {
-                aiTankPrefab = prefab;
+                aiTankPrefabs.Add(prefab);
                 Debug.Log("BTSAITankManager: Found BTSAITank prefab: " + prefab.name);
-                break;
-            }
         }
+
     }
 
     [Server]
@@ -143,10 +151,12 @@ public class BTSAITankManager : NetworkBehaviour
         if (networkStartPositions.Length > 0)
         {
             spawnPoints = new Transform[networkStartPositions.Length];
+
             for (int i = 0; i < networkStartPositions.Length; i++)
             {
                 spawnPoints[i] = networkStartPositions[i].transform;
             }
+
             Debug.Log($"BTSAITankManager: Found {networkStartPositions.Length} NetworkStartPosition objects.");
         }
     }
@@ -170,14 +180,15 @@ public class BTSAITankManager : NetworkBehaviour
             return;
         }
 
-        if (availableSpawnPoints.Count == 0 || aiTankPrefab == null)
+        if (availableSpawnPoints.Count == 0 || null == aiTankPrefabs || 0 == aiTankPrefabs.Count)
         {
             Debug.LogWarning("BTSAITankManager: No available spawn points or prefab missing!");
             return;
         }
 
         Transform spawnPoint = GetSafeSpawnPoint();
-        if (spawnPoint == null)
+
+        if (null == spawnPoint)
         {
             Debug.LogWarning("BTSAITankManager: No safe spawn points available!");
             return;
@@ -188,7 +199,8 @@ public class BTSAITankManager : NetworkBehaviour
         Vector3 spawnPos = spawnPoint.position;
         Quaternion spawnRot = spawnPoint.rotation;
 
-        GameObject tankObj = Instantiate(aiTankPrefab, spawnPos, spawnRot);
+        //GameObject tankObj = Instantiate(aiTankPrefab, spawnPos, spawnRot);
+        GameObject tankObj = Instantiate((GameObject)aiTankPrefabs[Random.Range(0, aiTankPrefabs.Count)], spawnPos, spawnRot);
         BTSAITank tank = tankObj.GetComponent<BTSAITank>();
         
         NetworkServer.Spawn(tankObj);
