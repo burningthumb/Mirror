@@ -71,7 +71,7 @@ public class AdmobAdSingleton : MonoBehaviour
         }
     }
 
-    public static AdAvailableDelegate AdAvailable
+    public static AdAvailableDelegate AdmobAdAvailable
     {
         get
         {
