@@ -108,7 +108,7 @@
 //
 // Author:  Robert Wiebe
 // Company: Burningthumb Studios
-// Updated: 25 Aug 27
+// Updated: 25 Sep 06
 //
 
 using TMPro;
@@ -131,7 +131,24 @@ public class AdmobAdSingletonUI : MonoBehaviour
     [SerializeField] string m_sourceAdMobAdAvailable = "AdMob Ad";
     [SerializeField] string m_sourceAdMobAdNotAvailable = "BTS Ad";
 
+    [SerializeField] private bool m_skipNextAd = false;
+
     [SerializeField] private UnityEvent m_adPlayed;
+
+
+
+    public bool SkipNextAd
+    {
+        get
+        {
+            return m_skipNextAd;
+        }
+
+        set
+        {
+            m_skipNextAd = value;
+        }
+    }
 
 	private void OnEnable()
     {
@@ -207,7 +224,15 @@ public class AdmobAdSingletonUI : MonoBehaviour
     {
 		s_requestingGO = gameObject;
 
-        AdmobAdSingleton.ShowRV();
+        if (SkipNextAd)
+        {
+            SkipNextAd = false;
+            OnAdPlayed(true);
+        }
+        else
+        { 
+            AdmobAdSingleton.ShowRV();
+        }
     }
 }
 
