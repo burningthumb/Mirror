@@ -116,14 +116,32 @@ public class GDPRManager : MonoBehaviour
             //    });
             //}
 
-            if (null != AdmobAdSingleton.SharedInstance)
+            // Make sure AdMob know that it can show non-limited ads and make sure iOS does not crash if
+			// a duplicate call is made
+
+			bool l_canRequestAds = false;
+
+			try
+			{
+				l_canRequestAds = ConsentInformation.CanRequestAds();
+			}
+			catch (System.Exception ex)
+			{
+				Debug.LogWarning($"{m_classname}: ConsentInformation.CanRequestAds() threw: {ex}");
+				// fallback: treat as limited ads
+				l_canRequestAds = false;
+			}
+
+            Debug.Log($"{m_classname}: CanRequestAds={l_canRequestAds}");
+
+            if (null != m_admobAdSingleton)
             {
-                Debug.Log($"{m_classname}:  setting AdmobAdSingleton.SharedInstance.gameObject Active");
-                AdmobAdSingleton.SharedInstance.gameObject.SetActive(true /*ConsentInformation.CanRequestAds()*/);
+                Debug.Log($"{m_classname}: Setting m_admobAdSingleton Active");
+                m_admobAdSingleton.gameObject.SetActive(true /*ConsentInformation.CanRequestAds()*/);
             }
             else
             {
-                Debug.Log($"{m_classname}:  AdmobAdSingleton.SharedInstance is NULL - what the puck!");
+                Debug.Log($"{m_classname}:  m_admobAdSingleton is NULL - what the puck!");
             }
 
         });
