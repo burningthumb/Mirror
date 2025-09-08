@@ -155,12 +155,14 @@ namespace StarterAssets
                 m_leftStickText.gameObject.SetActive(true);
                 m_dpadText.gameObject.SetActive(true);
                 m_turretRotateText.gameObject.SetActive(true);
+                m_lookText.gameObject.SetActive(true);
             }
             else
             {
                 m_leftStickText.gameObject.SetActive(false);
                 m_dpadText.gameObject.SetActive(false);
                 m_turretRotateText.gameObject.SetActive(false);
+                m_lookText.gameObject.SetActive(false);
 
             }
         }

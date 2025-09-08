@@ -116,7 +116,15 @@ public class GDPRManager : MonoBehaviour
             //    });
             //}
 
-            m_admobAdSingleton.gameObject.SetActive(ConsentInformation.CanRequestAds());
+            if (null != AdmobAdSingleton.SharedInstance)
+            {
+                Debug.Log($"{m_classname}:  setting AdmobAdSingleton.SharedInstance.gameObject Active");
+                AdmobAdSingleton.SharedInstance.gameObject.SetActive(true /*ConsentInformation.CanRequestAds()*/);
+            }
+            else
+            {
+                Debug.Log($"{m_classname}:  AdmobAdSingleton.SharedInstance is NULL - what the puck!");
+            }
 
         });
 
