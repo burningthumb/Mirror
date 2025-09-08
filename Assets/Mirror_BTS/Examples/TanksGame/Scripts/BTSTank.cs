@@ -175,9 +175,13 @@ namespace com.burningthumb.examples
                     CmdFire();
                 }
 
-                RotateTurret(); // Original mouse/joystick logic
-                HandleDPadTurretRotation(); // Original D-pad logic
-                RotateTurretWithKeys(); // New Q/E key logic
+                if (!HandleDPadTurretRotation()) // D-pad logic
+                {
+                    if (!RotateTurretWithKeys()) // Q/E key logic
+                    {
+                        RotateTurret(); // Mouse/joystick logic
+                    }
+                }
             }
         }
 
@@ -201,7 +205,7 @@ namespace com.burningthumb.examples
             {
                 projectile = -1;
 
-                string l_greyDash = new string ('-', m_maxProjectile);
+                string l_greyDash = new string('-', m_maxProjectile);
 
                 projectileBar.text = l_greyDash; // "----"; //new string('-', m_maxProjectile); // "----";
                 projectileBar.color = Color.gray;
@@ -275,29 +279,73 @@ namespace com.burningthumb.examples
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
-        void RotateTurret() // Original mouse/joystick logic -- updated to use turretRotationSpeed
+        //bool RotateTurret() // Original mouse/joystick logic -- updated to use turretRotationSpeed
+        //{
+        //    bool l_didRotate = false;
+
+        //    if (m_input.look.sqrMagnitude >= m_threshold)
+        //    {
+        //        l_didRotate = true;
+
+        //        float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+
+        //        m_cinemachineTargetPitch += m_input.look.y * turretRotationSpeed * deltaTimeMultiplier;
+        //        m_rotationVelocity = m_input.look.x * turretRotationSpeed * deltaTimeMultiplier;
+
+        //        m_cinemachineTargetPitch = ClampAngle(m_cinemachineTargetPitch, BottomClamp, TopClamp);
+        //        float currentAngle = turret.localEulerAngles.y;
+        //        if (currentAngle > 180f) currentAngle -= 360f;
+        //        float newAngle = currentAngle + m_rotationVelocity;
+        //        newAngle = ClampAngle(newAngle, BottomClamp, TopClamp);
+        //        turret.localEulerAngles = new Vector3(0, newAngle, 0);
+        //    }
+
+        //    return l_didRotate;
+        //}
+
+        bool RotateTurret() // Fixed, respects turretRotationSpeed for all tanks
         {
+            bool l_didRotate = false;
+
             if (m_input.look.sqrMagnitude >= m_threshold)
             {
-                float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+                l_didRotate = true;
 
-                m_cinemachineTargetPitch += m_input.look.y * turretRotationSpeed * deltaTimeMultiplier;
-                m_rotationVelocity = m_input.look.x * turretRotationSpeed * deltaTimeMultiplier;
+                float rotationDelta;
 
-                m_cinemachineTargetPitch = ClampAngle(m_cinemachineTargetPitch, BottomClamp, TopClamp);
+                if (IsCurrentDeviceMouse)
+                {
+                    // Mouse sensitivity adjustment (tune 0.05f to taste)
+                    float mouseFactor = 0.05f;
+                    rotationDelta = m_input.look.x * turretRotationSpeed * mouseFactor;
+                }
+                else
+                {
+                    // Joystick/gamepad: already normalized input, needs Time.deltaTime
+                    rotationDelta = m_input.look.x * turretRotationSpeed * Time.deltaTime;
+                }
+
                 float currentAngle = turret.localEulerAngles.y;
                 if (currentAngle > 180f) currentAngle -= 360f;
-                float newAngle = currentAngle + m_rotationVelocity;
+
+                float newAngle = currentAngle + rotationDelta;
                 newAngle = ClampAngle(newAngle, BottomClamp, TopClamp);
+
                 turret.localEulerAngles = new Vector3(0, newAngle, 0);
             }
+
+            return l_didRotate;
         }
 
-        void HandleDPadTurretRotation() // Original D-pad ping-pong logic
+
+        bool HandleDPadTurretRotation() // Original D-pad ping-pong logic
         {
+            bool l_didRotate = false;
+
             float dPadVertical = m_input.move.y;
 
             bool isBackPressed = dPadVertical < -backInputThreshold;
+
             if (isBackPressed && !wasBackPressedLastFrame)
             {
                 turretRotationDirection = -turretRotationDirection;
@@ -312,6 +360,7 @@ namespace com.burningthumb.examples
 
             if (isRotatingTurret)
             {
+                l_didRotate = true;
                 float currentAngle = turret.localEulerAngles.y;
                 if (currentAngle > 180f) currentAngle -= 360f;
 
@@ -326,14 +375,19 @@ namespace com.burningthumb.examples
 
                 turret.localEulerAngles = new Vector3(0, newAngle, 0);
             }
+
+            return l_didRotate;
         }
 
-        void RotateTurretWithKeys() // New Q/E key logic
+        bool RotateTurretWithKeys() // New Q/E key logic
         {
+            bool l_didRotate = false;
+
             float rotationInput = m_input.TurretRotate; // -1 for Q, 1 for E, 0 if neither
 
             if (Mathf.Abs(rotationInput) > m_threshold)
             {
+                l_didRotate = true;
                 float currentYaw = turret.localEulerAngles.y;
                 if (currentYaw > 180f) currentYaw -= 360f; // Normalize to -180 to 180
 
@@ -343,6 +397,8 @@ namespace com.burningthumb.examples
 
                 turret.localEulerAngles = new Vector3(0, newYaw, 0);
             }
+
+            return l_didRotate;
         }
     }
 }

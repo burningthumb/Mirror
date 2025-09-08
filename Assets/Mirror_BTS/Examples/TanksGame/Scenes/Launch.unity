@@ -12466,12 +12466,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_playButton: {fileID: 725959387}
   m_playText: {fileID: 0}
-  m_hintText: {fileID: 0}
+  m_hintText: {fileID: 671570292}
   m_sourceText: {fileID: 938240010}
   m_playImage: {fileID: 1997923761}
   m_playAdHint: Watch Ad, Play Game
   m_sourceAdMobAdAvailable: AdMob Ad
   m_sourceAdMobAdNotAvailable: BTS Ad
+  m_skipNextAd: 0
   m_adPlayed:
     m_PersistentCalls:
       m_Calls:

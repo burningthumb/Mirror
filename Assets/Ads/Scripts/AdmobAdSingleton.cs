@@ -21,6 +21,12 @@ public class AdmobAdSingleton : MonoBehaviour
 
     private static RewardedAd m_rewardedAd;
 
+    private static AdmobState s_admobState = AdmobState.unknown;
+
+    private static bool m_isAdmobAdAvailable = false;
+
+    private static AdmobAdSingleton m_sharedInstance = null;
+
     [SerializeField] BTSAd m_BTSAd;
 
     [SerializeField] bool m_dontDestroyOnLoad = false;
@@ -34,12 +40,6 @@ public class AdmobAdSingleton : MonoBehaviour
     private string _gameId;
 
     private bool m_needToLoadAdmobAd = false;
-
-    private static AdmobState m_admobState = AdmobState.unknown;
-
-    static bool m_isAdmobAdAvailable = false;
-
-    static AdmobAdSingleton m_sharedInstance = null;
 
     // Coroutine references
     private Coroutine m_retryLoadCoroutine;
@@ -169,10 +169,10 @@ public class AdmobAdSingleton : MonoBehaviour
         _adUnitId = m_noAdUnitID;
 #endif
 
-        if (AdmobState.unknown == m_admobState)
+        if (AdmobState.unknown == s_admobState)
         {
             // Need to Init the SDK
-            m_admobState = AdmobState.initializing;
+            s_admobState = AdmobState.initializing;
 
             InitializeGoogleMobileAds(); // --> The callback MUST call LoadRV()
 
@@ -180,9 +180,12 @@ public class AdmobAdSingleton : MonoBehaviour
         else
         {
 
-            if (AdmobState.initialized == m_admobState)
+            if (AdmobState.initialized == s_admobState)
             {
-                LoadRV();
+                if (!IsAdmobAdAvailable)
+                { 
+                    LoadRV();
+                }
             }
             else
             {
@@ -199,7 +202,7 @@ public class AdmobAdSingleton : MonoBehaviour
     {
 
         // The Google Mobile Ads Unity plugin needs to be run only once and before loading any ads.
-        if (AdmobState.initialized == m_admobState)
+        if (AdmobState.initialized == s_admobState)
         {
             return;
         }
@@ -211,12 +214,12 @@ public class AdmobAdSingleton : MonoBehaviour
             {
                 if (initstatus == null)
                 {
-                    m_admobState = AdmobState.unknown;
+                    s_admobState = AdmobState.unknown;
                     Invoke(nameof(InitializeGoogleMobileAds), 5.0f);
                     return;
                 }
 
-                m_admobState = AdmobState.initialized;
+                s_admobState = AdmobState.initialized;
 
                 LoadRV();
             });
@@ -389,7 +392,7 @@ public class AdmobAdSingleton : MonoBehaviour
 
     void LoadRV()
     {
-        if (AdmobState.initialized != m_admobState)
+        if (AdmobState.initialized != s_admobState)
         {
             RestartRetryLoadRV();
 
