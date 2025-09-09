@@ -15140,6 +15140,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AdmobSingleton
       objectReference: {fileID: 0}
+    - target: {fileID: 7348630714056564670, guid: 1310e48f5131c4819a2cef140a90b8a5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15153,10 +15158,10 @@ SceneRoots:
   - {fileID: 304151175}
   - {fileID: 451245870}
   - {fileID: 250986668}
-  - {fileID: 937947927}
   - {fileID: 3313931321135897020}
   - {fileID: 1223119787}
   - {fileID: 151092145213285745}
   - {fileID: 1190902563}
   - {fileID: 1733470599}
+  - {fileID: 937947927}
   - {fileID: 7077739957605369532}
