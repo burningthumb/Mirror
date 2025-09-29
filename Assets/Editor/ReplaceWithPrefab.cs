@@ -67,6 +67,8 @@ namespace Community
             public bool orderHierarchyToPreview;
             public bool applyRotation;
             public bool applyScale;
+            public float scaleFactor;
+            public bool alignBottoms;
         }
         public ReplacementPreferences replacementPreferences;
         NamingScheme namingScheme;
@@ -112,6 +114,8 @@ namespace Community
             replacementPreferences.orderHierarchyToPreview = false;
             replacementPreferences.applyRotation = true;
             replacementPreferences.applyScale = true;
+            replacementPreferences.scaleFactor = 1f;
+            replacementPreferences.alignBottoms = false;
         }
 
         /// <summary>
@@ -225,6 +229,11 @@ namespace Community
                         GUILayout.Space(10);
                         replacementPreferences.applyRotation = GUILayout.Toggle(replacementPreferences.applyRotation, "Apply rotation", EditorStyles.toggle);
                         replacementPreferences.applyScale = GUILayout.Toggle(replacementPreferences.applyScale, "Apply scale", EditorStyles.toggle);
+                        if (replacementPreferences.applyScale)
+                        {
+                            replacementPreferences.scaleFactor = EditorGUILayout.FloatField("Scale Factor", replacementPreferences.scaleFactor);
+                        }
+                        replacementPreferences.alignBottoms = GUILayout.Toggle(replacementPreferences.alignBottoms, "Align bottoms", EditorStyles.toggle);
                     }
                     else
                     {
@@ -467,8 +476,26 @@ namespace Community
             newObject.transform.SetParent(obj.transform.parent, true);
             newObjects.Add(newObject);
             CopyContentsToNew(obj, newObject);
+            if (replacementPreferences.alignBottoms)
+            {
+                float oldBottom = GetBottom(obj);
+                float newBottom = GetBottom(newObject);
+                newObject.transform.position += new Vector3(0, oldBottom - newBottom, 0);
+            }
             Undo.RegisterCreatedObjectUndo(newObject, "Replaced Objects");
             Undo.DestroyObjectImmediate(obj);
+        }
+
+        private float GetBottom(GameObject go)
+        {
+            var renderers = go.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0) return go.transform.position.y;
+            float minY = float.MaxValue;
+            foreach (var r in renderers)
+            {
+                minY = Mathf.Min(minY, r.bounds.min.y);
+            }
+            return minY;
         }
 
         void CopyContentsToNew(GameObject oldObject, GameObject newObject)
@@ -813,7 +840,7 @@ namespace Community
                 }
                 if (replacementPreferences.applyScale)
                 {
-                    newObject.transform.localScale = oldTransform.localScale;
+                    newObject.transform.localScale = oldTransform.localScale * replacementPreferences.scaleFactor;
                 }
                 if (!replacementPreferences.renameObjects)
                 {
