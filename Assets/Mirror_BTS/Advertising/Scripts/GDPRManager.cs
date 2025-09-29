@@ -1,3 +1,7 @@
+// Author: Robert Wiebe
+// Company: Burningthumb Studios
+// Date: 2025 Sep 20
+
 using System.Collections;
 using System.Collections.Generic;
 using GoogleMobileAds.Api;
@@ -15,6 +19,18 @@ public class GDPRManager : MonoBehaviour
     {
         Debug.Log($"{m_classname} Start");
 
+        if (null == m_admobAdSingleton)
+        {
+            if (null != AdmobAdSingleton.SharedInstance)
+			{
+                m_admobAdSingleton = AdmobAdSingleton.SharedInstance;
+			}
+            else
+            { 
+                m_admobAdSingleton = FindFirstObjectByType<AdmobAdSingleton>();
+            }
+        }
+
 #if (UNITY_IOS || UNITY_ANDROID)
 
         if (m_isTesting)
@@ -31,18 +47,6 @@ public class GDPRManager : MonoBehaviour
             "24B4207F149E57640E5D52985D597EA5"
         }
         };
-
-        if (null == m_admobAdSingleton)
-        {
-            if (null != AdmobAdSingleton.SharedInstance)
-			{
-                m_admobAdSingleton = AdmobAdSingleton.SharedInstance;
-			}
-            else
-            { 
-                m_admobAdSingleton = FindFirstObjectByType<AdmobAdSingleton>();
-            }
-        }
 
         // Set tag for under age of consent.
         // Here false means users are not under age of consent.
@@ -72,7 +76,6 @@ public class GDPRManager : MonoBehaviour
     m_admobAdSingleton.gameObject.SetActive(true);
 #endif
 
-
     }
 
     void OnConsentInfoUpdated(FormError consentError)
@@ -83,13 +86,11 @@ public class GDPRManager : MonoBehaviour
         {
             // Handle the error.
             Debug.Log($"{m_classname}:  /{consentError.ErrorCode}/ /{consentError.Message}/");
+            ActivateAdmobSingleton();
             return;
         }
-        else
-        {
-            Debug.Log($"{m_classname}:  consentError == null");
 
-        }
+        Debug.Log($"{m_classname}:  consentError == null");
 
         // If the error is null, the consent information state was updated.
         // You are now ready to check if a form is available.
@@ -104,51 +105,44 @@ public class GDPRManager : MonoBehaviour
             {
                 // Consent gathering failed.
                 Debug.Log($"{m_classname}:  /{consentError.ErrorCode}/ /{consentError.Message}/");
+                ActivateAdmobSingleton();
                 return;
             }
 
-            //// Consent has been gathered.
-            //if (ConsentInformation.CanRequestAds())
-            //{
-            //    MobileAds.Initialize((InitializationStatus initstatus) =>
-            //    {
-            //        // TODO: Request an ad.
-            //    });
-            //}
-
             // Make sure AdMob know that it can show non-limited ads and make sure iOS does not crash if
-			// a duplicate call is made
+            // a duplicate call is made
 
-			bool l_canRequestAds = false;
+            bool l_canRequestAds = false;
 
-			try
-			{
-				l_canRequestAds = ConsentInformation.CanRequestAds();
-			}
-			catch (System.Exception ex)
-			{
-				Debug.LogWarning($"{m_classname}: ConsentInformation.CanRequestAds() threw: {ex}");
-				// fallback: treat as limited ads
-				l_canRequestAds = false;
-			}
+            try
+            {
+                l_canRequestAds = ConsentInformation.CanRequestAds();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"{m_classname}: ConsentInformation.CanRequestAds() threw: {ex}");
+                // fallback: treat as limited ads
+                l_canRequestAds = false;
+            }
 
             Debug.Log($"{m_classname}: CanRequestAds={l_canRequestAds}");
 
-            if (null != m_admobAdSingleton)
-            {
-                Debug.Log($"{m_classname}: Setting m_admobAdSingleton Active");
-                m_admobAdSingleton.gameObject.SetActive(true /*ConsentInformation.CanRequestAds()*/);
-            }
-            else
-            {
-                Debug.Log($"{m_classname}:  m_admobAdSingleton is NULL - what the puck!");
-            }
+            ActivateAdmobSingleton();
 
         });
 
     }
 
-
-
-
+    private void ActivateAdmobSingleton()
+    {
+        if (null != m_admobAdSingleton)
+        {
+            Debug.Log($"{m_classname}: Setting m_admobAdSingleton Active");
+            m_admobAdSingleton.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.Log($"{m_classname}:  m_admobAdSingleton is NULL - what the puck!");
+        }
+    }
 }
