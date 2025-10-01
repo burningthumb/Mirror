@@ -31,5 +31,10 @@ public class SetSelectableTheme : MonoBehaviour
             l_selectable.colors = ThemeSelectableColorBlock;
         }
 
+        Image l_image = GetComponent<Image>();
+        if (null != l_image)
+        {
+            l_image.color = ThemeSelectableColorBlock.normalColor;
+        }
     }
 }
