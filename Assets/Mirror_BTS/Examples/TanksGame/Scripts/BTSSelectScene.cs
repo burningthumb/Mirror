@@ -99,6 +99,8 @@ public class BTSSelectScene : MonoBehaviour
         {
             if (AdSupported)
             {
+                // This must be called using the Admob singleton UI since the AdmobAdSingleton calls back
+                // into it and it verifies that it is the game object that requested the AS
                 AdmobAdSingletonUI l_ui = GetComponent<AdmobAdSingletonUI>();
 
                 if (null != l_ui)
