@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 81f52d79120604d4fb0609b14e9ffe15, type: 2}
+    - target: {fileID: -6411170560464761166, guid: 56b5b33feec514b0bb8b3752e4fe8fcd,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -3717533717154787143, guid: 56b5b33feec514b0bb8b3752e4fe8fcd,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -72,6 +77,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DesertGroundDirtRamp2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5000547506151307149, guid: 56b5b33feec514b0bb8b3752e4fe8fcd,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
