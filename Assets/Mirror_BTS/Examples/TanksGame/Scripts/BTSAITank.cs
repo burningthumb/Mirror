@@ -54,7 +54,7 @@ namespace com.burningthumb.examples
         public override void Start()
         {
             base.Start();
-            
+
             if (isServer)
             {
                 patrolDestination = GetRandomPatrolPosition();
@@ -103,7 +103,7 @@ namespace com.burningthumb.examples
         public override void HealthChanged(int oldHealth, int newHealth)
         {
             base.HealthChanged(oldHealth, newHealth);
-            
+
             if (isServer && newHealth <= 0)
             {
                 OnTankDestroyed?.Invoke(this);
@@ -173,6 +173,18 @@ namespace com.burningthumb.examples
             }
         }
 
+        //void MoveToward(Vector3 targetPosition)
+        //{
+        //    Vector3 direction = (targetPosition - transform.position).normalized;
+        //    Quaternion targetRotation = Quaternion.LookRotation(direction);
+        //    targetRotation.x = 0;
+        //    targetRotation.z = 0;
+
+        //    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        //    Vector3 forward = transform.forward;
+        //    agent.velocity = forward * MoveSpeed;
+        //}
+
         void MoveToward(Vector3 targetPosition)
         {
             Vector3 direction = (targetPosition - transform.position).normalized;
@@ -181,7 +193,17 @@ namespace com.burningthumb.examples
             targetRotation.z = 0;
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            // Default forward
             Vector3 forward = transform.forward;
+
+            // Adjust forward to align with slope if ground detected
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2f))
+            {
+                forward = Vector3.ProjectOnPlane(forward, hit.normal).normalized;
+                AlignWithGroundNormal(hit.normal);
+            }
+
             agent.velocity = forward * MoveSpeed;
         }
 

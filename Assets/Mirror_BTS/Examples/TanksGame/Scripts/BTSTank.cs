@@ -153,37 +153,82 @@ namespace com.burningthumb.examples
             m_playerID.Remove(this);
         }
 
+        //public virtual void Update()
+        //{
+        //    if (isLocalPlayer)
+        //    {
+        //        float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
+        //        agent.speed = targetSpeed;
+
+        //        float horizontal = m_input.move.x;
+        //        transform.Rotate(0, horizontal * rotationSpeed * Time.deltaTime, 0);
+
+        //        float vertical = m_input.move.y;
+        //        Vector3 forward = transform.forward;
+        //        Vector3 forwardVelocity = forward * Mathf.Max(vertical, 0) * agent.speed;
+        //        agent.velocity = new Vector3(forwardVelocity.x, agent.velocity.y, forwardVelocity.z);
+        //        animator.SetBool("Moving", agent.velocity.sqrMagnitude > 0.01f);
+
+        //        if (m_input.jump)
+        //        {
+        //            m_input.jump = false;
+        //            CmdFire();
+        //        }
+
+        //        if (!HandleDPadTurretRotation()) // D-pad logic
+        //        {
+        //            if (!RotateTurretWithKeys()) // Q/E key logic
+        //            {
+        //                RotateTurret(); // Mouse/joystick logic
+        //            }
+        //        }
+        //    }
+        //}
+
         public virtual void Update()
         {
-            if (isLocalPlayer)
+            if (!isLocalPlayer)
+                return;
+
+            float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
+            agent.speed = targetSpeed;
+
+            float horizontal = m_input.move.x;
+            transform.Rotate(0, horizontal * rotationSpeed * Time.deltaTime, 0);
+
+            float vertical = m_input.move.y;
+            Vector3 forward = transform.forward;
+
+            // Adjust forward direction to align with ramp slope
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2f))
             {
-                float targetSpeed = m_input.sprint ? SprintSpeed : MoveSpeed;
-                agent.speed = targetSpeed;
+                forward = Vector3.ProjectOnPlane(transform.forward, hit.normal).normalized;
+                AlignWithGroundNormal(hit.normal);
+            }
 
-                float horizontal = m_input.move.x;
-                transform.Rotate(0, horizontal * rotationSpeed * Time.deltaTime, 0);
+            // Forward velocity
+            Vector3 forwardVelocity = forward * Mathf.Max(vertical, 0) * agent.speed;
 
-                float vertical = m_input.move.y;
-                Vector3 forward = transform.forward;
-                Vector3 forwardVelocity = forward * Mathf.Max(vertical, 0) * agent.speed;
-                agent.velocity = new Vector3(forwardVelocity.x, agent.velocity.y, forwardVelocity.z);
-                animator.SetBool("Moving", agent.velocity.sqrMagnitude > 0.01f);
+            // Preserve vertical component (for gravity or falling)
+            agent.velocity = new Vector3(forwardVelocity.x, agent.velocity.y, forwardVelocity.z);
 
-                if (m_input.jump)
+            animator.SetBool("Moving", agent.velocity.sqrMagnitude > 0.01f);
+
+            if (m_input.jump)
+            {
+                m_input.jump = false;
+                CmdFire();
+            }
+
+            if (!HandleDPadTurretRotation()) // D-pad logic
+            {
+                if (!RotateTurretWithKeys()) // Q/E key logic
                 {
-                    m_input.jump = false;
-                    CmdFire();
-                }
-
-                if (!HandleDPadTurretRotation()) // D-pad logic
-                {
-                    if (!RotateTurretWithKeys()) // Q/E key logic
-                    {
-                        RotateTurret(); // Mouse/joystick logic
-                    }
+                    RotateTurret(); // Mouse/joystick logic
                 }
             }
         }
+
 
         [Server]
         protected void ServerFire()
@@ -399,6 +444,13 @@ namespace com.burningthumb.examples
             }
 
             return l_didRotate;
+        }
+
+        public void AlignWithGroundNormal(Vector3 groundNormal)
+        {
+            // Rotate tank so its "up" matches ground normal (tilts with ramps)
+            Quaternion targetRotation = Quaternion.FromToRotation(transform.up, groundNormal) * transform.rotation;
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
     }
 }
