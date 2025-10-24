@@ -1,3 +1,7 @@
+// Author: Robert Wiebe
+// Company: Burningthumb Studios
+// Date: 2025 Oct 09
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -120,8 +124,9 @@ public class ShaderPrewarmer : MonoBehaviour
 			if (!_batchSizeLearned && (Time.realtimeSinceStartup - frameStart >= timeBudgetPerFrame))
 			{
 				int compiledThisFrame = _activeCollection.warmedUpVariantCount - startCount;
-				_variantsPerCall = Mathf.Max(1, compiledThisFrame);
-				_variantsPerCall = Mathf.Min(5, compiledThisFrame);
+				//_variantsPerCall = Mathf.Max(1, compiledThisFrame);
+				//_variantsPerCall = Mathf.Min(5, compiledThisFrame);
+                _variantsPerCall = Mathf.Clamp(compiledThisFrame, 1, 5);
 				_batchSizeLearned = true;
 				return; // finish this frame, continue next
 			}

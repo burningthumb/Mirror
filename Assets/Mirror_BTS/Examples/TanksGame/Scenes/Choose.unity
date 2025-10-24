@@ -3280,43 +3280,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BTSSelectScene
   m_Scenes:
   - m_UIName: Sandblock Barrage
-    m_UIDescription: Rumble across checkerboard dunes, dodge cactus traps and barrel
-      explosions, and engage in dusty duels under the blazing sun.
+    m_UIDescription: Rumble across checkerboard dunes, hide behind a cactus or a
+      barrel, and engage in dusty duels under the blazing sun.
     m_UIButtonHint: Play Game
     m_UISprite: {fileID: 21300000, guid: 7981e2e619752408fbfeef5b32b7f0c2, type: 3}
     m_SceneName: Desert
     m_AdSupported: 0
   - m_UIName: Timber Clash
-    m_UIDescription: Skirmish among blocky trees and ramps, weave through trunks
-      and swinging logs, and surprise rivals from the treeline.
+    m_UIDescription: Skirmish among blocky trees and ramps, weave through trunks,
+      rumble across creeks and rivers, and surprise rivals from the treeline.
     m_UIButtonHint: Play Game
     m_UISprite: {fileID: 21300000, guid: e493b0481b9d54ac2966626217c92004, type: 3}
     m_SceneName: Forest
     m_AdSupported: 0
   - m_UIName: Blockcore Dungeon
-    m_UIDescription: Tunnel through stone blocks, jump traps and floor spikes, and
-      take cover behind crates in this underground labyrinth.
+    m_UIDescription: Roll past stone blocks, avoid traps and floor spikes, and take
+      cover behind crates in this underground labyrinth.
     m_UIButtonHint: Play Game
     m_UISprite: {fileID: 21300000, guid: 1a4d600e8184c4317b9c824a2d98f0c1, type: 3}
     m_SceneName: Dungeon
     m_AdSupported: 0
   - m_UIName: Frostblock Frenzy
     m_UIDescription: Slide over icy tiles, weave between snow-topped trees and frozen
-      barricades, and let snow barrels send enemies flying.
+      barricades, and let a snowy barrage blow away enemies.
     m_UIButtonHint: Play Game
     m_UISprite: {fileID: 21300000, guid: 942fb9b1f0bac4109a9d277c8c47fcf1, type: 3}
     m_SceneName: Winter
     m_AdSupported: 0
   - m_UIName: Junglerise Mayhem
-    m_UIDescription: Dash across vine bridges, hide behind dense leaf blocks, and
-      spring ambushes near deco logs and hanging vines.
+    m_UIDescription: Dash across wooden bridges, hide behind dense leaf blocks, and
+      spring ambushes near the ideal hidden cover.
     m_UIButtonHint: Watch Ad, Play Game
     m_UISprite: {fileID: 21300000, guid: 1d118e25dc1e54fbfa4bad7453e9943d, type: 3}
     m_SceneName: Jungle
     m_AdSupported: 1
   - m_UIName: Cliffblock Canyon
-    m_UIDescription: Battle in narrow stone passes, jump over ravines via bridges,
-      and dodge falling rock blocks and spikes from above.
+    m_UIDescription: Battle in narrow stone passes, roll over ravines via bridges,
+      and dodge opponents barrages by speed to the nearest cover.
     m_UIButtonHint: Watch Ad, Play Game
     m_UISprite: {fileID: 21300000, guid: 2c4ea5f9af5194a2a8b92386aa1f8512, type: 3}
     m_SceneName: Canyon

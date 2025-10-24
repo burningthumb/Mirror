@@ -88,6 +88,7 @@ PlayerSettings:
   muteOtherAudioSources: 0
   Prepare IOS For Recording: 0
   Force IOS Speakers When Recording: 0
+  audioSpatialExperience: 0
   deferSystemGesturesMode: 0
   hideHomeButton: 0
   submitAnalytics: 1
@@ -143,7 +144,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 2.3.0
-  bundleVersion: 2.3.0
+  bundleVersion: 2.3.1
   preloadedAssets:
   - {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
   metroInputSource: 0
@@ -178,7 +179,7 @@ PlayerSettings:
     iPhone: 251002
     tvOS: 251002
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 29
+  AndroidBundleVersionCode: 31
   AndroidMinSdkVersion: 23
   AndroidTargetSdkVersion: 36
   AndroidPreferredInstallLocation: 1
@@ -931,7 +932,7 @@ PlayerSettings:
   suppressCommonWarnings: 1
   allowUnsafeCode: 1
   useDeterministicCompilation: 1
-  additionalIl2CppArgs: --linker-flags="-framework Cocoa -framework WebKit"
+  additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
   gcIncremental: 1
   gcWBarrierValidation: 0
